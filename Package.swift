@@ -14,6 +14,7 @@ let package = Package(
         .Package(url: "https://github.com/Zewo/HTTPSServer.git", majorVersion: 0, minor: 2),
         .Package(url: "https://github.com/Zewo/HTTPSClient.git", majorVersion: 0, minor: 2),
         .Package(url: "https://github.com/Zewo/HTTPFile.git", majorVersion: 0, minor: 2),
+        .Package(url: "https://github.com/Zewo/TCP.git", majorVersion: 0, minor: 2),
         .Package(url: "https://github.com/Zewo/UDP.git", majorVersion: 0, minor: 2),
         .Package(url: "https://github.com/Zewo/OpenSSL.git", majorVersion: 0, minor: 2),
         .Package(url: "https://github.com/Zewo/Router.git", majorVersion: 0, minor: 2),

@@ -27,6 +27,7 @@
 @_exported import HTTPSServer
 @_exported import HTTPSClient
 @_exported import HTTPFile
+@_exported import TCP
 @_exported import UDP
 @_exported import OpenSSL
 @_exported import Router
