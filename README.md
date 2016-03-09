@@ -67,7 +67,7 @@ Currently, we have around 50+ packages. This list grows very fast so it might be
 
 ## External Packages
 
-- [Swift-Redis](https://github.com/rabc/Swift-Redis/)
+- [ZRedis](https://github.com/rabc/ZRedis/)
 - [MiniRouter](https://github.com/paulofaria/MiniRouter)
 
 # Documentation
