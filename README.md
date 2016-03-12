@@ -31,6 +31,7 @@ Currently, we have around 50+ packages. This list grows very fast so it might be
 - [HTTP](https://github.com/Zewo/HTTP)
 - [http_parser](https://github.com/Zewo/http_parser)
 - [HTTPClient](https://github.com/Zewo/HTTPClient)
+- [HTTPServer](https://github.com/Zewo/HTTPServer)
 - [HTTPFile](https://github.com/Zewo/HTTPFile)
 - [HTTPSClient](https://github.com/Zewo/HTTPSClient)
 - [HTTPSServer](https://github.com/Zewo/HTTPSServer)
