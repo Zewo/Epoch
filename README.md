@@ -118,7 +118,6 @@ Zewo has a **lot** of [modules](#zewo-packages), check out our [organization](ht
 
 See also:
 
-- [Developing with Xcode](http://docs.zewo.io/Xcode.html)
 - [Deploying with Docker](http://docs.zewo.io/Docker.html)
 
 ## Umbrella Package
