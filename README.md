@@ -33,46 +33,6 @@ Before we start we need to install some tools and dependencies.
 You can install swiftenv following official [instructions](https://github.com/kylef/swiftenv#installation)
 >note: if you use homebrew add `--HEAD` option as the stable version has some issues.
 
-## OS X
-
-### Install Xcode 7.3+
-
-[Xcode](https://developer.apple.com/xcode/) is apple's software development IDE.
-
-- [Xcode Download](https://developer.apple.com/xcode/download/)
-
-### Install Homebrew
-
-[Homebrew](http://brew.sh/) is a package manager for OS X.
-
-```sh
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-```
-
-### Install Zewo
-
-This brew formula installs all **Zewo** dependencies.
-
-```sh
-brew install zewo/tap/zewo
-```
-
-## Linux
-
-### Install Clang and ICU
-
-```sh
-sudo apt-get install clang libicu-dev
-```
-
-### Install Zewo
-
-```sh
-echo "deb [trusted=yes] http://apt.zewo.io/deb ./" | sudo tee --append /etc/apt/sources.list
-sudo apt-get update
-sudo apt-get install zewo
-```
-
 ## Create your first Zewo web application
 
 First we need to create a directory for our app.
@@ -81,7 +41,7 @@ First we need to create a directory for our app.
 mkdir hello && cd hello
 ```
 
-Then we install Swift Development Snapshot from **February 8, 2016**.
+Then we install Swift Development Snapshot from **April 12, 2016**.
 
 ```sh
 swiftenv install DEVELOPMENT-SNAPSHOT-2016-04-12-a
@@ -164,7 +124,7 @@ Zewo has a **lot** of [modules](#zewo-packages), check out our [organization](ht
 See also:
 
 - [Developing with Xcode](http://docs.zewo.io/Xcode.html)
-- [Developing with Docker](http://docs.zewo.io/Docker.html)
+- [Deploying with Docker](http://docs.zewo.io/Docker.html)
 
 ## Umbrella Package
 
