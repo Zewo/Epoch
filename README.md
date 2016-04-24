@@ -33,7 +33,6 @@ Once you have it, install the Swift Development Snapshot from **April 12, 2016**
 
 ```sh
 swiftenv install DEVELOPMENT-SNAPSHOT-2016-04-12-a
-swiftenv local DEVELOPMENT-SNAPSHOT-2016-04-12-a
 ```
 
 ## Create your first Zewo web application
@@ -44,10 +43,11 @@ First we need to create a directory for our app.
 mkdir hello && cd hello
 ```
 
-Now we initialize the project with Swift Package Manager (**SPM**).
+Now we initialize the project with Swift Package Manager (**SPM**) and select the 04-12 toolchain with Swiftenv.
 
 ```sh
 swift build --init
+swiftenv local DEVELOPMENT-SNAPSHOT-2016-04-12-a
 ```
 
 This command will create the basic structure for our app.
