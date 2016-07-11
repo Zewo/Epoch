@@ -117,11 +117,14 @@ To generate your Zewo Xcode project simply run:
 swift build -X
 ```
 
-In some cases, the generated Xcode project produces linking errors during the build process. If that happens to be the case, run the following commands instead:
-```sh
-swift build
-swift build -Xlinker -L$(pwd)/.build/debug -X
-```
+In some cases, the generated Xcode project produces linking errors during the build process (missing module(s)). If that happens to be the case, the following should fix the issues:
+
+1. Open the project in Xcode
+2. Select the project file (not target(s))
+3. Search for `Import Paths` with the 'Build Settings' tab selected
+4. Add `$(SRCROOT)/.build/debug` to the import path
+
+![alt text](Images/xcode-import-path-screenshot.png "Screenshot of adding an import path to an xcode project")
 
 ## What's next?
 Zewo has a **lot** of [modules](#zewo-packages), check out our [organization](https://github.com/Zewo) for more. You can also take a look at our [documentation](http://docs.zewo.io/index.html) which is growing every day. If you have any doubts you can reach us at our [slack](http://slack.zewo.io). We're very active and always ready to help.
