@@ -110,7 +110,7 @@ After it compiles, run it.
 Now open your favorite browser and go to [http://localhost:8080/hello](http://localhost:8080/hello). You should see `hello world` in your browser's window. 😊
 
 ### Xcode
-Using can IDE can be a huge boost to productivity. Luckily, **SPM** has Xcode project generation support built in!
+Using an IDE can be a huge boost to productivity. Luckily, **SPM** has Xcode project generation support built in!
 
 To generate your Zewo Xcode project simply run:
 ```sh
