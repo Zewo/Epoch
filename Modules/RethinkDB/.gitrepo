@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/Zewo/RethinkDB
+	branch = master
+	commit = 3f8ed77dfbb0e4aadc4c39f7e345ff840d2fda19
+	parent = 9411f154fa3a71ebb70b3dcf28c2d53f0b405ee3
+	cmdver = 0.3.0

@@ -11,6 +11,7 @@ import POSIXTests
 import ReflectionTests
 import TCPTests
 import VeniceTests
+import RethinkDBTests
 
 var testCases = [
     // POSIX
@@ -63,6 +64,10 @@ var testCases = [
     testCase(TCPTests.allTests),
     testCase(TickerTests.allTests),
     testCase(TimerTests.allTests),
+
+    // RethinkDB
+    testCase(ConnectionTests.allTests),
+    testCase(ReqlAstTests.allTests),
 ]
 
 #if os(macOS)
