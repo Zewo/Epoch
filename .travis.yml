@@ -11,3 +11,4 @@ script:
   - ./Scripts/Travis/build-test.sh
 after_success:
   - ./Scripts/Travis/report-coverage.sh
+  - ./Scripts/Travis/end-hack.sh
