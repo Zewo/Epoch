@@ -10,6 +10,7 @@ import IPTests
 import POSIXTests
 import ReflectionTests
 import TCPTests
+import UDPTests
 import VeniceTests
 
 var testCases = [
@@ -52,6 +53,8 @@ var testCases = [
     testCase(TrieRouteMatcherTests.allTests),
     testCase(HTTPSerializerTests.allTests),
     testCase(ServerTests.allTests),
+
+    testCase(UDPSocketTests.allTests),
 
     // Venice
     testCase(CoroutineTests.allTests),

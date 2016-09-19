@@ -12,6 +12,7 @@ let package = Package(
         Target(name: "Venice", dependencies: ["Core"]),
         Target(name: "IP", dependencies: ["Core"]),
         Target(name: "TCP", dependencies: ["IP", "OpenSSL"]),
+        Target(name: "UDP", dependencies: ["IP"]),
         Target(name: "File", dependencies: ["Core"]),
         Target(name: "HTTPFile", dependencies: ["HTTP", "File"]),
         Target(name: "HTTPServer", dependencies: ["HTTPFile", "TCP", "Venice"]),
