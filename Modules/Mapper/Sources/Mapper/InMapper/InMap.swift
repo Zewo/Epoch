@@ -1,4 +1,4 @@
-public protocol InMapProtocol {
+public protocol InMap {
 
     func get(at indexPath: IndexPathElement) -> Self?
     func get(at indexPath: [IndexPathElement]) -> Self?
@@ -9,7 +9,7 @@ public protocol InMapProtocol {
 
 }
 
-extension InMapProtocol {
+extension InMap {
 
     public func get(at indexPath: [IndexPathElement]) -> Self? {
         var result = self

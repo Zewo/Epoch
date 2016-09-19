@@ -1,6 +1,6 @@
 public protocol OutMapperProtocol {
     
-    associatedtype Map: OutMapProtocol
+    associatedtype Map: OutMap
     associatedtype IndexPath: IndexPathElement
     
     var outMap: Map { get set }
@@ -35,7 +35,7 @@ fileprivate extension OutMapperProtocol {
 
 fileprivate extension OutMappableWithContext {
     
-    func map<Map: OutMapProtocol>(withContext context: Context?) throws -> Map {
+    func map<Map: OutMap>(withContext context: Context?) throws -> Map {
         var mapper = ContextualOutMapper<Map, Keys, Context>(of: .blank, context: context)
         try outMap(mapper: &mapper)
         return mapper.outMap
@@ -89,7 +89,7 @@ extension OutMapperProtocol {
     
 }
 
-public struct OutMapper<Map: OutMapProtocol, Keys: IndexPathElement>: OutMapperProtocol {
+public struct OutMapper<Map: OutMap, Keys: IndexPathElement>: OutMapperProtocol {
     
     public typealias IndexPath = Keys
     public var outMap: Map
@@ -104,7 +104,7 @@ public struct OutMapper<Map: OutMapProtocol, Keys: IndexPathElement>: OutMapperP
     
 }
 
-public struct ContextualOutMapper<Map: OutMapProtocol, Keys: IndexPathElement, Context>: OutMapperProtocol {
+public struct ContextualOutMapper<Map: OutMap, Keys: IndexPathElement, Context>: OutMapperProtocol {
     
     public typealias IndexPath = Keys
     public var outMap: Map
@@ -133,5 +133,5 @@ public struct ContextualOutMapper<Map: OutMapProtocol, Keys: IndexPathElement, C
     
 }
 
-public typealias StringOutMapper<Map: OutMapProtocol> = OutMapper<Map, String>
-public typealias StringContextualOutMapper<Map: OutMapProtocol, Context> = ContextualOutMapper<Map, String, Context>
+public typealias StringOutMapper<Map: OutMap> = OutMapper<Map, String>
+public typealias StringContextualOutMapper<Map: OutMap, Context> = ContextualOutMapper<Map, String, Context>

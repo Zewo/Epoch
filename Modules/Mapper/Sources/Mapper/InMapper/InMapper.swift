@@ -1,9 +1,9 @@
 public protocol InMapperProtocol {
     
-    associatedtype Map: InMapProtocol
+    associatedtype Source: InMap
     associatedtype IndexPath: IndexPathElement
     
-    var inMap: Map { get }
+    var source: Source { get }
 
 }
 
@@ -18,32 +18,32 @@ public enum InMapperError: Error {
 
 extension InMapperProtocol {
     
-    fileprivate func dive(to indexPath: [IndexPath]) throws -> Map {
-        if let value = inMap.get(at: indexPath) {
+    fileprivate func dive(to indexPath: [IndexPath]) throws -> Source {
+        if let value = source.get(at: indexPath) {
             return value
         } else {
             throw InMapperError.noValue(forIndexPath: indexPath)
         }
     }
     
-    fileprivate func get<T>(from map: Map) throws -> T {
-        if let value: T = map.get() {
+    fileprivate func get<T>(from source: Source) throws -> T {
+        if let value: T = source.get() {
             return value
         } else {
             throw InMapperError.wrongType(T.self)
         }
     }
     
-    fileprivate func array(from map: Map) throws -> [Map] {
-        if let array = map.asArray {
+    fileprivate func array(from source: Source) throws -> [Source] {
+        if let array = source.asArray {
             return array
         } else {
             throw InMapperError.cannotRepresentAsArray
         }
     }
     
-    fileprivate func rawRepresent<T: RawRepresentable>(_ map: Map) throws -> T {
-        let raw: T.RawValue = try get(from: map)
+    fileprivate func rawRepresent<T: RawRepresentable>(_ source: Source) throws -> T {
+        let raw: T.RawValue = try get(from: source)
         if let value = T(rawValue: raw) {
             return value
         } else {
@@ -97,43 +97,43 @@ extension InMapperProtocol {
     
 }
 
-public struct InMapper<Map: InMapProtocol, Keys: IndexPathElement>: InMapperProtocol {
+public struct InMapper<Source: InMap, Keys: IndexPathElement>: InMapperProtocol {
     
-    public let inMap: Map
+    public let source: Source
     public typealias IndexPath = Keys
     
-    public init(of map: Map) {
-        self.inMap = map
+    public init(of source: Source) {
+        self.source = source
     }
     
 }
 
-public struct ContextualInMapper<Map: InMapProtocol, Keys: IndexPathElement, Context>: InMapperProtocol {
+public struct ContextualInMapper<Source: InMap, Keys: IndexPathElement, Context>: InMapperProtocol {
     
-    public let inMap: Map
+    public let source: Source
     public let context: Context?
     public typealias IndexPath = Keys
     
-    public init(of map: Map, context: Context?) {
-        self.inMap = map
+    public init(of source: Source, context: Context?) {
+        self.source = source
         self.context = context
     }
     
     public func map<T: InMappableWithContext>(from indexPath: IndexPath...) throws -> T
         where T.Context == Context {
             let leveled = try dive(to: indexPath)
-            return try T(mapper: ContextualInMapper<Map, T.Keys, T.Context>(of: leveled, context: self.context))
+            return try T(mapper: ContextualInMapper<Source, T.Keys, T.Context>(of: leveled, context: self.context))
     }
     
     public func mapArray<T: InMappableWithContext>(from indexPath: IndexPath...) throws -> [T]
         where T.Context == Context {
             let leveled = try dive(to: indexPath)
             let array = try self.array(from: leveled)
-            return try array.map({ try T(mapper: ContextualInMapper<Map, T.Keys, T.Context>(of: $0, context: self.context)) })
+            return try array.map({ try T(mapper: ContextualInMapper<Source, T.Keys, T.Context>(of: $0, context: self.context)) })
     }
     
 }
 
-public typealias StringInMapper<Map: InMapProtocol> = InMapper<Map, String>
-public typealias StringContextualInMapper<Map: InMapProtocol, Context> = ContextualInMapper<Map, String, Context>
+public typealias StringInMapper<Source: InMap> = InMapper<Source, String>
+public typealias StringContextualInMapper<Source: InMap, Context> = ContextualInMapper<Source, String, Context>
 

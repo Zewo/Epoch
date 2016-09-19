@@ -1,4 +1,4 @@
-public protocol OutMapProtocol {
+public protocol OutMap {
 
     static var blank: Self { get }
 
