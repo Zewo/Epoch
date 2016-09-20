@@ -1,7 +1,7 @@
 public protocol OutMappable {
     
     associatedtype Keys: IndexPathElement
-    func outMap<Map: OutMap>(mapper: inout OutMapper<Map, Keys>) throws
+    func outMap<Destination: OutMap>(mapper: inout OutMapper<Destination, Keys>) throws
     
 }
 
@@ -10,36 +10,36 @@ public protocol OutMappableWithContext: OutMappable {
     associatedtype Keys: IndexPathElement
     associatedtype Context
     
-    func outMap<Map: OutMap>(mapper: inout ContextualOutMapper<Map, Keys, Context>) throws
+    func outMap<Destination: OutMap>(mapper: inout ContextualOutMapper<Destination, Keys, Context>) throws
     
 }
 
 extension OutMappableWithContext {
     
-    public func outMap<Map: OutMap>(mapper: inout OutMapper<Map, Keys>) throws {
-        var contextual = ContextualOutMapper<Map, Keys, Context>(of: mapper.outMap, context: nil)
+    public func outMap<Destination: OutMap>(mapper: inout OutMapper<Destination, Keys>) throws {
+        var contextual = ContextualOutMapper<Destination, Keys, Context>(of: mapper.destination, context: nil)
         try self.outMap(mapper: &contextual)
-        mapper.outMap = contextual.outMap
+        mapper.destination = contextual.destination
     }
     
 }
 
 extension OutMappable {
     
-    public func map<Map: OutMap>() throws -> Map {
-        var mapper = OutMapper<Map, Keys>()
+    public func map<Destination: OutMap>() throws -> Destination {
+        var mapper = OutMapper<Destination, Keys>()
         try outMap(mapper: &mapper)
-        return mapper.outMap
+        return mapper.destination
     }
     
 }
 
 extension OutMappableWithContext {
     
-    public func map<Map: OutMap>(withContext context: Context) throws -> Map {
-        var mapper = ContextualOutMapper<Map, Keys, Context>(of: Map.blank, context: context)
+    public func map<Destination: OutMap>(withContext context: Context) throws -> Destination {
+        var mapper = ContextualOutMapper<Destination, Keys, Context>(of: Destination.blank, context: context)
         try outMap(mapper: &mapper)
-        return mapper.outMap
+        return mapper.destination
     }
     
 }
