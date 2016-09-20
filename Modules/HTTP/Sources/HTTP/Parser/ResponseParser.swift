@@ -45,7 +45,7 @@ public final class ResponseParser {
         self.stream = stream
         self.buffer = Data(count: bufferSize)
         self.context = ResponseContext.allocate(capacity: 1)
-        self.context.initialize(to: ResponseParserContext { response in
+        self.context.initialize(to: ResponseParserContext { [unowned self] response in
             self.responses.insert(response, at: 0)
         })
 
