@@ -125,7 +125,7 @@ public struct ContextualOutMapper<Map: OutMap, Keys: IndexPathElement, Context>:
         try outMap.set(new, at: indexPath)
     }
     
-    public mutating func map<T: OutMappableWithContext>(array: [T], to indexPath: IndexPath) throws where T.Context == Context {
+    public mutating func mapArray<T: OutMappableWithContext>(_ array: [T], to indexPath: IndexPath) throws where T.Context == Context {
         let maps: [Map] = try array.map({ try $0.map(withContext: context) })
         let map = try arrayMap(of: maps)
         try outMap.set(map, at: indexPath)
