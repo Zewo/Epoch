@@ -29,6 +29,27 @@ extension Buffer {
     public init() {
         self = Buffer.empty
     }
+    public init(capacity: Int, fill: (UnsafeMutableBufferPointer<UInt8>) throws -> Int) throws {
+        let bytes = UnsafeMutablePointer<UInt8>.allocate(capacity: capacity)
+        let buffer = UnsafeMutableBufferPointer(start: bytes, count: capacity)
+        let usedCapacity = try fill(buffer)
+        
+        guard usedCapacity > 0 else {
+            bytes.deallocate(capacity: capacity)
+            self = Buffer.empty
+            return
+        }
+        
+        guard Double(usedCapacity) > Double(capacity) * 0.25 else {
+            defer {
+                bytes.deallocate(capacity: capacity)
+            }
+            self = Buffer(bytes: UnsafeBufferPointer<UInt8>(start: bytes, count: usedCapacity))
+            return
+        }
+        
+        self = Buffer(bytesNoCopy: UnsafeBufferPointer<UInt8>(start: bytes, count: usedCapacity), deallocator: .free)
+    }
     
     public subscript(_ range: Range<Int>) -> Buffer {
         return subdata(in: self.startIndex.advanced(by: range.lowerBound)..<self.startIndex.advanced(by: range.upperBound))
