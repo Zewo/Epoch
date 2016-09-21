@@ -5,8 +5,8 @@ enum URLEncodedFormMapSerializerError : Error {
 public struct URLEncodedFormMapSerializer : MapSerializer {
     public init() {}
 
-    public func serialize(_ map: Map) throws -> Data {
-        return try serializeToString(map).data
+    public func serialize(_ map: Map) throws -> Buffer {
+        return try serializeToString(map).buffer
     }
 
     public func serializeToString(_ map: Map) throws -> String {

@@ -39,8 +39,8 @@ public enum JSONMapParseError : Error, CustomStringConvertible {
 public struct JSONMapParser : MapParser {
     public init() {}
 
-    public func parse(_ data: Data) throws -> Map {
-        return try GenericJSONMapParser(data).parse()
+    public func parse(_ buffer: Buffer) throws -> Map {
+        return try GenericJSONMapParser(buffer).parse()
     }
 }
 

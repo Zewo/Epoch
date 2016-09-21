@@ -42,9 +42,9 @@ extension String : MapRepresentable {
     }
 }
 
-extension Data : MapRepresentable {
+extension Buffer : MapRepresentable {
     public var map: Map {
-        return .data(self)
+        return .buffer(self)
     }
 }
 

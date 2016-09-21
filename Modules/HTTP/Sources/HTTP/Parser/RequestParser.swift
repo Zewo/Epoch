@@ -44,7 +44,7 @@ public final class RequestParser {
         self.stream = stream
         self.buffer = Data(count: bufferSize)
         self.context = RequestContext.allocate(capacity: 1)
-        self.context.initialize(to: RequestParserContext { request in
+        self.context.initialize(to: RequestParserContext { [unowned self] request in
             self.requests.insert(request, at: 0)
         })
 

@@ -38,13 +38,11 @@ public enum JSONMapStreamParseError : Error, CustomStringConvertible {
 
 public final class JSONMapStreamParser : MapStreamParser {
     let stream: Stream
-    var buffer: Data
-    var currentBufferIndex: Int = 0
-    var endBufferIndex: Int = 1
+    var buffer: Buffer
 
     public init(stream: Stream) {
         self.stream = stream
-        self.buffer = Data(count: 1)
+        self.buffer = Buffer.empty
     }
 
     var lineNumber = 1
@@ -97,19 +95,18 @@ extension JSONMapStreamParser {
     }
 
     private func readChunk() throws {
-        if stream.closed {
+        guard !stream.closed else {
             throw insufficientTokenError(reason: "unexpected end of tokens")
         }
-        let bytesRead = try stream.read(into: &buffer)
-        if bytesRead == 0 {
+        let chunk = try stream.read(upTo: 1024)
+        guard chunk.count > 0 else {
             throw insufficientTokenError(reason: "unexpected end of tokens")
         }
-        endBufferIndex = bytesRead + 1
-        currentBufferIndex = 0
+        buffer.append(chunk)
     }
 
     private var bytesInBuffer: Int {
-        return endBufferIndex - currentBufferIndex - 1
+        return buffer.count
     }
 
     private func getCurrentByte() throws -> Byte {
@@ -119,7 +116,7 @@ extension JSONMapStreamParser {
         guard bytesInBuffer >= 1 else {
             throw insufficientTokenError(reason: "unexpected end of tokens")
         }
-        return buffer[currentBufferIndex]
+        return buffer[0]
     }
 
     private func getCurrentSymbol() throws -> Character {
@@ -402,7 +399,7 @@ extension JSONMapStreamParser {
             return false
         }
 
-        let start = currentBufferIndex
+        let current = buffer
         let l = lineNumber
         let c = columnNumber
 
@@ -412,7 +409,7 @@ extension JSONMapStreamParser {
         while p != endp {
             let currentByte = try getCurrentByte()
             if p.pointee != currentByte {
-                currentBufferIndex = start
+                buffer = current
                 lineNumber = l
                 columnNumber = c
                 return false
@@ -435,8 +432,10 @@ extension JSONMapStreamParser {
     }
 
     private func advance() throws {
-        currentBufferIndex += 1
-
+        if buffer.count > 0 {
+            buffer = buffer.subdata(in: buffer.startIndex.advanced(by: 1)..<buffer.endIndex)
+        }
+        
         if bytesInBuffer > 0 {
             switch try getCurrentByte() {
 

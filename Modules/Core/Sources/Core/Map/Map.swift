@@ -24,7 +24,7 @@ public enum Map {
     case double(Double)
     case int(Int)
     case string(String)
-    case data(Data)
+    case buffer(Buffer)
     case array([Map])
     case dictionary([String: Map])
 }
@@ -45,17 +45,17 @@ public enum MapError : Error {
 // MARK: Parser/Serializer Protocols
 
 public protocol MapParser {
-    func parse(_ data: Data) throws -> Map
+    func parse(_ buffer: Buffer) throws -> Map
 }
 
 extension MapParser {
-    public func parse(_ convertible: DataRepresentable) throws -> Map {
-        return try parse(convertible.data)
+    public func parse(_ convertible: BufferRepresentable) throws -> Map {
+        return try parse(convertible.buffer)
     }
 }
 
 public protocol MapSerializer {
-    func serialize(_ map: Map) throws -> Data
+    func serialize(_ map: Map) throws -> Buffer
 }
 
 public protocol MapStreamParser {
@@ -158,8 +158,8 @@ extension Map {
         return false
     }
 
-    public var isData: Bool {
-        if case .data = self {
+    public var isBuffer: Bool {
+        if case .buffer = self {
             return true
         }
         return false
@@ -199,7 +199,7 @@ extension Map {
         return try? get()
     }
 
-    public var data: Data? {
+    public var buffer: Buffer? {
         return try? get()
     }
 
@@ -237,7 +237,7 @@ extension Map {
             default: throw MapError.incompatibleType
             }
 
-        case .data(let value):
+        case .buffer(let value):
             return !value.isEmpty
 
         case .array(let value):
@@ -327,8 +327,8 @@ extension Map {
         case .string(let value):
             return value
 
-        case .data(let value):
-            return try String(data: value)
+        case .buffer(let value):
+            return try String(buffer: value)
 
         case .array:
             throw MapError.incompatibleType
@@ -341,23 +341,23 @@ extension Map {
         }
     }
 
-    public func asData(converting: Bool = false) throws -> Data {
+    public func asBuffer(converting: Bool = false) throws -> Buffer {
         guard converting else {
             return try get()
         }
 
         switch self {
         case .bool(let value):
-            return value ? Data([0xff]) : Data([0x00])
+            return value ? Buffer([0xff]) : Buffer([0x00])
 
         case .string(let value):
-            return Data(value)
+            return Buffer(value)
 
-        case .data(let value):
+        case .buffer(let value):
             return value
 
         case .null:
-            return Data()
+            return Buffer.empty
 
         default:
             throw MapError.incompatibleType
@@ -459,7 +459,7 @@ extension Map {
             case .int(let value as T): return value
             case .double(let value as T): return value
             case .string(let value as T): return value
-            case .data(let value as T): return value
+            case .buffer(let value as T): return value
             case .array(let value as T): return value
             case .dictionary(let value as T): return value
             default: throw MapError.incompatibleType
@@ -635,7 +635,7 @@ public func == (lhs: Map, rhs: Map) -> Bool {
     case let (.int(l), .int(r)) where l == r: return true
     case let (.bool(l), .bool(r)) where l == r: return true
     case let (.string(l), .string(r)) where l == r: return true
-    case let (.data(l), .data(r)) where l == r: return true
+    case let (.buffer(l), .buffer(r)) where l == r: return true
     case let (.double(l), .double(r)) where l == r: return true
     case let (.array(l), .array(r)) where l == r: return true
     case let (.dictionary(l), .dictionary(r)) where l == r: return true
@@ -740,7 +740,7 @@ extension Map : CustomStringConvertible {
             case .double(let number): return String(number)
             case .int(let number): return String(number)
             case .string(let string): return escape(string)
-            case .data(let data): return "0x" + data.hexadecimalString()
+            case .buffer(let buffer): return "0x" + buffer.hexadecimalString()
             case .array(let array): return serialize(array: array)
             case .dictionary(let dictionary): return serialize(dictionary: dictionary)
             }

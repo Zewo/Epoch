@@ -6,8 +6,8 @@ enum URLEncodedFormParseError : Error {
 public struct URLEncodedFormParser {
     public init() {}
 
-    public func parse(data: Data) throws -> URLEncodedForm {
-        guard let string = try? String(data: data) else {
+    public func parse(buffer: Buffer) throws -> URLEncodedForm {
+        guard let string = try? String(buffer: buffer) else {
             throw URLEncodedFormParseError.unsupportedEncoding
         }
 
