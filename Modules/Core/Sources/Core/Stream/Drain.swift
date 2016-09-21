@@ -8,7 +8,7 @@ public final class Drain : BufferRepresentable, Stream {
         }
 
         var buffer = Buffer.empty
-        while !stream.closed, let chunk = try? stream.read(upTo: 2048) {
+        while !stream.closed, let chunk = try? stream.read(upTo: 2048), chunk.count > 0 {
             buffer.append(chunk)
         }
         self.buffer = buffer
