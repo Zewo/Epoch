@@ -19,11 +19,16 @@ public class Random {
 		#endif
 	}
 
-	public static func bytes(_ size: Int) throws -> Data {
-		var buffer = Data(count: size)
-		guard (buffer.withUnsafeMutableBytes { RAND_bytes($0, Int32(buffer.count)) }) == 1 else {
-			throw SSLRandomError.error(description: lastSSLErrorDescription)
-		}
-		return buffer
+	public static func bytes(_ size: Int) throws -> Buffer {
+		let pointer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
+        guard RAND_bytes(pointer, Int32(size)) == 1 else {
+            pointer.deallocate(capacity: size)
+            throw SSLRandomError.error(description: lastSSLErrorDescription)
+        }
+        
+        return Buffer(bytesNoCopy: UnsafeBufferPointer(start: pointer, count: size),
+                      deallocator: .custom(nil, {
+                        pointer.deallocate(capacity: size)
+                      }))
 	}
 }

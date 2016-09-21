@@ -62,62 +62,78 @@ public final class SSLConnection : Connection {
 
 		try handshake(deadline: deadline)
 	}
-
-	private func handshake(deadline: Double) throws {
-        var buffer = Data(count: 2048)
-		let flushAndReceive = {
-			try self.flush(deadline: deadline)
-			let bytesRead = try self.raw.stream.read(into: &buffer, deadline: deadline)
-            try self.readIO.write(buffer, length: bytesRead)
-		}
-		while !session.initializationFinished {
-			do {
-				try session.handshake()
-			} catch SSLSessionError.wantRead {
-				if context.mode == .client {
-					try flushAndReceive()
-				}
-			}
-			if context.mode == .server {
-				try flushAndReceive()
-			}
-		}
+    
+    private func handshake(deadline: Double) throws {
+        var rawBuffer = [UInt8](repeating: 0, count: 2048)
+        try rawBuffer.withUnsafeMutableBufferPointer { buffer in
+            func flushAndReceive() throws {
+                try self.flush(deadline: deadline)
+                let bytesRead = try self.raw.stream.read(into: buffer, deadline: deadline)
+                _ = try self.readIO.write(from: UnsafeBufferPointer<UInt8>(start: buffer.baseAddress!, count: bytesRead))
+            }
+            while !session.initializationFinished {
+                do {
+                    try session.handshake()
+                } catch SSLSessionError.wantRead {
+                    if context.mode == .client {
+                        try flushAndReceive()
+                    }
+                }
+                if context.mode == .server {
+                    try flushAndReceive()
+                }
+            }
+        }
 	}
 
-    public func read(into buffer: inout Data, length: Int, deadline: Double) throws -> Int {
-        var rawBuffer = Data(count: length)
-		while true {
-			do {
-                let bytesRead = try session.read(into: &buffer, length: length)
-				if bytesRead > 0 {
-					return bytesRead
-				}
-			} catch SSLSessionError.wantRead {
-				do {
-                    let bytesRead = try raw.stream.read(into: &rawBuffer, length: length, deadline: deadline)
-                    try readIO.write(rawBuffer, length: bytesRead)
-				} catch StreamError.closedStream(let data) {
-					if data.count > 0 {
-						try readIO.write(data, length: data.count)
-					} else {
-						throw StreamError.closedStream(data: Data())
-					}
-				}
-			} catch SSLSessionError.zeroReturn {
-				throw StreamError.closedStream(data: Data())
-			}
-		}
-	}
+    public func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int {
+        var rawBuffer = [UInt8](repeating: 0, count: 2048)
+        while true {
+            do {
+                let bytesRead = try session.read(into: into)
+                guard bytesRead > 0 else {
+                    continue
+                }
+                return bytesRead
+            } catch SSLSessionError.wantRead {
+                do {
+                    try rawBuffer.withUnsafeMutableBufferPointer { buffer in
+                        let bytesRead = try self.raw.stream.read(into: buffer, deadline: deadline)
+                        _ = try self.readIO.write(from: UnsafeBufferPointer<UInt8>(start: buffer.baseAddress!, count: bytesRead))
+                    }
+                } catch StreamError.closedStream(let buffer) {
+                    guard !buffer.isEmpty else {
+                        throw StreamError.closedStream(buffer: Buffer())
+                    }
+                    _ = try buffer.withUnsafeBytes { bufferBytes in
+                        try readIO.write(from: UnsafeBufferPointer<UInt8>(start: bufferBytes, count: buffer.count))
+                    }
+                    
+                }
+            } catch SSLSessionError.zeroReturn {
+                throw StreamError.closedStream(buffer: Buffer())
+            }
+        }
+    }
 
-    public func write(_ data: Data, length: Int, deadline: Double) throws -> Int {
-        return session.write(data, length: length)
-	}
-
+    
+    public func write(from: UnsafeBufferPointer<UInt8>, deadline: Double = .never) throws -> Int {
+        return try session.write(from: from)
+    }
+    
 	public func flush(deadline: Double) throws {
+        guard writeIO.pending > 0 else {
+            return
+        }
+        
 		do {
-            var buffer = Data(count: writeIO.pending)
-            let bytesRead = try writeIO.read(into: &buffer, length: buffer.count)
-            try raw.stream.write(buffer, length: bytesRead, deadline: deadline)
+            let rawBufferCapacity = writeIO.pending
+            let rawBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: rawBufferCapacity)
+            defer {
+                rawBuffer.deallocate(capacity: rawBufferCapacity)
+            }
+            let bytesRead = try writeIO.read(into: UnsafeMutableBufferPointer(start: rawBuffer, count: rawBufferCapacity))
+            _ = try raw.stream.write(from: UnsafeBufferPointer(start: rawBuffer, count: bytesRead), deadline: deadline)
 			try raw.stream.flush(deadline: deadline)
 		} catch SSLIOError.shouldRetry { }
 	}

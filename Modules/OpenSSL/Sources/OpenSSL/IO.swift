@@ -1,4 +1,5 @@
 import COpenSSL
+import Core
 
 public enum SSLIOError: Error {
     case io(description: String)
@@ -29,9 +30,13 @@ public class IO {
 		}
 	}
 
-	public convenience init(buffer: Data) throws {
+	public convenience init(buffer: BufferRepresentable) throws {
 		try self.init()
-        try write(buffer, length: buffer.count)
+        let bufferBuffer = buffer.buffer
+        _ = try bufferBuffer.withUnsafeBytes {
+            try write(from: UnsafeBufferPointer<UInt8>(start: $0, count: bufferBuffer.count))
+        }
+        
 	}
 
 	// TODO: crash???
@@ -46,37 +51,40 @@ public class IO {
 	public var shouldRetry: Bool {
 		return (bio!.pointee.flags & BIO_FLAGS_SHOULD_RETRY) != 0
 	}
-
-	@discardableResult
-    public func write(_ data: Data, length: Int) throws -> Int {
-		let result = data.withUnsafeBytes {
-			BIO_write(bio, $0, Int32(length))
-		}
-
-		if result < 0 {
-			if shouldRetry {
-				throw SSLIOError.shouldRetry(description: lastSSLErrorDescription)
-			} else {
-				throw SSLIOError.io(description: lastSSLErrorDescription)
-			}
-		}
-
-		return Int(result)
-	}
-
-    public func read(into buffer: inout Data, length: Int) throws -> Int {
-		let result = buffer.withUnsafeMutableBytes {
-			BIO_read(bio, $0, Int32(length))
-		}
-
-		if result < 0 {
-			if shouldRetry {
-				throw SSLIOError.shouldRetry(description: lastSSLErrorDescription)
-			} else {
-				throw SSLIOError.io(description: lastSSLErrorDescription)
-			}
-		}
-
-		return Int(result)
-	}
+    
+    public func write(from: UnsafeBufferPointer<UInt8>) throws -> Int {
+        guard !from.isEmpty else {
+            return 0
+        }
+        
+        let bytesWritten = BIO_write(bio, from.baseAddress!, Int32(from.count))
+        
+        guard bytesWritten >= 0 else {
+            if shouldRetry {
+                throw SSLIOError.shouldRetry(description: lastSSLErrorDescription)
+            } else {
+                throw SSLIOError.io(description: lastSSLErrorDescription)
+            }
+        }
+        
+        return Int(bytesWritten)
+    }
+    
+    public func read(into: UnsafeMutableBufferPointer<UInt8>) throws -> Int {
+        guard !into.isEmpty else {
+            return 0
+        }
+        
+        let bytesRead = BIO_read(bio, into.baseAddress!, Int32(into.count))
+        
+        guard bytesRead >= 0 else {
+            if shouldRetry {
+                throw SSLIOError.shouldRetry(description: lastSSLErrorDescription)
+            } else {
+                throw SSLIOError.io(description: lastSSLErrorDescription)
+            }
+        }
+        
+        return Int(bytesRead)
+    }
 }

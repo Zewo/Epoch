@@ -1,4 +1,5 @@
 import COpenSSL
+import Core
 
 public enum SSLSessionError: Error {
     case session(description: String)
@@ -97,37 +98,55 @@ public class SSLSession {
 			}
 		}
 	}
-
-    public func write(_ data: Data, length: Int) -> Int {
-		let result = data.withUnsafeBytes {
-			SSL_write(ssl, $0, Int32(length))
-		}
-        // TODO: Deal with errors.
-        return Int(result)
-	}
-
-    public func read(into buffer: inout Data, length: Int) throws -> Int {
-		let result = buffer.withUnsafeMutableBytes {
-			SSL_read(ssl, $0, Int32(length))
-		}
-
-		if result <= 0 {
-			let error = SSL_get_error(ssl, result)
-			switch error {
-			case SSL_ERROR_WANT_READ:
-				throw SSLSessionError.wantRead(description: lastSSLErrorDescription)
-			case SSL_ERROR_WANT_WRITE:
-				throw SSLSessionError.wantWrite(description: lastSSLErrorDescription)
-			case SSL_ERROR_ZERO_RETURN:
-				throw SSLSessionError.zeroReturn(description: lastSSLErrorDescription)
-			default:
-				throw SSLSessionError.session(description: lastSSLErrorDescription)
-			}
-		}
-
-		return Int(result)
-	}
-
+    
+    public func write(from: UnsafeBufferPointer<UInt8>) throws -> Int {
+        guard !from.isEmpty else {
+            return 0
+        }
+        
+        let bytesWritten = SSL_write(ssl, from.baseAddress!, Int32(from.count))
+        
+        guard bytesWritten > 0 else {
+            let error = SSL_get_error(ssl, bytesWritten)
+            switch error {
+            case SSL_ERROR_WANT_READ:
+                throw SSLSessionError.wantRead(description: lastSSLErrorDescription)
+            case SSL_ERROR_WANT_WRITE:
+                throw SSLSessionError.wantWrite(description: lastSSLErrorDescription)
+            case SSL_ERROR_ZERO_RETURN:
+                throw SSLSessionError.zeroReturn(description: lastSSLErrorDescription)
+            default:
+                throw SSLSessionError.session(description: lastSSLErrorDescription)
+            }
+        }
+        
+        return Int(bytesWritten)
+    }
+    
+    public func read(into: UnsafeMutableBufferPointer<UInt8>) throws -> Int {
+        guard !into.isEmpty else {
+            return 0
+        }
+        
+        let bytesRead = SSL_read(ssl, into.baseAddress!, Int32(into.count))
+        
+        guard bytesRead > 0 else {
+            let error = SSL_get_error(ssl, bytesRead)
+            switch error {
+            case SSL_ERROR_WANT_READ:
+                throw SSLSessionError.wantRead(description: lastSSLErrorDescription)
+            case SSL_ERROR_WANT_WRITE:
+                throw SSLSessionError.wantWrite(description: lastSSLErrorDescription)
+            case SSL_ERROR_ZERO_RETURN:
+                throw SSLSessionError.zeroReturn(description: lastSSLErrorDescription)
+            default:
+                throw SSLSessionError.session(description: lastSSLErrorDescription)
+            }
+        }
+        
+        return Int(bytesRead)
+    }
+    
 	public func shutdown() {
 		SSL_shutdown(ssl)
 		SSL_free(ssl)
