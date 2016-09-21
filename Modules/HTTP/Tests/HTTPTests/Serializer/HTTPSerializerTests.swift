@@ -74,7 +74,7 @@ public class HTTPSerializerTests : XCTestCase {
         bodyStream.close()
         XCTAssertEqual(bodyStream.closed, true)
         do {
-            try bodyStream.write(from: Buffer())
+            try bodyStream.write(from: Buffer([1,2,3]))
             XCTFail()
         } catch {}
         bodyStream.closed = false
