@@ -3,16 +3,16 @@ import XCTest
 
 public class URLEncodedFormParserTests : XCTestCase {
     func testSingleValue() throws {
-        let data = Data("key=value")
-        let urlEncodedForm = try URLEncodedFormParser().parse(data: data)
+        let buffer = Buffer("key=value")
+        let urlEncodedForm = try URLEncodedFormParser().parse(buffer: buffer)
 
         XCTAssertEqual(urlEncodedForm.values.count, 1)
         XCTAssertEqual(urlEncodedForm.values["key"], "value")
     }
 
     func testMultipleValues() throws {
-        let data = Data("key1=value1&key2=value2")
-        let urlEncodedForm = try URLEncodedFormParser().parse(data: data)
+        let buffer = Buffer("key1=value1&key2=value2")
+        let urlEncodedForm = try URLEncodedFormParser().parse(buffer: buffer)
 
         XCTAssertEqual(urlEncodedForm.values.count, 2)
         XCTAssertEqual(urlEncodedForm.values["key1"], "value1")
@@ -20,8 +20,8 @@ public class URLEncodedFormParserTests : XCTestCase {
     }
 
     func testEmptyValues() throws {
-        let data = Data("key1=value1&empty1=&key2=value2&empty2=")
-        let urlEncodedForm = try URLEncodedFormParser().parse(data: data)
+        let buffer = Buffer("key1=value1&empty1=&key2=value2&empty2=")
+        let urlEncodedForm = try URLEncodedFormParser().parse(buffer: buffer)
 
         XCTAssertEqual(urlEncodedForm.values.count, 4)
         XCTAssertEqual(urlEncodedForm.values["key1"], "value1")
@@ -31,19 +31,19 @@ public class URLEncodedFormParserTests : XCTestCase {
     }
 
     func testMissingEqualSymbol() throws {
-        var data = Data("key")
-        XCTAssertNil(try? URLEncodedFormParser().parse(data: data))
+        var buffer = Buffer("key")
+        XCTAssertNil(try? URLEncodedFormParser().parse(buffer: buffer))
 
-        data = Data("key1&key2=value2")
-        XCTAssertNil(try? URLEncodedFormParser().parse(data: data))
+        buffer = Buffer("key1&key2=value2")
+        XCTAssertNil(try? URLEncodedFormParser().parse(buffer: buffer))
 
-        data = Data("key1=value1&key2")
-        XCTAssertNil(try? URLEncodedFormParser().parse(data: data))
+        buffer = Buffer("key1=value1&key2")
+        XCTAssertNil(try? URLEncodedFormParser().parse(buffer: buffer))
     }
 
     func testPercentEncoding() throws {
-        let data = Data("user%2Bemail=test%40example.com")
-        let urlEncodedForm = try URLEncodedFormParser().parse(data: data)
+        let buffer = Buffer("user%2Bemail=test%40example.com")
+        let urlEncodedForm = try URLEncodedFormParser().parse(buffer: buffer)
 
         XCTAssertEqual(urlEncodedForm.values.count, 1)
         XCTAssertEqual(urlEncodedForm.values["user+email"], "test@example.com")
