@@ -89,6 +89,7 @@ extension Buffer {
 extension Buffer: Equatable {    
 }
 
+// TODO: optimize this
 public func ==(lhs: Buffer, rhs: Buffer) -> Bool {
     return lhs.hexadecimalString() == rhs.hexadecimalString()
 }
