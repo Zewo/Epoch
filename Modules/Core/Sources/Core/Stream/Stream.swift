@@ -12,30 +12,7 @@ public protocol InputStream {
 
 extension InputStream {
     public func read(upTo count: Int, deadline: Double = .never) throws -> Buffer {
-        let bytes = UnsafeMutablePointer<UInt8>.allocate(capacity: count)
-        let bytesRead = try read(upTo: count, into: bytes, deadline: deadline)
-        
-        // no bytes
-        guard  bytesRead > 0 else {
-            defer {
-                bytes.deallocate(capacity: count)
-            }
-            return Buffer.empty
-        }
-        
-        let buffer = UnsafeBufferPointer(start: bytes, count: bytesRead)
-        
-        // bytes less than 25% of count
-        guard Double(bytesRead) > Double(count) * 0.25 else {
-            defer {
-                bytes.deallocate(capacity: count)
-            }
-            return Buffer(bytes: buffer)
-        }
-        
-        return Buffer(bytesNoCopy: buffer, deallocator: .custom(nil, {
-            bytes.deallocate(capacity: count)
-        }))
+        return try Buffer(capacity: count) { try read(upTo: count, into: $0.baseAddress!, deadline: deadline) }
     }
     public func read(upTo count: Int, into: UnsafeMutablePointer<UInt8>, deadline: Double = .never) throws -> Int {
         return try read(upTo: count, into: into, deadline: deadline)
