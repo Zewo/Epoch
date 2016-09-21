@@ -107,7 +107,7 @@ public class TrieRouteMatcherTests : XCTestCase {
             guard let buffer = try? body?.becomeBuffer() else {
                 return false
             }
-            return buffer == expectedResponse.data
+            return buffer == expectedResponse.buffer
         }
 
         let helloWorld = Request(method: .get, url: "/hello/world")!
@@ -182,7 +182,7 @@ public class TrieRouteMatcherTests : XCTestCase {
             guard let buffer = try? body?.becomeBuffer() else {
                 return false
             }
-            return buffer == expectedResponse.data
+            return buffer == expectedResponse.buffer
         }
 
         XCTAssert(route("/a/s/d/f", expectedResponse: "wild"))
