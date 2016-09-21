@@ -1,4 +1,6 @@
 import COpenSSL
+import Core
+
 
 internal extension Hash.Function {
 	var digestLength: Int {
@@ -64,56 +66,63 @@ public struct Hash {
 
 	// MARK: - Hash
 
-	public static func hash(_ function: Function, message: Data) -> Data {
+	public static func hash(_ function: Function, message: BufferRepresentable) -> Buffer {
 		initialize()
-
-		var hashBuf = Data(count: function.digestLength)
-		_ = message.withUnsafeBytes { ptr in
-			hashBuf.withUnsafeMutableBytes { bufPtr in
-				function.function(ptr, message.count, bufPtr)
-			}
-		}
-		return hashBuf
+        
+        let messageBuffer = message.buffer
+        return Buffer(count: function.digestLength) { bytesBuffer in
+            _ = messageBuffer.withUnsafeBytes { (messageBytes: UnsafePointer<UInt8>) in
+                function.function(messageBytes, messageBuffer.count, bytesBuffer.baseAddress!)
+            }
+        }
 	}
 
 	// MARK: - HMAC
 
-	public static func hmac(_ function: Function, key: Data, message: Data) -> Data {
+	public static func hmac(_ function: Function, key: BufferRepresentable, message: BufferRepresentable) -> Buffer {
 		initialize()
-
-		var resultLen: UInt32 = 0
-		let result = UnsafeMutablePointer<Byte>.allocate(capacity: Int(EVP_MAX_MD_SIZE))
-		_ = key.withUnsafeBytes { keyPtr in
-			message.withUnsafeBytes { msgPtr in
-				COpenSSL.HMAC(function.evp, keyPtr, Int32(key.count), msgPtr, message.count, result, &resultLen)
-			}
-		}
-		let data = Data(Array(UnsafeBufferPointer<Byte>(start: result, count: Int(resultLen))))
-		result.deinitialize(count: Int(resultLen))
-        result.deallocate(capacity: Int(EVP_MAX_MD_SIZE))
-		return data
+        
+        let keyBuffer = key.buffer
+        let messageBuffer = message.buffer
+        
+        return Buffer(capacity: Int(EVP_MAX_MD_SIZE)) { bytesBuffer in
+            return keyBuffer.withUnsafeBytes { (keyBytes: UnsafePointer<UInt8>) -> Int in
+                return messageBuffer.withUnsafeBytes { (messageBytes: UnsafePointer<UInt8>) -> Int in
+                    var outLength: UInt32 = 0
+                    _ = COpenSSL.HMAC(function.evp,
+                                  keyBytes,
+                                  Int32(keyBuffer.count),
+                                  messageBytes,
+                                  messageBuffer.count,
+                                  bytesBuffer.baseAddress!,
+                                  &outLength)
+                    return Int(outLength)
+                }
+            }
+        }
 	}
 
 	// MARK: - RSA
 
-	public static func rsa(_ function: Function, key: Key, message: Data) throws -> Data {
+	public static func rsa(_ function: Function, key: Key, message: BufferRepresentable) throws -> Buffer {
 		initialize()
 
 		let ctx = EVP_MD_CTX_create()
 		guard ctx != nil else {
 			throw HashError.error(description: lastSSLErrorDescription)
 		}
+        
+        let messageBuffer = message.buffer
 
-        return message.withUnsafeBytes { (digestPtr: UnsafePointer<UInt8>) -> Data in
-			EVP_DigestInit_ex(ctx, function.evp, nil)
-			EVP_DigestUpdate(ctx, UnsafeRawPointer(digestPtr), message.count)
-			var signLen: UInt32 = 0
-			var buf = Data(count: Int(EVP_PKEY_size(key.key)))
-			_ = buf.withUnsafeMutableBytes { ptr in
-				EVP_SignFinal(ctx, ptr, &signLen, key.key)
-			}
-			return Data(buf.prefix(Int(signLen)))
-		}
+        return Buffer(capacity: Int(EVP_PKEY_size(key.key))) { bytesBuffer in
+            return messageBuffer.withUnsafeBytes { (messageBytes: UnsafePointer<UInt8>) -> Int in
+                EVP_DigestInit_ex(ctx, function.evp, nil)
+                EVP_DigestUpdate(ctx, UnsafeRawPointer(messageBytes), messageBuffer.count)
+                var outLength: UInt32 = 0
+                EVP_SignFinal(ctx, bytesBuffer.baseAddress!, &outLength, key.key)
+                return Int(outLength)
+            }
+        }
 	}
 
 }
