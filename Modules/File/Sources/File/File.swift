@@ -103,7 +103,7 @@ extension File {
         try ensureFileIsOpen()
 
         let bytesWritten = buffer.withUnsafeBytes {
-            filewrite(file, $0, length, deadline.int64milliseconds)
+            filewrite(file, $0, buffer.count, deadline.int64milliseconds)
         }
 
         guard bytesWritten > 0 else {
