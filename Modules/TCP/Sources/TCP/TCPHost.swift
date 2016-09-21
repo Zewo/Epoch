@@ -19,4 +19,10 @@ public final class TCPHost : Host {
         try ensureLastOperationSucceeded()
         return try TCPConnection(with: socket!)
     }
+    
+    deinit {
+        if let socket = socket {
+            tcpclose(socket)
+        }
+    }
 }
