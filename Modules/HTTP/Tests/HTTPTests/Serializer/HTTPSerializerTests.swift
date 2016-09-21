@@ -17,7 +17,7 @@ public class HTTPSerializerTests : XCTestCase {
         let inStream = Drain(buffer: Buffer("foo"))
         let outStream = Drain()
         let serializer = ResponseSerializer(stream: outStream)
-        let response = Response(body: inStream.buffer)
+        let response = Response(body: inStream as Core.Stream)
 
         try serializer.serialize(response)
         XCTAssertEqual(outStream.buffer, Buffer("HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n3\r\nfoo\r\n0\r\n\r\n"))
