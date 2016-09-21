@@ -29,7 +29,13 @@ extension Buffer {
     public init() {
         self = Buffer.empty
     }
-    public init(capacity: Int, fill: (UnsafeMutableBufferPointer<UInt8>) throws -> Int) throws {
+    public init(count: Int, fill: (UnsafeMutableBufferPointer<UInt8>) throws -> Void) rethrows {
+        self = try Buffer(capacity: count) {
+            try fill($0)
+            return count
+        }
+    }
+    public init(capacity: Int, fill: (UnsafeMutableBufferPointer<UInt8>) throws -> Int) rethrows {
         let bytes = UnsafeMutablePointer<UInt8>.allocate(capacity: capacity)
         let buffer = UnsafeMutableBufferPointer(start: bytes, count: capacity)
         let usedCapacity = try fill(buffer)

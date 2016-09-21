@@ -26,7 +26,7 @@ public final class Drain : BufferRepresentable, Stream {
         closed = true
     }
     
-    public func read(upTo count: Int, into: UnsafeMutablePointer<UInt8>, deadline: Double) throws -> Int {
+    public func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double = .never) throws -> Int {
         if closed && buffer.count == 0 {
             throw StreamError.closedStream(buffer: Buffer.empty)
         }
@@ -35,8 +35,12 @@ public final class Drain : BufferRepresentable, Stream {
             return 0
         }
         
-        let read = min(buffer.count, count)
-        buffer.copyBytes(to: into, count: read)
+        guard !into.isEmpty else {
+            return 0
+        }
+        
+        let read = min(buffer.count, into.count)
+        buffer.copyBytes(to: into.baseAddress!, count: read)
         
         if buffer.count > read {
             buffer = buffer.subdata(in: buffer.startIndex.advanced(by: read)..<buffer.endIndex)
@@ -47,8 +51,8 @@ public final class Drain : BufferRepresentable, Stream {
         return read
     }
     
-    public func write(_ chunk: Buffer, deadline: Double) throws -> Buffer? {
-        buffer.append(chunk)
+    public func write(_ buffer: Buffer, deadline: Double = .never) throws -> Buffer? {
+        self.buffer.append(buffer)
         return nil
     }
 

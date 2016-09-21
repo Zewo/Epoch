@@ -99,7 +99,7 @@ public final class File : Stream {
 }
 
 extension File {
-    public func write(_ buffer: Buffer, deadline: Double) throws -> Buffer? {
+    public func write(_ buffer: Buffer, deadline: Double = .never) throws -> Buffer? {
         try ensureFileIsOpen()
 
         let bytesWritten = buffer.withUnsafeBytes {
@@ -114,10 +114,14 @@ extension File {
         return buffer.subdata(in: buffer.startIndex.advanced(by: bytesWritten)..<buffer.endIndex)
     }
 
-    public func read(upTo count: Int, into: UnsafeMutablePointer<UInt8>, deadline: Double) throws -> Int {
+    public func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double = .never) throws -> Int {
+        guard !into.isEmpty else {
+            return 0
+        }
+        
         try ensureFileIsOpen()
         
-        let bytesRead = filereadlh(file, into, 1, count, deadline.int64milliseconds)
+        let bytesRead = filereadlh(file, into.baseAddress!, 1, into.count, deadline.int64milliseconds)
         
         if bytesRead == 0 {
             try ensureLastOperationSucceeded()
