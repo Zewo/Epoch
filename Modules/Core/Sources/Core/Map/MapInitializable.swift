@@ -62,12 +62,12 @@ extension String : MapInitializable {
     }
 }
 
-extension Data : MapInitializable {
+extension Buffer : MapInitializable {
     public init(map: Map) throws {
-        guard case .data(let data) = map else {
-            throw MapError.cannotInitialize(type: Data.self, from: try type(of: map.get()))
+        guard case .buffer(let buffer) = map else {
+            throw MapError.cannotInitialize(type: Buffer.self, from: try type(of: map.get()))
         }
-        self = data
+        self = buffer
     }
 }
 

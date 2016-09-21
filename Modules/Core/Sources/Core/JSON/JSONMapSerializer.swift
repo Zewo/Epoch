@@ -7,8 +7,8 @@ public struct JSONMapSerializer : MapSerializer {
         self.ordering = ordering
     }
 
-    public func serialize(_ map: Map) throws -> Data {
-        return try Data(serializeToString(map))
+    public func serialize(_ map: Map) throws -> Buffer {
+        return try Buffer(serializeToString(map))
     }
 
     public func serializeToString(_ map: Map) throws -> String {
