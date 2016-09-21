@@ -51,9 +51,8 @@ public final class Drain : BufferRepresentable, Stream {
         return read
     }
     
-    public func write(from: UnsafeBufferPointer<UInt8>, deadline: Double = .never) throws -> Int {
+    public func write(from: UnsafeBufferPointer<UInt8>, deadline: Double = .never) {
         self.buffer.append(Buffer(bytes: from))
-        return from.count
     }
 
     public func flush(deadline: Double = .never) throws {}

@@ -117,8 +117,16 @@ public final class SSLConnection : Connection {
     }
 
     
-    public func write(from: UnsafeBufferPointer<UInt8>, deadline: Double = .never) throws -> Int {
-        return try session.write(from: from)
+    public func write(from: UnsafeBufferPointer<UInt8>, deadline: Double = .never) throws {
+        var remaining = from
+        while !remaining.isEmpty {
+            let bytesWritten = try session.write(from: remaining)
+            guard bytesWritten != remaining.count else {
+                return
+            }
+            remaining = UnsafeBufferPointer(start: remaining.baseAddress!.advanced(by: bytesWritten),
+                                            count: remaining.count - bytesWritten)
+        }
     }
     
 	public func flush(deadline: Double) throws {
