@@ -99,19 +99,22 @@ public final class File : Stream {
 }
 
 extension File {
-    public func write(_ buffer: Buffer, deadline: Double = .never) throws -> Buffer? {
-        try ensureFileIsOpen()
-
-        let bytesWritten = buffer.withUnsafeBytes {
-            filewrite(file, $0, buffer.count, deadline.int64milliseconds)
+    
+    public func write(from: UnsafeBufferPointer<UInt8>, deadline: Double = .never) throws -> Int {
+        guard !from.isEmpty else {
+            return 0
         }
-
+        
+        try ensureFileIsOpen()
+        
+        let bytesWritten = filewrite(file, from.baseAddress!, from.count, deadline.int64milliseconds)
+        
         guard bytesWritten > 0 else {
             try ensureLastOperationSucceeded()
-            return nil
+            return 0
         }
-
-        return buffer.subdata(in: buffer.startIndex.advanced(by: bytesWritten)..<buffer.endIndex)
+        
+        return bytesWritten
     }
 
     public func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double = .never) throws -> Int {
