@@ -7,7 +7,7 @@ public class ResponseTests : XCTestCase {
         XCTAssertEqual(response.status, .ok)
         XCTAssertEqual(response.version, Version(major: 1, minor: 1))
         XCTAssertEqual(response.headers, ["Content-Length": "0"])
-        XCTAssertEqual(response.body, .buffer(Data()))
+        XCTAssertEqual(response.body, .buffer(Buffer()))
 
         response = Response(body: Drain(buffer: "foo") as Core.InputStream)
         XCTAssertEqual(response.status, .ok)
@@ -16,7 +16,7 @@ public class ResponseTests : XCTestCase {
         XCTAssertTrue(response.body.isReader)
 
         response = Response { stream in
-            try stream.write("foo")
+            try stream.write(from: "foo")
             try stream.flush()
         }
         XCTAssertEqual(response.status, .ok)
@@ -29,7 +29,7 @@ public class ResponseTests : XCTestCase {
         XCTAssertEqual(response.status, .ok)
         XCTAssertEqual(response.version, Version(major: 1, minor: 1))
         XCTAssertEqual(response.headers, ["Content-Length": "0"])
-        XCTAssertEqual(response.body, .buffer(Data()))
+        XCTAssertEqual(response.body, .buffer(Buffer()))
     }
 
     func testStatusAccessors() throws {

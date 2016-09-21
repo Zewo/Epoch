@@ -1,3 +1,5 @@
+import Core
+
 public struct HTTPError {}
 
 public enum ClientError : Error {
@@ -93,221 +95,221 @@ extension ClientError : ResponseRepresentable {
 
 extension HTTPError {
     public static var badRequest: ClientError {
-        return ClientError.badRequest(headers: [:], body: .buffer(Data()))
+        return ClientError.badRequest(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var unauthorized: ClientError {
-        return ClientError.unauthorized(headers: [:], body: .buffer(Data()))
+        return ClientError.unauthorized(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var paymentRequired: ClientError {
-        return ClientError.paymentRequired(headers: [:], body: .buffer(Data()))
+        return ClientError.paymentRequired(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var forbidden: ClientError {
-        return ClientError.forbidden(headers: [:], body: .buffer(Data()))
+        return ClientError.forbidden(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var notFound: ClientError {
-        return ClientError.notFound(headers: [:], body: .buffer(Data()))
+        return ClientError.notFound(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var methodNotAllowed: ClientError {
-        return ClientError.methodNotAllowed(headers: [:], body: .buffer(Data()))
+        return ClientError.methodNotAllowed(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var notAcceptable: ClientError {
-        return ClientError.notAcceptable(headers: [:], body: .buffer(Data()))
+        return ClientError.notAcceptable(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var proxyAuthenticationRequired: ClientError {
-        return ClientError.proxyAuthenticationRequired(headers: [:], body: .buffer(Data()))
+        return ClientError.proxyAuthenticationRequired(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var requestTimeout: ClientError {
-        return ClientError.requestTimeout(headers: [:], body: .buffer(Data()))
+        return ClientError.requestTimeout(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var conflict: ClientError {
-        return ClientError.conflict(headers: [:], body: .buffer(Data()))
+        return ClientError.conflict(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var gone: ClientError {
-        return ClientError.gone(headers: [:], body: .buffer(Data()))
+        return ClientError.gone(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var lengthRequired: ClientError {
-        return ClientError.lengthRequired(headers: [:], body: .buffer(Data()))
+        return ClientError.lengthRequired(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var preconditionFailed: ClientError {
-        return ClientError.preconditionFailed(headers: [:], body: .buffer(Data()))
+        return ClientError.preconditionFailed(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var requestEntityTooLarge: ClientError {
-        return ClientError.requestEntityTooLarge(headers: [:], body: .buffer(Data()))
+        return ClientError.requestEntityTooLarge(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var requestURITooLong: ClientError {
-        return ClientError.requestURITooLong(headers: [:], body: .buffer(Data()))
+        return ClientError.requestURITooLong(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var unsupportedMediaType: ClientError {
-        return ClientError.unsupportedMediaType(headers: [:], body: .buffer(Data()))
+        return ClientError.unsupportedMediaType(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var requestedRangeNotSatisfiable: ClientError {
-        return ClientError.requestedRangeNotSatisfiable(headers: [:], body: .buffer(Data()))
+        return ClientError.requestedRangeNotSatisfiable(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var expectationFailed: ClientError {
-        return ClientError.expectationFailed(headers: [:], body: .buffer(Data()))
+        return ClientError.expectationFailed(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var imATeapot: ClientError {
-        return ClientError.imATeapot(headers: [:], body: .buffer(Data()))
+        return ClientError.imATeapot(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var authenticationTimeout: ClientError {
-        return ClientError.authenticationTimeout(headers: [:], body: .buffer(Data()))
+        return ClientError.authenticationTimeout(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var enhanceYourCalm: ClientError {
-        return ClientError.enhanceYourCalm(headers: [:], body: .buffer(Data()))
+        return ClientError.enhanceYourCalm(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var unprocessableEntity: ClientError {
-        return ClientError.unprocessableEntity(headers: [:], body: .buffer(Data()))
+        return ClientError.unprocessableEntity(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var locked: ClientError {
-        return ClientError.locked(headers: [:], body: .buffer(Data()))
+        return ClientError.locked(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var failedDependency: ClientError {
-        return ClientError.failedDependency(headers: [:], body: .buffer(Data()))
+        return ClientError.failedDependency(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var preconditionRequired: ClientError {
-        return ClientError.preconditionRequired(headers: [:], body: .buffer(Data()))
+        return ClientError.preconditionRequired(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var tooManyRequests: ClientError {
-        return ClientError.tooManyRequests(headers: [:], body: .buffer(Data()))
+        return ClientError.tooManyRequests(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var requestHeaderFieldsTooLarge: ClientError {
-        return ClientError.requestHeaderFieldsTooLarge(headers: [:], body: .buffer(Data()))
+        return ClientError.requestHeaderFieldsTooLarge(headers: [:], body: .buffer(Buffer()))
     }
 }
 
 extension HTTPError {
-    public static func badRequest(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.badRequest(headers: headers, body: .buffer(body))
+    public static func badRequest(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.badRequest(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func unauthorized(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.unauthorized(headers: headers, body: .buffer(body))
+    public static func unauthorized(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.unauthorized(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func paymentRequired(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.paymentRequired(headers: headers, body: .buffer(body))
+    public static func paymentRequired(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.paymentRequired(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func forbidden(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.forbidden(headers: headers, body: .buffer(body))
+    public static func forbidden(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.forbidden(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func notFound(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.notFound(headers: headers, body: .buffer(body))
+    public static func notFound(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.notFound(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func methodNotAllowed(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.methodNotAllowed(headers: headers, body: .buffer(body))
+    public static func methodNotAllowed(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.methodNotAllowed(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func notAcceptable(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.notAcceptable(headers: headers, body: .buffer(body))
+    public static func notAcceptable(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.notAcceptable(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func proxyAuthenticationRequired(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.proxyAuthenticationRequired(headers: headers, body: .buffer(body))
+    public static func proxyAuthenticationRequired(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.proxyAuthenticationRequired(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func requestTimeout(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.requestTimeout(headers: headers, body: .buffer(body))
+    public static func requestTimeout(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.requestTimeout(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func conflict(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.conflict(headers: headers, body: .buffer(body))
+    public static func conflict(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.conflict(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func gone(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.gone(headers: headers, body: .buffer(body))
+    public static func gone(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.gone(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func lengthRequired(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.lengthRequired(headers: headers, body: .buffer(body))
+    public static func lengthRequired(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.lengthRequired(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func preconditionFailed(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.preconditionFailed(headers: headers, body: .buffer(body))
+    public static func preconditionFailed(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.preconditionFailed(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func requestEntityTooLarge(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.requestEntityTooLarge(headers: headers, body: .buffer(body))
+    public static func requestEntityTooLarge(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.requestEntityTooLarge(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func requestURITooLong(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.requestURITooLong(headers: headers, body: .buffer(body))
+    public static func requestURITooLong(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.requestURITooLong(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func unsupportedMediaType(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.unsupportedMediaType(headers: headers, body: .buffer(body))
+    public static func unsupportedMediaType(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.unsupportedMediaType(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func requestedRangeNotSatisfiable(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.requestedRangeNotSatisfiable(headers: headers, body: .buffer(body))
+    public static func requestedRangeNotSatisfiable(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.requestedRangeNotSatisfiable(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func expectationFailed(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.expectationFailed(headers: headers, body: .buffer(body))
+    public static func expectationFailed(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.expectationFailed(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func imATeapot(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.imATeapot(headers: headers, body: .buffer(body))
+    public static func imATeapot(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.imATeapot(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func authenticationTimeout(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.authenticationTimeout(headers: headers, body: .buffer(body))
+    public static func authenticationTimeout(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.authenticationTimeout(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func enhanceYourCalm(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.enhanceYourCalm(headers: headers, body: .buffer(body))
+    public static func enhanceYourCalm(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.enhanceYourCalm(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func unprocessableEntity(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.unprocessableEntity(headers: headers, body: .buffer(body))
+    public static func unprocessableEntity(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.unprocessableEntity(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func locked(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.locked(headers: headers, body: .buffer(body))
+    public static func locked(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.locked(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func failedDependency(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.failedDependency(headers: headers, body: .buffer(body))
+    public static func failedDependency(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.failedDependency(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func preconditionRequired(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.preconditionRequired(headers: headers, body: .buffer(body))
+    public static func preconditionRequired(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.preconditionRequired(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func tooManyRequests(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.tooManyRequests(headers: headers, body: .buffer(body))
+    public static func tooManyRequests(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.tooManyRequests(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func requestHeaderFieldsTooLarge(headers: Headers = [:], body: Data) -> ClientError {
-        return ClientError.requestHeaderFieldsTooLarge(headers: headers, body: .buffer(body))
+    public static func requestHeaderFieldsTooLarge(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ClientError {
+        return ClientError.requestHeaderFieldsTooLarge(headers: headers, body: .buffer(body.buffer))
     }
 }
 
@@ -356,92 +358,92 @@ extension ServerError : ResponseRepresentable {
 
 extension HTTPError {
     public static var internalServerError: ServerError {
-        return ServerError.internalServerError(headers: [:], body: .buffer(Data()))
+        return ServerError.internalServerError(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var notImplemented: ServerError {
-        return ServerError.notImplemented(headers: [:], body: .buffer(Data()))
+        return ServerError.notImplemented(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var badGateway: ServerError {
-        return ServerError.badGateway(headers: [:], body: .buffer(Data()))
+        return ServerError.badGateway(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var serviceUnavailable: ServerError {
-        return ServerError.serviceUnavailable(headers: [:], body: .buffer(Data()))
+        return ServerError.serviceUnavailable(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var gatewayTimeout: ServerError {
-        return ServerError.gatewayTimeout(headers: [:], body: .buffer(Data()))
+        return ServerError.gatewayTimeout(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var httpVersionNotSupported: ServerError {
-        return ServerError.httpVersionNotSupported(headers: [:], body: .buffer(Data()))
+        return ServerError.httpVersionNotSupported(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var variantAlsoNegotiates: ServerError {
-        return ServerError.variantAlsoNegotiates(headers: [:], body: .buffer(Data()))
+        return ServerError.variantAlsoNegotiates(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var insufficientStorage: ServerError {
-        return ServerError.insufficientStorage(headers: [:], body: .buffer(Data()))
+        return ServerError.insufficientStorage(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var loopDetected: ServerError {
-        return ServerError.loopDetected(headers: [:], body: .buffer(Data()))
+        return ServerError.loopDetected(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var notExtended: ServerError {
-        return ServerError.notExtended(headers: [:], body: .buffer(Data()))
+        return ServerError.notExtended(headers: [:], body: .buffer(Buffer()))
     }
 
     public static var networkAuthenticationRequired: ServerError {
-        return ServerError.networkAuthenticationRequired(headers: [:], body: .buffer(Data()))
+        return ServerError.networkAuthenticationRequired(headers: [:], body: .buffer(Buffer()))
     }
 }
 
 extension HTTPError {
-    public static func internalServerError(headers: Headers = [:], body: Data) -> ServerError {
-        return ServerError.internalServerError(headers: headers, body: .buffer(body))
+    public static func internalServerError(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ServerError {
+        return ServerError.internalServerError(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func notImplemented(headers: Headers = [:], body: Data) -> ServerError {
-        return ServerError.notImplemented(headers: headers, body: .buffer(body))
+    public static func notImplemented(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ServerError {
+        return ServerError.notImplemented(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func badGateway(headers: Headers = [:], body: Data) -> ServerError {
-        return ServerError.badGateway(headers: headers, body: .buffer(body))
+    public static func badGateway(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ServerError {
+        return ServerError.badGateway(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func serviceUnavailable(headers: Headers = [:], body: Data) -> ServerError {
-        return ServerError.serviceUnavailable(headers: headers, body: .buffer(body))
+    public static func serviceUnavailable(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ServerError {
+        return ServerError.serviceUnavailable(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func gatewayTimeout(headers: Headers = [:], body: Data) -> ServerError {
-        return ServerError.gatewayTimeout(headers: headers, body: .buffer(body))
+    public static func gatewayTimeout(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ServerError {
+        return ServerError.gatewayTimeout(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func httpVersionNotSupported(headers: Headers = [:], body: Data) -> ServerError {
-        return ServerError.httpVersionNotSupported(headers: headers, body: .buffer(body))
+    public static func httpVersionNotSupported(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ServerError {
+        return ServerError.httpVersionNotSupported(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func variantAlsoNegotiates(headers: Headers = [:], body: Data) -> ServerError {
-        return ServerError.variantAlsoNegotiates(headers: headers, body: .buffer(body))
+    public static func variantAlsoNegotiates(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ServerError {
+        return ServerError.variantAlsoNegotiates(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func insufficientStorage(headers: Headers = [:], body: Data) -> ServerError {
-        return ServerError.insufficientStorage(headers: headers, body: .buffer(body))
+    public static func insufficientStorage(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ServerError {
+        return ServerError.insufficientStorage(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func loopDetected(headers: Headers = [:], body: Data) -> ServerError {
-        return ServerError.loopDetected(headers: headers, body: .buffer(body))
+    public static func loopDetected(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ServerError {
+        return ServerError.loopDetected(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func notExtended(headers: Headers = [:], body: Data) -> ServerError {
-        return ServerError.notExtended(headers: headers, body: .buffer(body))
+    public static func notExtended(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ServerError {
+        return ServerError.notExtended(headers: headers, body: .buffer(body.buffer))
     }
 
-    public static func networkAuthenticationRequired(headers: Headers = [:], body: Data) -> ServerError {
-        return ServerError.networkAuthenticationRequired(headers: headers, body: .buffer(body))
+    public static func networkAuthenticationRequired(headers: Headers = [:], body: BufferRepresentable = Buffer()) -> ServerError {
+        return ServerError.networkAuthenticationRequired(headers: headers, body: .buffer(body.buffer))
     }
 }

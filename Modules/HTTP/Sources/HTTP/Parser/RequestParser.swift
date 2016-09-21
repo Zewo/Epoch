@@ -7,7 +7,7 @@ struct RequestParserContext {
     var url: URL! = nil
     var version: Version = Version(major: 0, minor: 0)
     var headers: Headers = Headers([:])
-    var body: Data = Data()
+    var body: Buffer = Buffer()
 
     var currentURI = ""
     var buildingHeaderName = ""
@@ -38,13 +38,13 @@ public final class RequestParser {
     let context: RequestContext
     var parser = http_parser()
     var requests: [Request] = []
-    var buffer: Data
+    var bufferSize: Int
 
     public init(stream: Stream, bufferSize: Int = 2048) {
         self.stream = stream
-        self.buffer = Data(count: bufferSize)
+        self.bufferSize = bufferSize
         self.context = RequestContext.allocate(capacity: 1)
-        self.context.initialize(to: RequestParserContext { request in
+        self.context.initialize(to: RequestParserContext { [unowned self] request in
             self.requests.insert(request, at: 0)
         })
 
@@ -66,12 +66,12 @@ public final class RequestParser {
                 return request
             }
 
-            let bytesRead = try stream.read(into: &buffer)
+            let buffer = try stream.read(upTo: bufferSize)
             let bytesParsed = buffer.withUnsafeBytes {
-                http_parser_execute(&parser, &requestSettings, $0, bytesRead)
+                http_parser_execute(&parser, &requestSettings, $0, buffer.count)
             }
-
-            guard bytesParsed == bytesRead else {
+            
+            guard bytesParsed == buffer.count else {
                 defer { resetParser() }
                 throw http_errno(parser.http_errno)
             }
@@ -160,7 +160,7 @@ func onRequestMessageComplete(_ parser: Parser?) -> Int32 {
         $0.url = nil
         $0.version = Version(major: 0, minor: 0)
         $0.headers = Headers([:])
-        $0.body = Data()
+        $0.body = Buffer()
         return 0
     }
 }

@@ -8,7 +8,7 @@ public class RequestTests : XCTestCase {
         XCTAssertEqual(request.url, URL(string: "/"))
         XCTAssertEqual(request.version, Version(major: 1, minor: 1))
         XCTAssertEqual(request.headers, ["Content-Length": "0"])
-        XCTAssertEqual(request.body, .buffer(Data()))
+        XCTAssertEqual(request.body, .buffer(Buffer()))
 
         request = Request(body: Drain(buffer: "foo") as Core.InputStream)
         XCTAssertEqual(request.method, .get)
@@ -18,7 +18,7 @@ public class RequestTests : XCTestCase {
         XCTAssertTrue(request.body.isReader)
 
         request = Request { stream in
-            try stream.write("foo")
+            try stream.write(from: "foo")
             try stream.flush()
         }
         XCTAssertEqual(request.method, .get)
@@ -33,14 +33,14 @@ public class RequestTests : XCTestCase {
         XCTAssertEqual(request.url, URL(string: "/"))
         XCTAssertEqual(request.version, Version(major: 1, minor: 1))
         XCTAssertEqual(request.headers, ["Content-Length": "0"])
-        XCTAssertEqual(request.body, .buffer(Data()))
+        XCTAssertEqual(request.body, .buffer(Buffer()))
 
         request = Request(url: "/")!
         XCTAssertEqual(request.method, .get)
         XCTAssertEqual(request.url, URL(string: "/"))
         XCTAssertEqual(request.version, Version(major: 1, minor: 1))
         XCTAssertEqual(request.headers, ["Content-Length": "0"])
-        XCTAssertEqual(request.body, .buffer(Data()))
+        XCTAssertEqual(request.body, .buffer(Buffer()))
 
         request = Request(url: "/", body: Drain(buffer: "foo") as Core.InputStream)!
         XCTAssertEqual(request.method, .get)
@@ -50,7 +50,7 @@ public class RequestTests : XCTestCase {
         XCTAssertTrue(request.body.isReader)
 
         request = Request(url: "/") { stream in
-            try stream.write("foo")
+            try stream.write(from: "foo")
             try stream.flush()
         }!
         XCTAssertEqual(request.method, .get)

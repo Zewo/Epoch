@@ -33,12 +33,12 @@ public struct ContentNegotiationMiddleware : Middleware {
         return parsers
     }
 
-    public func parse(_ data: Data, mediaType: MediaType) throws -> (MediaType, Map) {
+    public func parse(_ buffer: Buffer, mediaType: MediaType) throws -> (MediaType, Map) {
         var lastError: Error?
 
         for (mediaType, parser) in parsersFor(mediaType) {
             do {
-                return try (mediaType, parser.parse(data))
+                return try (mediaType, parser.parse(buffer))
             } catch {
                 lastError = error
                 continue
@@ -64,11 +64,11 @@ public struct ContentNegotiationMiddleware : Middleware {
         return serializers
     }
 
-    public func serialize(_ content: Map) throws -> (MediaType, Data) {
+    public func serialize(_ content: Map) throws -> (MediaType, Buffer) {
         return try serialize(content, mediaTypes: mediaTypes)
     }
 
-    func serialize(_ content: Map, mediaTypes: [MediaType]) throws -> (MediaType, Data) {
+    func serialize(_ content: Map, mediaTypes: [MediaType]) throws -> (MediaType, Buffer) {
         var lastError: Error?
 
         for acceptedType in mediaTypes {

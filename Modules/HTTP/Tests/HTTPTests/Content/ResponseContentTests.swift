@@ -14,7 +14,7 @@ public class ResponseContentTests : XCTestCase {
         let response = Response(content: content)
         XCTAssertEqual(response.status, .ok)
         XCTAssertEqual(response.headers, ["Content-Length": "0"])
-        XCTAssertEqual(response.body, .buffer(Data()))
+        XCTAssertEqual(response.body, .buffer(Buffer()))
         XCTAssertEqual(response.content, Map(content))
     }
 
@@ -23,7 +23,7 @@ public class ResponseContentTests : XCTestCase {
         let response = Response(content: content)
         XCTAssertEqual(response.status, .ok)
         XCTAssertEqual(response.headers, ["Content-Length": "0"])
-        XCTAssertEqual(response.body, .buffer(Data()))
+        XCTAssertEqual(response.body, .buffer(Buffer()))
         XCTAssertEqual(response.content, Map(content))
     }
 
@@ -32,7 +32,7 @@ public class ResponseContentTests : XCTestCase {
         let response = Response(content: content)
         XCTAssertEqual(response.status, .ok)
         XCTAssertEqual(response.headers, ["Content-Length": "0"])
-        XCTAssertEqual(response.body, .buffer(Data()))
+        XCTAssertEqual(response.body, .buffer(Buffer()))
         XCTAssertEqual(response.content, Map(content))
     }
 
@@ -41,7 +41,7 @@ public class ResponseContentTests : XCTestCase {
         let response = Response(content: content)
         XCTAssertEqual(response.status, .ok)
         XCTAssertEqual(response.headers, ["Content-Length": "0"])
-        XCTAssertEqual(response.body, .buffer(Data()))
+        XCTAssertEqual(response.body, .buffer(Buffer()))
         XCTAssertEqual(response.content, Map(content))
     }
 
@@ -51,7 +51,7 @@ public class ResponseContentTests : XCTestCase {
         let response = try Response(content: fuu)
         XCTAssertEqual(response.status, .ok)
         XCTAssertEqual(response.headers, ["Content-Length": "0"])
-        XCTAssertEqual(response.body, .buffer(Data()))
+        XCTAssertEqual(response.body, .buffer(Buffer()))
         XCTAssertEqual(response.content, Map(content))
     }
 }

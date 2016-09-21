@@ -119,11 +119,11 @@ extension Response {
         }
     }
 
-    public init(status: Status = .ok, headers: Headers = [:], body: Data = Data()) {
+    public init(status: Status = .ok, headers: Headers = [:], body: BufferRepresentable = Buffer()) {
         self.init(
             status: status,
             headers: headers,
-            body: .buffer(body)
+            body: .buffer(body.buffer)
         )
     }
 
@@ -140,16 +140,6 @@ extension Response {
             status: status,
             headers: headers,
             body: .writer(body)
-        )
-    }
-}
-
-extension Response {
-    public init(status: Status = .ok, headers: Headers = [:], body: DataConvertible) {
-        self.init(
-            status: status,
-            headers: headers,
-            body: body.data
         )
     }
 }

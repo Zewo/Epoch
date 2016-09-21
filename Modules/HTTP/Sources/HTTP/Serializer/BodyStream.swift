@@ -14,22 +14,24 @@ final class BodyStream : Stream {
         closed = true
     }
 
-    func read(into buffer: inout Data, length: Int, deadline: Double) throws -> Int {
+    func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double = .never) throws -> Int {
         throw BodyStreamError.receiveUnsupported
     }
-
-    func write(_ buffer: Data, length: Int, deadline: Double) throws -> Int {
-        if closed {
-            throw StreamError.closedStream(data: buffer)
+    
+    func write(from: UnsafeBufferPointer<UInt8>, deadline: Double = .never) throws {
+        guard !from.isEmpty else {
+            return
         }
-
-        let newLine: Data = Data([13, 10])
-        try transport.write(String(length, radix: 16))
-        try transport.write(newLine)
-        try transport.write(buffer, length: length)
-        try transport.write(newLine)
-
-        return length
+        
+        if closed {
+            throw StreamError.closedStream(buffer: Buffer(bytes: from))
+        }
+        
+        let newLine: [UInt8] = [13, 10]
+        try transport.write(from: newLine, deadline: deadline)
+        try transport.write(from: String(from.count, radix: 16), deadline: deadline)
+        try transport.write(from: from, deadline: deadline)
+        try transport.write(from: newLine, deadline: deadline)
     }
 
     func flush(deadline: Double = .never) throws {

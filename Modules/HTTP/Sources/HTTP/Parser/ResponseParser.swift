@@ -8,7 +8,7 @@ struct ResponseParserContext {
     var version: Version = Version(major: 0, minor: 0)
     var headers: Headers = [:]
     var cookieHeaders: Set<String> = []
-    var body: Data = Data()
+    var body: Buffer = Buffer()
 
     var buildingHeaderName = ""
     var buildingCookieValue = ""
@@ -39,13 +39,13 @@ public final class ResponseParser {
     let context: ResponseContext
     var parser = http_parser()
     var responses: [Response] = []
-    var buffer: Data
+    var bufferSize: Int
 
     public init(stream: Stream, bufferSize: Int = 2048) {
         self.stream = stream
-        self.buffer = Data(count: bufferSize)
+        self.bufferSize = bufferSize
         self.context = ResponseContext.allocate(capacity: 1)
-        self.context.initialize(to: ResponseParserContext { response in
+        self.context.initialize(to: ResponseParserContext { [unowned self] response in
             self.responses.insert(response, at: 0)
         })
 
@@ -62,24 +62,23 @@ public final class ResponseParser {
     }
 
     public func parse(deadline: Double = .never) throws -> Response {
-        var read = 0
-
         while true {
             if let response = responses.popLast() {
                 return response
             }
 
+            let buffer: Buffer
             do {
-                read = try stream.read(into: &buffer, deadline: deadline)
+                buffer = try stream.read(upTo: bufferSize, deadline: deadline)
             } catch StreamError.closedStream {
-                read = 0
+                buffer = Buffer()
             }
 
             let bytesParsed = buffer.withUnsafeBytes {
-                http_parser_execute(&parser, &responseSettings, $0, read)
+                http_parser_execute(&parser, &responseSettings, $0, buffer.count)
             }
 
-            guard bytesParsed == read else {
+            guard bytesParsed == buffer.count else {
                 defer { resetParser() }
                 throw http_errno(parser.http_errno)
             }
@@ -178,7 +177,7 @@ func onResponseMessageComplete(_ parser: Parser?) -> Int32 {
         $0.version = Version(major: 0, minor: 0)
         $0.headers = [:]
         $0.cookieHeaders = []
-        $0.body = Data()
+        $0.body = Buffer()
         return 0
     }
 }

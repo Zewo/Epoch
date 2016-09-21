@@ -18,7 +18,7 @@ extension Request {
             method: method,
             url: url,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = content.map
@@ -29,7 +29,7 @@ extension Request {
             method: method,
             url: url,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = content.map
@@ -40,7 +40,7 @@ extension Request {
             method: method,
             url: url,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = content.map
@@ -51,7 +51,7 @@ extension Request {
             method: method,
             url: url,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = content.map
@@ -62,7 +62,7 @@ extension Request {
             method: method,
             url: url,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = try content.asMap()
@@ -79,7 +79,7 @@ extension Request {
             method: method,
             url: url,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = content.map
@@ -94,7 +94,7 @@ extension Request {
             method: method,
             url: url,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = content.map
@@ -109,7 +109,7 @@ extension Request {
             method: method,
             url: url,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = content.map
@@ -124,7 +124,7 @@ extension Request {
             method: method,
             url: url,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = content.map
@@ -139,7 +139,7 @@ extension Request {
             method: method,
             url: url,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = try content.asMap()

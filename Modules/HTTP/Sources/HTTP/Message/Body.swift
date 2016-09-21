@@ -1,5 +1,5 @@
 public enum Body {
-    case buffer(Data)
+    case buffer(Buffer)
     case reader(InputStream)
     case writer((OutputStream) throws -> Void)
 }
@@ -28,21 +28,21 @@ extension Body {
 }
 
 extension Body {
-    public mutating func becomeBuffer(deadline: Double = .never) throws -> Data {
+    public mutating func becomeBuffer(deadline: Double = .never) throws -> Buffer {
         switch self {
-        case .buffer(let data):
-            return data
+        case .buffer(let buffer):
+            return buffer
         case .reader(let reader):
-            let data = Drain(stream: reader, deadline: deadline).data
-            self = .buffer(data)
-            return data
+            let buffer = Drain(stream: reader, deadline: deadline).buffer
+            self = .buffer(buffer)
+            return buffer
         case .writer(let writer):
             let drain = Drain()
             try writer(drain)
-            let data = drain.data
+            let buffer = drain.buffer
 
-            self = .buffer(data)
-            return data
+            self = .buffer(buffer)
+            return buffer
         }
     }
 
@@ -64,17 +64,17 @@ extension Body {
 
     public mutating func becomeWriter(deadline: Double = .never) throws -> ((OutputStream) throws -> Void) {
         switch self {
-        case .buffer(let data):
+        case .buffer(let buffer):
             let closure: ((OutputStream) throws -> Void) = { writer in
-                try writer.write(data, deadline: deadline)
+                try writer.write(from: buffer, deadline: deadline)
                 try writer.flush()
             }
             self = .writer(closure)
             return closure
         case .reader(let reader):
             let closure: ((OutputStream) throws -> Void) = { writer in
-                let data = Drain(stream: reader, deadline: deadline).data
-                try writer.write(data, deadline: deadline)
+                let buffer = Drain(stream: reader, deadline: deadline).buffer
+                try writer.write(from: buffer, deadline: deadline)
                 try writer.flush()
             }
             self = .writer(closure)

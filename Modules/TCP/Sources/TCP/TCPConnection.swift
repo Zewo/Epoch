@@ -1,4 +1,6 @@
 import CLibvenice
+import Core
+
 
 public final class TCPConnection : Connection {
     public var ip: IP
@@ -23,19 +25,43 @@ public final class TCPConnection : Connection {
         self.closed = false
     }
 
-    public func write(_ buffer: Data, length: Int, deadline: Double) throws -> Int {
+    public func write(from: UnsafeBufferPointer<UInt8>, deadline: Double) throws {
+        guard !from.isEmpty else {
+            return
+        }
+        
         let socket = try getSocket()
         try ensureStreamIsOpen()
-
-        let bytesWritten = buffer.withUnsafeBytes {
-            tcpsend(socket, $0, length, deadline.int64milliseconds)
-        }
-
-        if bytesWritten == 0 {
+        
+        let bytesWritten = tcpsend(socket, from.baseAddress!, from.count, deadline.int64milliseconds)
+        
+        guard bytesWritten == from.count else {
             try ensureLastOperationSucceeded()
+            throw SystemError.other(errorNumber: -1)
         }
-
-        return bytesWritten
+    }
+    
+    public func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int {
+        guard !into.isEmpty else {
+            return 0
+        }
+        
+        let socket = try getSocket()
+        try ensureStreamIsOpen()
+        
+        let bytesRead = tcprecvlh(socket, into.baseAddress!, 1, into.count, deadline.int64milliseconds)
+        
+        guard bytesRead == into.count else {
+            do {
+                try ensureLastOperationSucceeded()
+            } catch SystemError.connectionResetByPeer {
+                closed = true
+                throw StreamError.closedStream(buffer: Buffer())
+            }
+            throw SystemError.other(errorNumber: -1)
+        }
+        
+        return bytesRead
     }
 
     public func flush(deadline: Double) throws {
@@ -44,26 +70,6 @@ public final class TCPConnection : Connection {
 
         tcpflush(socket, deadline.int64milliseconds)
         try ensureLastOperationSucceeded()
-    }
-
-    public func read(into buffer: inout Data, length: Int, deadline: Double = .never) throws -> Int {
-        let socket = try getSocket()
-        try ensureStreamIsOpen()
-
-        let bytesRead = buffer.withUnsafeMutableBytes {
-            tcprecvlh(socket, $0, 1, length, deadline.int64milliseconds)
-        }
-
-        if bytesRead == 0 {
-            do {
-                try ensureLastOperationSucceeded()
-            } catch SystemError.connectionResetByPeer {
-                closed = true
-                throw StreamError.closedStream(data: Data())
-            }
-        }
-
-        return bytesRead
     }
 
     public func close() {
@@ -83,7 +89,7 @@ public final class TCPConnection : Connection {
 
     private func ensureStreamIsOpen() throws {
         if closed {
-            throw StreamError.closedStream(data: Data())
+            throw StreamError.closedStream(buffer: Buffer())
         }
     }
 

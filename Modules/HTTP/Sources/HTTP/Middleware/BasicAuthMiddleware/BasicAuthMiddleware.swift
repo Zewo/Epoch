@@ -1,3 +1,5 @@
+import struct Foundation.Data
+
 public enum AuthenticationResult {
     case accessDenied
     case authenticated
@@ -49,7 +51,7 @@ public struct BasicAuthMiddleware : Middleware {
 
         guard
             let decodedData = Data(base64Encoded: tokens[1]),
-            let decodedCredentials = try? String(data: decodedData)
+            let decodedCredentials = String(data: decodedData, encoding: .utf8)
         else {
             return deniedResponse
         }
@@ -76,7 +78,7 @@ public struct BasicAuthMiddleware : Middleware {
 
     public func clientRespond(_ request: Request, chain: Responder, username: String, password: String) throws -> Response {
         var request = request
-        let credentials = Data(username + ":" + password).base64EncodedString()
+        let credentials = Data("\(username):\(password)".utf8).base64EncodedString()
         request.authorization = "Basic " + credentials
         return try chain.respond(to: request)
     }

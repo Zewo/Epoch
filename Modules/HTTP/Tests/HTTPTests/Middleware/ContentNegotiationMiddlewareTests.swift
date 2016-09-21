@@ -23,7 +23,7 @@ public class ContentNegotiationMiddlewareTests : XCTestCase {
         // Because there was no Accept header we serializer with the first media type in the
         // content negotiation middleware media type list. In this case JSON.
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
-        XCTAssertEqual(response.body, .buffer(Data("{\"fuu\":\"baz\"}")))
+        XCTAssertEqual(response.body, .buffer(Buffer("{\"fuu\":\"baz\"}")))
     }
 
     func testJSONRequestResponse() throws {
@@ -43,7 +43,7 @@ public class ContentNegotiationMiddlewareTests : XCTestCase {
         let response = try contentNegotiation.respond(to: request, chainingTo: responder)
 
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
-        XCTAssertEqual(response.body, .buffer(Data("{\"fuu\":\"baz\"}")))
+        XCTAssertEqual(response.body, .buffer(Buffer("{\"fuu\":\"baz\"}")))
     }
 
     func testJSONRequestURLEncodedFormResponse() throws {
@@ -63,7 +63,7 @@ public class ContentNegotiationMiddlewareTests : XCTestCase {
         let response = try contentNegotiation.respond(to: request, chainingTo: responder)
 
         XCTAssertEqual(response.headers["Content-Type"], "application/x-www-form-urlencoded; charset=utf-8")
-        XCTAssertEqual(response.body, .buffer(Data("fuu=baz")))
+        XCTAssertEqual(response.body, .buffer(Buffer("fuu=baz")))
     }
 
     func testURLEncodedFormRequestDefaultResponse() throws {
@@ -84,7 +84,7 @@ public class ContentNegotiationMiddlewareTests : XCTestCase {
         // Because there was no Accept header we serializer with the first media type in the
         // content negotiation middleware media type list. In this case JSON.
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
-        XCTAssertEqual(response.body, .buffer(Data("{\"fuu\":\"baz\"}")))
+        XCTAssertEqual(response.body, .buffer(Buffer("{\"fuu\":\"baz\"}")))
     }
 
     func testURLEncodedFormRequestResponse() throws {
@@ -104,7 +104,7 @@ public class ContentNegotiationMiddlewareTests : XCTestCase {
         let response = try contentNegotiation.respond(to: request, chainingTo: responder)
 
         XCTAssertEqual(response.headers["Content-Type"], "application/x-www-form-urlencoded; charset=utf-8")
-        XCTAssertEqual(response.body, .buffer(Data("fuu=baz")))
+        XCTAssertEqual(response.body, .buffer(Buffer("fuu=baz")))
     }
 
     func testURLEncodedFormRequestJSONResponse() throws {
@@ -124,7 +124,7 @@ public class ContentNegotiationMiddlewareTests : XCTestCase {
         let response = try contentNegotiation.respond(to: request, chainingTo: responder)
 
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
-        XCTAssertEqual(response.body, .buffer(Data("{\"fuu\":\"baz\"}")))
+        XCTAssertEqual(response.body, .buffer(Buffer("{\"fuu\":\"baz\"}")))
     }
 
     func testClientRequestJSONResponse() throws {
@@ -133,7 +133,7 @@ public class ContentNegotiationMiddlewareTests : XCTestCase {
         let responder = BasicResponder { request in
             XCTAssertEqual(request.headers["Content-Type"], "application/json; charset=utf-8")
             XCTAssertEqual(request.headers["Accept"], "application/json, application/x-www-form-urlencoded")
-            XCTAssertEqual(request.body, .buffer(Data("{\"foo\":\"bar\"}")))
+            XCTAssertEqual(request.body, .buffer(Buffer("{\"foo\":\"bar\"}")))
             return Response(
                 headers: [
                     "Content-Type": "application/json; charset=utf-8",
@@ -156,7 +156,7 @@ public class ContentNegotiationMiddlewareTests : XCTestCase {
         let responder = BasicResponder { request in
             XCTAssertEqual(request.headers["Content-Type"], "application/json; charset=utf-8")
             XCTAssertEqual(request.headers["Accept"], "application/json, application/x-www-form-urlencoded")
-            XCTAssertEqual(request.body, .buffer(Data("{\"foo\":\"bar\"}")))
+            XCTAssertEqual(request.body, .buffer(Buffer("{\"foo\":\"bar\"}")))
             return Response(
                 headers: [
                     "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",

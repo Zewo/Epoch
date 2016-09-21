@@ -1,3 +1,6 @@
+import Core
+
+
 public struct Request : Message {
     public enum Method {
         case delete
@@ -67,12 +70,12 @@ extension Request {
         }
     }
 
-    public init(method: Method = .get, url: URL = URL(string: "/")!, headers: Headers = [:], body: Data = Data()) {
+    public init(method: Method = .get, url: URL = URL(string: "/")!, headers: Headers = [:], body: BufferRepresentable = Buffer()) {
         self.init(
             method: method,
             url: url,
             headers: headers,
-            body: .buffer(body)
+            body: .buffer(body.buffer)
         )
     }
 
@@ -96,18 +99,7 @@ extension Request {
 }
 
 extension Request {
-    public init(method: Method = .get, url: URL = URL(string: "/")!, headers: Headers = [:], body: DataRepresentable) {
-        self.init(
-            method: method,
-            url: url,
-            headers: headers,
-            body: body.data
-        )
-    }
-}
-
-extension Request {
-    public init?(method: Method = .get, url: String, headers: Headers = [:], body: Data = Data()) {
+    public init?(method: Method = .get, url: String, headers: Headers = [:], body: BufferRepresentable = Buffer()) {
         guard let url = URL(string: url) else {
             return nil
         }

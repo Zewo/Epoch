@@ -1,3 +1,5 @@
+import Core
+
 extension Response {
     public var content: Map? {
         get {
@@ -15,7 +17,7 @@ extension Response {
         self.init(
             status: status,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = content.map
@@ -25,7 +27,7 @@ extension Response {
         self.init(
             status: status,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = content.map
@@ -35,7 +37,7 @@ extension Response {
         self.init(
             status: status,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = content.map
@@ -45,7 +47,7 @@ extension Response {
         self.init(
             status: status,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = content.map
@@ -55,7 +57,7 @@ extension Response {
         self.init(
             status: status,
             headers: headers,
-            body: Data()
+            body: Buffer()
         )
 
         self.content = try content.asMap()
