@@ -6,8 +6,8 @@ enum URLEncodedFormMapParserError : Error {
 public struct URLEncodedFormMapParser : MapParser {
     public init() {}
 
-    public func parse(_ data: Data) throws -> Map {
-        guard let string = try? String(data: data) else {
+    public func parse(_ buffer: Buffer) throws -> Map {
+        guard let string = try? String(buffer: buffer) else {
             throw URLEncodedFormMapParserError.unsupportedEncoding
         }
 

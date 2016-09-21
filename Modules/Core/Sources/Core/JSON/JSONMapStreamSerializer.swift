@@ -8,7 +8,7 @@ public final class JSONMapStreamSerializer : MapStreamSerializer {
     }
 
     public func serialize(_ map: Map) throws {
-        try stream.write(serializeToString(map))
+        _ = try stream.write(serializeToString(map))
         try stream.flush()
     }
 

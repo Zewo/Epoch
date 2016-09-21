@@ -5,8 +5,8 @@ enum URLEncodedFormSerializeError : Error {
 public struct URLEncodedFormSerializer {
     public init() {}
 
-    public func serialize(_ urlEncodedForm: URLEncodedForm) -> Data {
-        return serializeToString(urlEncodedForm).data
+    public func serialize(_ urlEncodedForm: URLEncodedForm) -> Buffer {
+        return serializeToString(urlEncodedForm).buffer
     }
 
     public func serializeToString(_ urlEncodedForm: URLEncodedForm) -> String {
