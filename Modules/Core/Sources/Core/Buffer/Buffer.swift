@@ -1,4 +1,9 @@
 @_exported import struct Dispatch.DispatchData
+#if os(Linux)
+import Glibc
+#else
+import Darwin
+#endif
 
 public typealias Byte = UInt8
 public typealias Buffer = DispatchData
@@ -96,10 +101,29 @@ extension Buffer {
     }
 }
 
+extension Buffer: CustomDebugStringConvertible {
+    
+    public var debugDescription: String {
+        return (try? String(buffer: self)) ?? hexadecimalString()
+    }
+    
+}
+
 extension Buffer: Equatable {    
 }
 
 // TODO: optimize this
 public func ==(lhs: Buffer, rhs: Buffer) -> Bool {
-    return lhs.hexadecimalString() == rhs.hexadecimalString()
+    guard lhs.count == rhs.count else {
+        return false
+    }
+    guard lhs.count > 0 && rhs.count > 0 else {
+        return true
+    }
+    
+    return lhs.withUnsafeBytes { lhsBytes in
+        rhs.withUnsafeBytes { rhsBytes in
+            return memcmp(UnsafeRawPointer(lhsBytes), UnsafeRawPointer(rhsBytes), lhs.count) == 0
+        }
+    }
 }
