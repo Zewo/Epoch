@@ -29,6 +29,10 @@ extension Buffer {
     public init() {
         self = Buffer.empty
     }
+    
+    public subscript(_ range: Range<Int>) -> Buffer {
+        return subdata(in: self.startIndex.advanced(by: range.lowerBound)..<self.startIndex.advanced(by: range.upperBound))
+    }
 }
 
 extension String : BufferConvertible {
