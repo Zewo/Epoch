@@ -6,6 +6,7 @@ public enum StreamError : Error {
 public protocol InputStream {
     var closed: Bool { get }
     func close()
+    
     func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int
     func read(upTo: Int, deadline: Double) throws -> Buffer
 }
@@ -23,7 +24,7 @@ extension InputStream {
 public protocol OutputStream {
     var closed: Bool { get }
     func close()
-    @discardableResult
+    
     func write(from: UnsafeBufferPointer<UInt8>, deadline: Double) throws -> Int
     func write(from: Buffer, deadline: Double) throws -> Buffer?
     func write(from: BufferRepresentable, deadline: Double) throws -> Buffer?
