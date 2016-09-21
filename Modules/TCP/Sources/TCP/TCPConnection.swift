@@ -51,14 +51,13 @@ public final class TCPConnection : Connection {
         
         let bytesRead = tcprecvlh(socket, into.baseAddress!, 1, into.count, deadline.int64milliseconds)
         
-        guard bytesRead == into.count else {
+        if bytesRead == 0 {
             do {
                 try ensureLastOperationSucceeded()
             } catch SystemError.connectionResetByPeer {
                 closed = true
                 throw StreamError.closedStream(buffer: Buffer())
             }
-            throw SystemError.other(errorNumber: -1)
         }
         
         return bytesRead
