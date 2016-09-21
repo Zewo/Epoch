@@ -31,7 +31,7 @@ public final class Drain : BufferRepresentable, Stream {
             throw StreamError.closedStream(buffer: Buffer.empty)
         }
         
-        guard buffer.count > 0 else {
+        guard !buffer.isEmpty else {
             return 0
         }
         

@@ -99,7 +99,7 @@ extension JSONMapStreamParser {
             throw insufficientTokenError(reason: "unexpected end of tokens")
         }
         let chunk = try stream.read(upTo: 1024)
-        guard chunk.count > 0 else {
+        guard !chunk.isEmpty else {
             throw insufficientTokenError(reason: "unexpected end of tokens")
         }
         buffer.append(chunk)
@@ -432,7 +432,7 @@ extension JSONMapStreamParser {
     }
 
     private func advance() throws {
-        if buffer.count > 0 {
+        if !buffer.isEmpty {
             buffer = buffer.subdata(in: buffer.startIndex.advanced(by: 1)..<buffer.endIndex)
         }
         
