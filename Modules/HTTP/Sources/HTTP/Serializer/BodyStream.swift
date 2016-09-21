@@ -28,8 +28,8 @@ final class BodyStream : Stream {
         }
         
         let newLine: [UInt8] = [13, 10]
-        try transport.write(from: newLine, deadline: deadline)
         try transport.write(from: String(from.count, radix: 16), deadline: deadline)
+        try transport.write(from: newLine, deadline: deadline)
         try transport.write(from: from, deadline: deadline)
         try transport.write(from: newLine, deadline: deadline)
     }
