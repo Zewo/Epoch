@@ -32,12 +32,15 @@ public final class RequestParser {
     var parserContext: RequestParserContext = RequestParserContext()
     var parserState: RequestParserState = .none
     var requests: [Request] = []
-    var bufferSize: Int
+    
+    let bufferBytes: UnsafeMutablePointer<UInt8>
+    let buffer: UnsafeMutableBufferPointer<UInt8>
     
     
-    public init(stream: Core.Stream, bufferSize: Int = 2048) {
+    public init(stream: Core.Stream, bufferSize: Int = 4096) {
         self.stream = stream
-        self.bufferSize = bufferSize
+        self.bufferBytes = UnsafeMutablePointer.allocate(capacity: bufferSize)
+        self.buffer = UnsafeMutableBufferPointer(start: bufferBytes, count: bufferSize)
         
         var parserSettings = http_parser_settings()
         http_parser_settings_init(&parserSettings)
@@ -75,6 +78,9 @@ public final class RequestParser {
         
         resetParser()
     }
+    deinit {
+        bufferBytes.deallocate(capacity: buffer.count)
+    }
 
     public func parse() throws -> Request {
         while true {
@@ -82,12 +88,12 @@ public final class RequestParser {
                 return request
             }
 
-            let buffer = try stream.read(upTo: bufferSize)
-            let bytesParsed = buffer.withUnsafeBytes {
-                http_parser_execute(&parser, &parserSettings, $0, buffer.count)
+            let bytesRead = try stream.read(into: buffer)
+            let bytesParsed = buffer.baseAddress!.withMemoryRebound(to: Int8.self, capacity: buffer.count) {
+                http_parser_execute(&parser, &parserSettings, $0, bytesRead)
             }
             
-            guard bytesParsed == buffer.count else {
+            guard bytesParsed == bytesRead else {
                 defer { resetParser() }
                 throw http_errno(parser.http_errno)
             }
