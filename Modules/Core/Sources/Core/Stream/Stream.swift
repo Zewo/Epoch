@@ -42,8 +42,18 @@ extension OutputStream {
             return
         }
         
-        try buffer.withUnsafeBytes {
-            try write(from: UnsafeBufferPointer(start: $0, count: buffer.count), deadline: deadline)
+        var rethrowError: Error? = nil
+        buffer.enumerateBytes { bufferPtr, _, stop in
+            do {
+                try write(from: bufferPtr, deadline: deadline)
+            } catch {
+                rethrowError = error
+                stop = true
+            }
+        }
+        
+        if let error = rethrowError {
+            throw error
         }
     }
     
