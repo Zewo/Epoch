@@ -152,8 +152,15 @@ public final class RequestParser {
                 parserContext.currentHeaderField = str
                 
             case .headerValue:
+                let field = CaseInsensitiveString(parserContext.currentHeaderField!)
                 let str = String(bytes: parserBuffer, encoding: String.Encoding.utf8)!
-                parserContext.headers[CaseInsensitiveString(parserContext.currentHeaderField!)] = str
+                
+                if let existing = parserContext.headers[field] {
+                    parserContext.headers[field] = "\(existing), \(str)"
+                } else {
+                    parserContext.headers[field] = str
+                }
+                
                 parserContext.currentHeaderField = nil
                 
             case .headersComplete:
@@ -177,6 +184,7 @@ public final class RequestParser {
                     body: .buffer(parserContext.body)
                 )
                 requests.append(request)
+                resetParser()
                 return
             }
         }
