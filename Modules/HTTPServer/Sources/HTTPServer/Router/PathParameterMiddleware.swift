@@ -1,4 +1,4 @@
-public struct PathParameterMiddleware : Middleware {
+public class PathParameterMiddleware : Middleware {
     let pathParameters: [String: String]
 
     public init(_ pathParameters: [String: String]) {

@@ -1,4 +1,4 @@
-public struct RedirectMiddleware : Middleware {
+public class RedirectMiddleware : Middleware {
     let location: String
     let shouldRedirect: (Request) -> Bool
 

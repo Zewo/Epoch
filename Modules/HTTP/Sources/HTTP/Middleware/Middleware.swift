@@ -1,10 +1,10 @@
-public protocol Middleware {
+public protocol Middleware: class {
     func respond(to request: Request, chainingTo next: Responder) throws -> Response
 }
 
 extension Middleware {
     public func chain(to responder: Responder) -> Responder {
-        return BasicResponder { request in
+        return BasicResponder { [unowned self] (request: Request) throws -> Response in
             return try self.respond(to: request, chainingTo: responder)
         }
     }
