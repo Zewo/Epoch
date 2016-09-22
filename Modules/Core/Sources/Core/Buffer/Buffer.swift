@@ -25,8 +25,17 @@ extension Buffer : BufferRepresentable {
 public protocol BufferConvertible : BufferInitializable, BufferRepresentable {}
 
 extension Buffer {
+    
     public init(_ string: String) {
-        self = [UInt8](string.utf8).withUnsafeBufferPointer { Buffer(bytes: $0) }
+        self = string.utf8CString.withUnsafeBufferPointer { bufferPtr in
+            guard bufferPtr.count > 1 else {
+                return Buffer()
+            }
+            
+            return bufferPtr.baseAddress!.withMemoryRebound(to: UInt8.self, capacity: bufferPtr.count) { ptr in
+                return Buffer(bytes: UnsafeBufferPointer<UInt8>(start: ptr, count: bufferPtr.count - 1))
+            }
+        }
     }
     
     public init(_ bytes: [UInt8]) {
