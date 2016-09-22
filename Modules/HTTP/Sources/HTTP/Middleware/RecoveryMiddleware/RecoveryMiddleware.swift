@@ -1,6 +1,6 @@
 public typealias Recover = (Error) throws -> Response
 
-public class RecoveryMiddleware : Middleware {
+public struct RecoveryMiddleware : Middleware {
     let recover: Recover
 
     public init(_ recover: @escaping Recover = RecoveryMiddleware.recover) {

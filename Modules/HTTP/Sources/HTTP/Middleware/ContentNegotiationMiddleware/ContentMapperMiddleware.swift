@@ -4,7 +4,7 @@ extension MapInitializable {
     }
 }
 
-public class ContentMapperMiddleware : Middleware {
+public struct ContentMapperMiddleware : Middleware {
     let type: MapInitializable.Type
     public let mode: Mode
 

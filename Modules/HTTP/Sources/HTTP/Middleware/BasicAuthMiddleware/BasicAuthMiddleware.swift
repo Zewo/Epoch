@@ -11,7 +11,7 @@ enum AuthenticationType {
     case client(username: String, password: String)
 }
 
-public class BasicAuthMiddleware : Middleware {
+public struct BasicAuthMiddleware : Middleware {
     let type: AuthenticationType
 
     public init(realm: String? = nil, authenticate: @escaping (_ username: String, _ password: String) throws -> AuthenticationResult) {

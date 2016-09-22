@@ -130,12 +130,14 @@ public class ChannelTests : XCTestCase {
         let channel1 = Channel<Int>()
         let channel2 = Channel<Int>()
         co {
-            XCTAssert(channel1.receive() == nil)
-            channel2.send(0)
-        }
-        co {
-            XCTAssert(channel1.receive() == nil)
-            channel2.send(0)
+            co {
+                XCTAssert(channel1.receive() == nil)
+                channel2.send(0)
+            }
+            co {
+                XCTAssert(channel1.receive() == nil)
+                channel2.send(0)
+            }
         }
         channel1.close()
         XCTAssert(channel2.receive() == 0)

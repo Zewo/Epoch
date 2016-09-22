@@ -1,13 +1,18 @@
-public class LogMiddleware : Middleware {
+import Core
+
+
+public struct LogMiddleware : Middleware {
     private let debug: Bool
-    public var message: String = ""
+    private let stream: OutputStream?
 
-    public init(debug: Bool = false) {
+    public init(debug: Bool = false, stream: OutputStream? = nil) {
         self.debug = debug
+        self.stream = stream
     }
-
+    
     public func respond(to request: Request, chainingTo next: Responder) throws -> Response {
         let response = try next.respond(to: request)
+        var message: String = ""
         message = "================================================================================\n"
         message += "Request:\n\n"
         message += (debug ? String(describing: request.debugDescription) : String(describing: request)) + "\n"
@@ -15,7 +20,11 @@ public class LogMiddleware : Middleware {
         message += "Response:\n\n"
         message += (debug ? String(describing: response.debugDescription) : String(describing: response)) + "\n"
         message += "================================================================================\n"
-        print(message)
+        if let stream = stream {
+            try stream.write(from: message)
+        } else {
+            print(message)
+        }
         return response
     }
 }

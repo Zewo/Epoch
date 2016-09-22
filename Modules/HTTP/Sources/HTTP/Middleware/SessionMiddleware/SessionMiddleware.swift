@@ -5,7 +5,7 @@ private func uuid() -> String {
     return String(uuidCount)
 }
 
-public final class SessionMiddleware: Middleware {
+public struct SessionMiddleware: Middleware {
     public static let cookieName = "zewo-session"
     public let storage: SessionStorage
 

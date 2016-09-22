@@ -3,7 +3,7 @@ public enum ContentNegotiationMiddlewareError : Error {
     case noSuitableSerializer
 }
 
-public class ContentNegotiationMiddleware : Middleware {
+public struct ContentNegotiationMiddleware : Middleware {
     public let types: [MediaTypeRepresentor.Type]
     public let mode: Mode
 
