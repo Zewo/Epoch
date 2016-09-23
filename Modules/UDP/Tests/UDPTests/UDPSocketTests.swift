@@ -1,46 +1,75 @@
 import XCTest
 @testable import Venice
 @testable import UDP
+import struct Foundation.Data
 
 public class UDPSocketTests : XCTestCase {
-    func testBasicEcho() throws {
+    
+    func testBasicClientServer() throws {
         let serverSocket = try UDPSocket(ip: IP(port: 5050))
-        let clientSocket = try UDPSocket(ip: IP(port: 5051))
+        let clientSocket = try UDPSocket(ip: IP(port: 5051)).sending(to: IP(port: 5050))
 
         let originalMessage = "Hello, World!"
-        let comparisonChannel = Channel<Bool>()
+        let doneChannel = Channel<Void>()
 
-        // Coroutine waiting for input message
+        // Coroutine for the server socket
         co {
-            var data = Data(count: 1024)
-            guard let (count, _) = try? serverSocket.read(into: &data, length: data.count) else {
-                return comparisonChannel.send(false)
+            do {
+                let buffer = try Buffer(capacity: 1024) {
+                    try serverSocket.read(into: $0)
+                }
+                
+                // Check received buffer has appropriate count and content
+                XCTAssertEqual(buffer.count, originalMessage.characters.count)
+                XCTAssertEqual(buffer, Buffer(originalMessage))
+                
+                // Not mandatory: compare received and original string messages
+                let receivedMessage = try String(buffer: buffer)
+                XCTAssertEqual(receivedMessage, originalMessage)
+                
+            } catch {
+                XCTFail()
             }
-            // compare the received message and send back the comparison value
-            guard let receivedMessage = String(data: Data(data.prefix(count)), encoding: String.Encoding.utf8) else {
-                return comparisonChannel.send(false)
-            }
-            comparisonChannel.send(receivedMessage == originalMessage)
+            
+            doneChannel.send()
         }
+        
 
         // Send data to the server
         do {
-            try clientSocket.write(Data(originalMessage), to: IP(port: 5050))
+            try clientSocket.write(Buffer(originalMessage))
         } catch {
             XCTFail("failed to send data to the server")
             return
         }
-        // Data was sent to the server
-
-        let success = comparisonChannel.receive()!
-        XCTAssert(success, "Sent and received messages are not equal")
+        
+        doneChannel.receive()!
     }
+    
+    
+    /// Sending *to* a closed UDP port should *not* fail: this is UDP
+    func testSendToClosedSocket() throws {
+        let clientSocket = try UDPSocket(ip: IP(port: 5051)).sending(to: IP(port: 5052))
+        try clientSocket.write(Buffer([1, 2, 3]))
+        XCTAssert(true, "Could not write to UDPSocket")
+    }
+    
+    
+    /// Sending *from* a closed UDP port should fail
+    func testSendFromClosedSocket() throws {
+        let clientSocket = try UDPSocket(ip: IP(port: 5051)).sending(to: IP(port: 5052))
+        clientSocket.close()
+        XCTAssertThrowsError(try clientSocket.write(Buffer([1, 2, 3])))
+    }
+    
 }
 
 extension UDPSocketTests {
     public static var allTests: [(String, (UDPSocketTests) -> () throws -> Void)] {
         return [
-           ("testBasicEcho", testBasicEcho),
+           ("testBasicEcho", testBasicClientServer),
+           ("testSendToClosedSocket", testSendToClosedSocket),
+           ("testSendFromClosedSocket", testSendFromClosedSocket),
         ]
     }
 }

@@ -1,28 +1,18 @@
 import CLibvenice
 import POSIX
 
-public enum UDPError : Error {
-    case writeFailed(error: SystemError, remaining: Data)
-    case readFailed(error: SystemError, received: Data)
-}
-
-extension UDPError : CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .writeFailed(let error, _): return "\(error)"
-        case .readFailed(let error, _): return "\(error)"
-        }
-    }
-}
-
 public final class UDPSocket {
+
     private var socket: udpsock?
     public private(set) var closed = false
 
+    /// Local IP port
     public var port: Int {
         return Int(udpport(socket))
     }
 
+    // MARK: - Initializers
+    
     internal init(socket: udpsock) {
         self.socket = socket
     }
@@ -36,8 +26,8 @@ public final class UDPSocket {
         self.init(socket: socket)
     }
 
-    public convenience init(host: String, port: Int) throws {
-        let ip = try IP(remoteAddress: host, port: port)
+    public convenience init(localHost: String, localPort: Int) throws {
+        let ip = try IP(localAddress: localHost, port: localPort)
         try self.init(ip: ip)
     }
 
@@ -45,33 +35,25 @@ public final class UDPSocket {
         close()
     }
 
-    public func write(_ data: Data, to ip: IP, timingOut deadline: Double = .never) throws {
+    
+    // MARK: - Core functions (read, write, close)
+    
+    public func write(_ buffer: UnsafeBufferPointer<Byte>, to ip: IP) throws {
         try ensureStreamIsOpen()
-
-        data.withUnsafeBytes { (ptr: UnsafePointer<Data>) -> Void in
-            udpsend(socket, ip.address, ptr, data.count)
-        }
-
+        udpsend(socket, ip.address, buffer.baseAddress!, buffer.count)
         try ensureLastOperationSucceeded()
     }
 
-    public func read(into buffer: inout Data, length: Int, deadline: Double = .never) throws -> (Int, IP) {
-        let byteCount = min(buffer.count, length)
+    public func read(into buffer: UnsafeMutableBufferPointer<Byte>, deadline: Double = .never) throws -> (Int, IP) {
         try ensureStreamIsOpen()
 
-        var address = ipaddr()
-        let received = buffer.withUnsafeMutableBytes {
-            udprecv(socket, &address, $0, byteCount, deadline.int64milliseconds)
-        }
+        var senderAddress = ipaddr()
+        let bytesRead = udprecv(socket, &senderAddress, buffer.baseAddress!, buffer.count, deadline.int64milliseconds)
 
-        do {
-            try ensureLastOperationSucceeded()
-        } catch let error as SystemError where received > 0 {
-            throw UDPError.readFailed(error: error, received: buffer)
-        }
+        try ensureLastOperationSucceeded()
 
-        let ip = IP(address: address)
-        return (received, ip)
+        let ip = IP(address: senderAddress)
+        return (bytesRead, ip)
     }
 
     public func close() {
@@ -82,10 +64,26 @@ public final class UDPSocket {
         }
         socket = nil
     }
-
+    
+    // MARK: - Utilities
+    
     private func ensureStreamIsOpen() throws {
         if closed {
-            throw StreamError.closedStream(data: Data())
+            throw StreamError.closedStream(buffer: Buffer())
         }
+    }
+    
+    public func sending(to remoteIP: IP) -> UDPSendingSocket {
+        return UDPSendingSocket(to: remoteIP, with: self)
+    }
+}
+
+
+
+extension UDPSocket : InputStream {
+    
+    public func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double = .never) throws -> Int {
+        let (bytesRead, _) = try read(into: into, deadline: deadline)
+        return bytesRead
     }
 }
