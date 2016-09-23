@@ -29,11 +29,11 @@ public struct Server {
         var chain: [Middleware] = []
 
         if enableLog {
-            //chain.append(LogMiddleware())
+            chain.append(LogMiddleware())
         }
 
         if enableSession {
-//            chain.append(SessionMiddleware())
+            chain.append(SessionMiddleware())
         }
 
         if enableContentNegotiation {
@@ -92,15 +92,15 @@ public struct Server {
         var chain: [Middleware] = []
 
         if enableLog {
-//            chain.append(LogMiddleware())
+            chain.append(LogMiddleware())
         }
 
         if enableSession {
-//            chain.append(SessionMiddleware())
+            chain.append(SessionMiddleware())
         }
 
         if enableContentNegotiation {
-//            chain.append(ContentNegotiationMiddleware(mediaTypes: [JSON.self, URLEncodedForm.self]))
+            chain.append(ContentNegotiationMiddleware(mediaTypes: [JSON.self, URLEncodedForm.self]))
         }
 
         chain.append(contentsOf: middleware)
