@@ -18,7 +18,7 @@ public class RequestTests : XCTestCase {
         XCTAssertTrue(request.body.isReader)
 
         request = Request { stream in
-            try stream.write(from: "foo")
+            try stream.write("foo")
             try stream.flush()
         }
         XCTAssertEqual(request.method, .get)
@@ -50,7 +50,7 @@ public class RequestTests : XCTestCase {
         XCTAssertTrue(request.body.isReader)
 
         request = Request(url: "/") { stream in
-            try stream.write(from: "foo")
+            try stream.write("foo")
             try stream.flush()
         }!
         XCTAssertEqual(request.method, .get)

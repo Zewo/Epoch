@@ -16,7 +16,7 @@ public class TCPTests : XCTestCase {
                 let connection = try TCPConnection(host: "127.0.0.1", port: 8080)
                 try connection.open()
                 connection.close()
-                XCTAssertThrowsError(try connection.write(from: Buffer([1,2,3]), deadline: 1.second))
+                XCTAssertThrowsError(try connection.write(Buffer([1,2,3]), deadline: 1.second))
             } catch {
                 XCTFail()
             }
@@ -72,7 +72,7 @@ public class TCPTests : XCTestCase {
             do {
                 let connection = try TCPConnection(host: "127.0.0.1", port: port)
                 try connection.open()
-                try connection.write(from: Buffer([123]))
+                try connection.write(Buffer([123]))
                 try connection.flush()
             } catch {
                 XCTAssert(false)
@@ -99,7 +99,7 @@ public class TCPTests : XCTestCase {
                 XCTAssertEqual(buffer, Buffer("ABC"))
                 XCTAssertEqual(buffer.count, 3)
 
-                try connection.write(from: "123456789")
+                try connection.write("123456789")
                 try connection.flush()
             } catch {
                 XCTFail()
@@ -114,7 +114,7 @@ public class TCPTests : XCTestCase {
         let diff = now() - deadline
         XCTAssert(diff > -300 && diff < 300)
 
-        try connection.write(from: "ABC")
+        try connection.write("ABC")
         try connection.flush()
 
         let buffer = try connection.read(upTo: 9)

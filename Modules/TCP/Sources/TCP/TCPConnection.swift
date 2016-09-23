@@ -25,17 +25,17 @@ public final class TCPConnection : Connection {
         self.closed = false
     }
 
-    public func write(from: UnsafeBufferPointer<UInt8>, deadline: Double) throws {
-        guard !from.isEmpty else {
+    public func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double) throws {
+        guard !buffer.isEmpty else {
             return
         }
         
         let socket = try getSocket()
         try ensureStreamIsOpen()
         
-        let bytesWritten = tcpsend(socket, from.baseAddress!, from.count, deadline.int64milliseconds)
+        let bytesWritten = tcpsend(socket, buffer.baseAddress!, buffer.count, deadline.int64milliseconds)
         
-        guard bytesWritten == from.count else {
+        guard bytesWritten == buffer.count else {
             try ensureLastOperationSucceeded()
             throw SystemError.other(errorNumber: -1)
         }

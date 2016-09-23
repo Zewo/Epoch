@@ -27,8 +27,8 @@ public struct TCPTLSConnection : Connection {
         return try sslConnection.read(into: into, deadline: deadline)
     }
     
-    public func write(from: UnsafeBufferPointer<UInt8>, deadline: Double) throws {
-        try sslConnection.write(from: from, deadline: deadline)
+    public func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double) throws {
+        try sslConnection.write(buffer, deadline: deadline)
     }
 
     public func flush(deadline: Double) throws {

@@ -21,7 +21,7 @@ public struct LogMiddleware : Middleware {
         message += (debug ? String(describing: response.debugDescription) : String(describing: response)) + "\n"
         message += "================================================================================\n"
         if let stream = stream {
-            try stream.write(from: message)
+            try stream.write(message)
         } else {
             print(message)
         }

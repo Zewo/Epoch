@@ -51,8 +51,8 @@ final class ServerStream : Core.Stream {
         return read
     }
     
-    func write(from: UnsafeBufferPointer<UInt8>, deadline: Double) throws {
-        outputBuffer.append(from)
+    func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double) throws {
+        outputBuffer.append(buffer)
     }
     
     func flush(deadline: Double = .never) throws {

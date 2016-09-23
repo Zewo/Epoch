@@ -69,7 +69,7 @@ public final class SSLConnection : Connection {
             func flushAndReceive() throws {
                 try self.flush(deadline: deadline)
                 let bytesRead = try self.raw.stream.read(into: buffer, deadline: deadline)
-                _ = try self.readIO.write(from: UnsafeBufferPointer<UInt8>(start: buffer.baseAddress!, count: bytesRead))
+                _ = try self.readIO.write(UnsafeBufferPointer<UInt8>(start: buffer.baseAddress!, count: bytesRead))
             }
             while !session.initializationFinished {
                 do {
@@ -99,14 +99,14 @@ public final class SSLConnection : Connection {
                 do {
                     try rawBuffer.withUnsafeMutableBufferPointer { buffer in
                         let bytesRead = try self.raw.stream.read(into: buffer, deadline: deadline)
-                        _ = try self.readIO.write(from: UnsafeBufferPointer<UInt8>(start: buffer.baseAddress!, count: bytesRead))
+                        _ = try self.readIO.write(UnsafeBufferPointer<UInt8>(start: buffer.baseAddress!, count: bytesRead))
                     }
                 } catch StreamError.closedStream(let buffer) {
                     guard !buffer.isEmpty else {
                         throw StreamError.closedStream(buffer: Buffer())
                     }
                     _ = try buffer.withUnsafeBytes { bufferBytes in
-                        try readIO.write(from: UnsafeBufferPointer<UInt8>(start: bufferBytes, count: buffer.count))
+                        try readIO.write(UnsafeBufferPointer<UInt8>(start: bufferBytes, count: buffer.count))
                     }
                     
                 }
@@ -117,10 +117,10 @@ public final class SSLConnection : Connection {
     }
 
     
-    public func write(from: UnsafeBufferPointer<UInt8>, deadline: Double = .never) throws {
-        var remaining = from
+    public func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double = .never) throws {
+        var remaining = buffer
         while !remaining.isEmpty {
-            let bytesWritten = try session.write(from: remaining)
+            let bytesWritten = try session.write(remaining)
             guard bytesWritten != remaining.count else {
                 return
             }
@@ -141,7 +141,7 @@ public final class SSLConnection : Connection {
                 rawBuffer.deallocate(capacity: rawBufferCapacity)
             }
             let bytesRead = try writeIO.read(into: UnsafeMutableBufferPointer(start: rawBuffer, count: rawBufferCapacity))
-            _ = try raw.stream.write(from: UnsafeBufferPointer(start: rawBuffer, count: bytesRead), deadline: deadline)
+            _ = try raw.stream.write(UnsafeBufferPointer(start: rawBuffer, count: bytesRead), deadline: deadline)
 			try raw.stream.flush(deadline: deadline)
 		} catch SSLIOError.shouldRetry { }
 	}

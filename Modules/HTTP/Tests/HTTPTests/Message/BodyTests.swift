@@ -95,7 +95,7 @@ public class BodyTests : XCTestCase {
 
     func testWriterBecomeBuffer() throws {
         var body: Body = .writer { writerStream in
-            try writerStream.write(from: self.testData)
+            try writerStream.write(self.testData)
         }
         let buffer = try body.becomeBuffer()
         XCTAssertTrue(body.isBuffer)
@@ -112,7 +112,7 @@ public class BodyTests : XCTestCase {
 
     func testWriterBecomeReader() throws {
         var body: Body = .writer { writerStream in
-            try writerStream.write(from: self.testData)
+            try writerStream.write(self.testData)
         }
         let reader = try body.becomeReader()
         XCTAssertFalse(body.isBuffer)
@@ -127,7 +127,7 @@ public class BodyTests : XCTestCase {
 
     func testWriterBecomeWriter() throws {
         var body: Body = .writer { writerStream in
-            try writerStream.write(from: self.testData)
+            try writerStream.write(self.testData)
         }
         let writer = try body.becomeWriter()
         let writerStream = Drain()
@@ -149,7 +149,7 @@ public class BodyTests : XCTestCase {
         let reader = Body.reader(drain)
 
         let writer = Body.writer { stream in
-            try stream.write(from: self.testData)
+            try stream.write(self.testData)
             try stream.flush()
         }
 

@@ -34,7 +34,7 @@ public class IO {
 		try self.init()
         let bufferBuffer = buffer.buffer
         _ = try bufferBuffer.withUnsafeBytes {
-            try write(from: UnsafeBufferPointer<UInt8>(start: $0, count: bufferBuffer.count))
+            try write(UnsafeBufferPointer<UInt8>(start: $0, count: bufferBuffer.count))
         }
         
 	}
@@ -52,12 +52,12 @@ public class IO {
 		return (bio!.pointee.flags & BIO_FLAGS_SHOULD_RETRY) != 0
 	}
     
-    public func write(from: UnsafeBufferPointer<UInt8>) throws -> Int {
-        guard !from.isEmpty else {
+    public func write(_ buffer: UnsafeBufferPointer<UInt8>) throws -> Int {
+        guard !buffer.isEmpty else {
             return 0
         }
         
-        let bytesWritten = BIO_write(bio, from.baseAddress!, Int32(from.count))
+        let bytesWritten = BIO_write(bio, buffer.baseAddress!, Int32(buffer.count))
         
         guard bytesWritten >= 0 else {
             if shouldRetry {

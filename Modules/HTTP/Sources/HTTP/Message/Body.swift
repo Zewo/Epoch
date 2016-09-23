@@ -66,7 +66,7 @@ extension Body {
         switch self {
         case .buffer(let buffer):
             let closure: ((OutputStream) throws -> Void) = { writer in
-                try writer.write(from: buffer, deadline: deadline)
+                try writer.write(buffer, deadline: deadline)
                 try writer.flush()
             }
             self = .writer(closure)
@@ -74,7 +74,7 @@ extension Body {
         case .reader(let reader):
             let closure: ((OutputStream) throws -> Void) = { writer in
                 let buffer = Drain(stream: reader, deadline: deadline).buffer
-                try writer.write(from: buffer, deadline: deadline)
+                try writer.write(buffer, deadline: deadline)
                 try writer.flush()
             }
             self = .writer(closure)

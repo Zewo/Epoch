@@ -100,15 +100,15 @@ public final class File : Stream {
 
 extension File {
     
-    public func write(from: UnsafeBufferPointer<UInt8>, deadline: Double = .never) throws {
-        guard !from.isEmpty else {
+    public func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double = .never) throws {
+        guard !buffer.isEmpty else {
             return
         }
         
         try ensureFileIsOpen()
         
-        let bytesWritten = filewrite(file, from.baseAddress!, from.count, deadline.int64milliseconds)
-        guard bytesWritten == from.count else {
+        let bytesWritten = filewrite(file, buffer.baseAddress!, buffer.count, deadline.int64milliseconds)
+        guard bytesWritten == buffer.count else {
             try ensureLastOperationSucceeded()
             throw SystemError.other(errorNumber: -1)
         }

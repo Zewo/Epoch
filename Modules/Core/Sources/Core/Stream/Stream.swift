@@ -25,19 +25,19 @@ public protocol OutputStream {
     var closed: Bool { get }
     func close()
     
-    func write(from: UnsafeBufferPointer<UInt8>, deadline: Double) throws
-    func write(from: Buffer, deadline: Double) throws
-    func write(from: BufferRepresentable, deadline: Double) throws
+    func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double) throws
+    func write(_ buffer: Buffer, deadline: Double) throws
+    func write(_ buffer: BufferRepresentable, deadline: Double) throws
     func flush(deadline: Double) throws
 }
 
 extension OutputStream {
     
-    public func write(from: UnsafeBufferPointer<UInt8>) throws {
-        try write(from: from, deadline: .never)
+    public func write(_ buffer: UnsafeBufferPointer<UInt8>) throws {
+        try write(buffer, deadline: .never)
     }
     
-    public func write(from buffer: Buffer, deadline: Double = .never) throws {
+    public func write(_ buffer: Buffer, deadline: Double = .never) throws {
         guard !buffer.isEmpty else {
             return
         }
@@ -45,7 +45,7 @@ extension OutputStream {
         var rethrowError: Error? = nil
         buffer.enumerateBytes { bufferPtr, _, stop in
             do {
-                try write(from: bufferPtr, deadline: deadline)
+                try write(bufferPtr, deadline: deadline)
             } catch {
                 rethrowError = error
                 stop = true
@@ -57,15 +57,15 @@ extension OutputStream {
         }
     }
     
-    public func write(from buffer: BufferRepresentable, deadline: Double = .never) throws {
-        try write(from: buffer.buffer, deadline: .never)
+    public func write(_ converting: BufferRepresentable, deadline: Double = .never) throws {
+        try write(converting.buffer, deadline: .never)
     }
     
-    public func write(from bytes: [UInt8], deadline: Double = .never) throws {
+    public func write(_ bytes: [UInt8], deadline: Double = .never) throws {
         guard !bytes.isEmpty else {
             return
         }
-        try bytes.withUnsafeBufferPointer { try self.write(from: $0, deadline: deadline) }
+        try bytes.withUnsafeBufferPointer { try self.write($0, deadline: deadline) }
     }
 
     public func flush() throws {

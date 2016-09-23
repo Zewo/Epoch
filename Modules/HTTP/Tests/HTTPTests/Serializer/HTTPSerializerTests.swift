@@ -28,7 +28,7 @@ public class HTTPSerializerTests : XCTestCase {
         let serializer = ResponseSerializer(stream: outStream)
 
         let response = Response { (stream: Core.OutputStream) in
-            try stream.write(from: "foo")
+            try stream.write("foo")
             try stream.flush()
         }
 
@@ -60,7 +60,7 @@ public class HTTPSerializerTests : XCTestCase {
         let serializer = RequestSerializer(stream: outStream)
 
         let request = Request { (stream: Core.OutputStream) in
-            try stream.write(from: "foo")
+            try stream.write("foo")
             try stream.flush()
         }
 
@@ -74,7 +74,7 @@ public class HTTPSerializerTests : XCTestCase {
         bodyStream.close()
         XCTAssertEqual(bodyStream.closed, true)
         do {
-            try bodyStream.write(from: Buffer([1,2,3]))
+            try bodyStream.write(Buffer([1,2,3]))
             XCTFail()
         } catch {}
         bodyStream.closed = false
