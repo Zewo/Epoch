@@ -121,7 +121,7 @@ extension Buffer: CustomDebugStringConvertible {
 extension Buffer: Equatable {    
 }
 
-// TODO: optimize this
+
 public func ==(lhs: Buffer, rhs: Buffer) -> Bool {
     guard lhs.count == rhs.count else {
         return false
