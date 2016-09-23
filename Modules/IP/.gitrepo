@@ -6,6 +6,6 @@
 [subrepo]
 	remote = https://github.com/Zewo/IP
 	branch = master
-	commit = 7751096365517b9ae8eaa09dce7671d75f8ac77e
-	parent = 9d6e920ed8355f9f4a2c5640b557d0da2b123bdf
+	commit = 3be4656250e6bee38bb82ed1b33de1b37a31271d
+	parent = 5e316f9af0f03a059d20774239a53648bdadf244
 	cmdver = 0.3.0

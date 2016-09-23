@@ -6,6 +6,6 @@
 [subrepo]
 	remote = https://github.com/Zewo/Venice
 	branch = master
-	commit = c2a7daa5f595e4371c351c6b0aa93015090977b2
-	parent = 27f6cc30bf2a513e7642f45110960783a471e127
+	commit = 14292e5d049b34c382e39e15d11afb7e8cd4a10c
+	parent = d7fbd0d21f46db4c1a7ec26e28f2aa15e1385ad9
 	cmdver = 0.3.0

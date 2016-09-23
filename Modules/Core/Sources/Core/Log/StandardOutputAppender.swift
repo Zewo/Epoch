@@ -3,7 +3,7 @@ public class StandardOutputAppender : Appender {
     public var levels: Logger.Level
     var lastMessage: String = ""
 
-    init(name: String = "Standard Output Appender", levels: Logger.Level = .all) {
+    public init(name: String = "Standard Output Appender", levels: Logger.Level = .all) {
         self.name = name
         self.levels = levels
     }

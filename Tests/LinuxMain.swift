@@ -16,6 +16,8 @@ var testCases = [
     // POSIX
     testCase(POSIXTests.allTests),
     testCase(EnvironmentTests.allTests),
+    testCase(ThreadTests.allTests),
+    testCase(LockTests.allTests),
 
     // Core
     testCase(JSONTests.allTests),

@@ -6,6 +6,6 @@
 [subrepo]
 	remote = https://github.com/Zewo/HTTPServer
 	branch = master
-	commit = 2aad95ea4bb463756505266c5e7ecb733cb57772
-	parent = 5033168f5959ce8e1a8b546345b9426be94de2eb
+	commit = 242f4031314539fc31ff49b8d3dc29bed7d37575
+	parent = a50bead95c338afc08e4d1bc3d64dd4473367bc5
 	cmdver = 0.3.0
