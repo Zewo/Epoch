@@ -3,6 +3,9 @@ public enum IndexPathValue {
     case key(String)
 }
 
+public typealias IndexPath = [IndexPathValue]
+
+/// Can be represented as `IndexPathValue`.
 public protocol IndexPathElement {
     var indexPathValue: IndexPathValue { get }
 }

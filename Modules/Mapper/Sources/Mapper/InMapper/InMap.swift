@@ -1,5 +1,5 @@
 
-/// Data type from which strongly-typed instances can be mapped
+/// Data type from which strongly-typed instances can be mapped.
 public protocol InMap {
 
     
