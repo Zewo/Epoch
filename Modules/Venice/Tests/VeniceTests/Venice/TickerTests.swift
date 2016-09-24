@@ -3,11 +3,16 @@ import XCTest
 
 public class TickerTests : XCTestCase {
     func testTicker() {
-        let ticker = Ticker(period: 10.milliseconds)
+        let tickerPeriod = 20.milliseconds
+        let ticker = Ticker(period: tickerPeriod)
         co {
-            for _ in ticker.channel {}
+            var last: Double = ticker.channel.receive()!
+            for time in ticker.channel {
+                XCTAssertEqualWithAccuracy(time - last, tickerPeriod, accuracy: tickerPeriod / 2)
+                last = time
+            }
         }
-        nap(for: 100.milliseconds)
+        nap(for: 200.milliseconds)
         ticker.stop()
         nap(for: 20.milliseconds)
     }
