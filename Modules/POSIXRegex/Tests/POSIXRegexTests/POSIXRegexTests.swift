@@ -1,7 +1,7 @@
 import XCTest
 @testable import POSIXRegex
 
-class POSIXRegexTests: XCTestCase {
+public class POSIXRegexTests: XCTestCase {
     func testInvalidRegex() {
         var called = false
         do {
@@ -57,7 +57,7 @@ class POSIXRegexTests: XCTestCase {
 }
 
 extension POSIXRegexTests {
-    static var allTests: [(String, (POSIXRegexTests) -> () throws -> Void)] {
+    public static var allTests: [(String, (POSIXRegexTests) -> () throws -> Void)] {
         return [
            ("testInvalidRegex", testInvalidRegex),
            ("testMatches", testMatches),
