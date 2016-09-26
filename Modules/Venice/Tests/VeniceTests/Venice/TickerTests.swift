@@ -3,7 +3,7 @@ import XCTest
 
 public class TickerTests : XCTestCase {
     func testTicker() {
-        let tickerPeriod = 20.milliseconds
+        let tickerPeriod = 50.milliseconds
         let ticker = Ticker(period: tickerPeriod)
         co {
             var last: Double = ticker.channel.receive()!
@@ -12,7 +12,7 @@ public class TickerTests : XCTestCase {
                 last = time
             }
         }
-        nap(for: 200.milliseconds)
+        nap(for: 300.milliseconds)
         ticker.stop()
         nap(for: 20.milliseconds)
     }
