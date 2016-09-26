@@ -258,4 +258,5 @@ public typealias StringOutMapper<Destination : OutMap> = OutMapper<Destination, 
 /// Mapper which use string as keys.
 public typealias StringContextualOutMapper<Destination : OutMap, Context> = ContextualOutMapper<Destination, String, Context>
 
-public typealias FlatOutMapper<Destination : OutMap> = OutMapper<Destination, NoKeys>
+/// Mapper for mapping without keys.
+public typealias PlainOutMapper<Destination : OutMap> = OutMapper<Destination, NoKeys>

@@ -112,6 +112,13 @@ extension InMapperProtocol {
         return try T(mapper: ContextualInMapper(of: leveled, context: context))
     }
     
+    /// Returns value at `indexPath` represented as `T`, when `T` itself is `ExternalInMappable`.
+    ///
+    /// - parameter indexPath: path to desired value.
+    ///
+    /// - throws: `InMapperError`.
+    ///
+    /// - returns: value at `indexPath` represented as `T`.
     public func map<T : ExternalInMappable>(from indexPath: IndexPath...) throws -> T {
         let leveled = try dive(to: indexPath)
         return try T(mapper: ExternalInMapper(of: leveled))
@@ -175,6 +182,13 @@ extension InMapperProtocol {
         return try array.map({ try T(mapper: ContextualInMapper(of: $0, context: context)) })
     }
     
+    /// Returns array of values at `indexPath` represented as `T`, when `T` itself is `ExternalInMappable`.
+    ///
+    /// - parameter indexPath: path to desired value.
+    ///
+    /// - throws: `InMapperError`.
+    ///
+    /// - returns: array of values at `indexPath` represented as `T`.
     public func mapArray<T : ExternalInMappable>(from indexPath: IndexPath...) throws -> [T] {
         let leveled = try dive(to: indexPath)
         let array = try self.array(from: leveled)
@@ -211,11 +225,15 @@ public struct InMapper<Source : InMap, Keys : IndexPathElement> : InMapperProtoc
     
 }
 
+/// Mapper that is used to map external classes (in most cases - Cocoa classes).
 public struct ExternalInMapper<Source : InMap> : InMapperProtocol {
     
     public typealias IndexPath = IndexPathValue
     public let source: Source
     
+    /// Creates mapper for given `source`.
+    ///
+    /// - parameter source: source of mapping.
     public init(of source: Source) {
         self.source = source
     }
@@ -278,4 +296,5 @@ public typealias StringInMapper<Source : InMap> = InMapper<Source, String>
 /// Mapper which use string as keys.
 public typealias StringContextualInMapper<Source : InMap, Context> = ContextualInMapper<Source, String, Context>
 
-public typealias FlatInMapper<Source : InMap> = InMapper<Source, NoKeys>
+/// Mapper for mapping without keys.
+public typealias PlainInMapper<Source : InMap> = InMapper<Source, NoKeys>

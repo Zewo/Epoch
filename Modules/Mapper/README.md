@@ -274,26 +274,26 @@ struct Team : Mappable {
 }
 ```
 
-#### Flat mapping
+#### Plain mapping
 
 Tutorial by example: making **Foundation**'s `Date` conform to `Mappable`.
 
 ```swift
 extension Date : Mappable {
     
-    public init<Source : InMap>(mapper: FlatInMapper<Source>) throws {
+    public init<Source : InMap>(mapper: PlainInMapper<Source>) throws {
         let interval: Double = try mapper.map()
         self.init(timeIntervalSince1970: interval)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout FlatOutMapper<Destination>) throws {
+    public func outMap<Destination : OutMap>(mapper: inout PlainOutMapper<Destination>) throws {
         try mapper.map(self.timeIntervalSince1970)
     }
     
 }
 ```
 
-Mappers take variadic parameter as index path, so it's possible to pass no index path at all. We call it "flat mapping".
+Mappers take variadic parameter as index path, so it's possible to pass no index path at all. We call it "plain mapping".
 
 #### Mapping of external classes
 
@@ -324,7 +324,6 @@ Now `NSDate` can be mapped as usual.
 
 - Zewo/Map
 - Zewo/JSON
-- MongoKitten/BSON
 
 ## Adopting Mapper
 
