@@ -8,6 +8,7 @@ import HTTPTests
 import IPTests
 // import OpenSSLTests
 import POSIXTests
+import POSIXRegexTests
 import ReflectionTests
 import TCPTests
 import UDPTests
@@ -19,6 +20,7 @@ var testCases = [
     testCase(EnvironmentTests.allTests),
     testCase(ThreadTests.allTests),
     testCase(LockTests.allTests),
+    testCase(POSIXRegexTests.allTests),
 
     // Axis
     testCase(JSONTests.allTests),
