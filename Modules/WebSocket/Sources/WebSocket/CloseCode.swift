@@ -41,20 +41,20 @@ public enum CloseCode: Equatable {
 
     init(code: UInt16) {
         switch code {
-        case 1000: self = normal
-        case 1001: self = goingAway
-        case 1002: self = protocolError
-        case 1003: self = unsupported
-        case 1005: self = noStatus
-        case 1006: self = abnormal
-        case 1007: self = unsupportedData
-        case 1008: self = policyViolation
-        case 1009: self = tooLarge
-        case 1010: self = missingExtension
-        case 1011: self = internalError
-        case 1012: self = serviceRestart
-        case 1013: self = tryAgainLater
-        case 1015: self = tlsHandshake
+        case 1000: self = .normal
+        case 1001: self = .goingAway
+        case 1002: self = .protocolError
+        case 1003: self = .unsupported
+        case 1005: self = .noStatus
+        case 1006: self = .abnormal
+        case 1007: self = .unsupportedData
+        case 1008: self = .policyViolation
+        case 1009: self = .tooLarge
+        case 1010: self = .missingExtension
+        case 1011: self = .internalError
+        case 1012: self = .serviceRestart
+        case 1013: self = .tryAgainLater
+        case 1015: self = .tlsHandshake
         default:   self = .raw(UInt16(code))
         }
     }

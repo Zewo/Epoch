@@ -22,10 +22,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-@_exported import Event
-@_exported import Base64
+import Core
+import Foundation
 
-public enum WebSocketError: ErrorProtocol {
+public enum WebSocketError: Error {
     case noFrame
     case invalidOpCode
     case maskedFrameFromServer
@@ -41,83 +41,80 @@ public enum WebSocketError: ErrorProtocol {
 }
 
 public final class WebSocket {
-    private static let GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+    fileprivate static let GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
 
     public enum Mode {
         case server
         case client
     }
 
-    private enum State {
+    fileprivate enum State {
         case header
         case headerExtra
         case payload
     }
 
-    private enum CloseState {
+    fileprivate enum CloseState {
         case open
         case serverClose
         case clientClose
     }
 
     public let mode: Mode
-    // public let request: Request
-    // public let response: Response
-    private let stream: Stream
-    private var state: State = .header
-    private var closeState: CloseState = .open
 
-    private var incompleteFrame: Frame?
-    private var continuationFrames: [Frame] = []
+    fileprivate let stream: Core.Stream
+    fileprivate var state: State = .header
+    fileprivate var closeState: CloseState = .open
 
-    private let binaryEventEmitter = EventEmitter<Data>()
-    private let textEventEmitter = EventEmitter<String>()
-    private let pingEventEmitter = EventEmitter<Data>()
-    private let pongEventEmitter = EventEmitter<Data>()
-    private let closeEventEmitter = EventEmitter<(code: CloseCode?, reason: String?)>()
+    fileprivate var incompleteFrame: Frame?
+    fileprivate var continuationFrames: [Frame] = []
 
-    public init(stream: Stream, mode: Mode) { //, request: Request, response: Response) {
+    fileprivate let binaryEventEmitter = EventEmitter<Buffer>()
+    fileprivate let textEventEmitter = EventEmitter<String>()
+    fileprivate let pingEventEmitter = EventEmitter<Buffer>()
+    fileprivate let pongEventEmitter = EventEmitter<Buffer>()
+    fileprivate let closeEventEmitter = EventEmitter<(code: CloseCode?, reason: String?)>()
+
+    public init(stream: Core.Stream, mode: Mode) {
         self.stream = stream
         self.mode = mode
-        // self.request = request
-        // self.response = response
     }
 
     @discardableResult
-    public func onBinary(_ listen: EventListener<Data>.Listen) -> EventListener<Data> {
+    public func onBinary(_ listen: @escaping EventListener<Buffer>.Listen) -> EventListener<Buffer> {
         return binaryEventEmitter.addListener(listen: listen)
     }
 
     @discardableResult
-    public func onText(_ listen: EventListener<String>.Listen) -> EventListener<String> {
+    public func onText(_ listen: @escaping EventListener<String>.Listen) -> EventListener<String> {
         return textEventEmitter.addListener(listen: listen)
     }
 
     @discardableResult
-    public func onPing(_ listen: EventListener<Data>.Listen) -> EventListener<Data> {
+    public func onPing(_ listen: @escaping EventListener<Buffer>.Listen) -> EventListener<Buffer> {
         return pingEventEmitter.addListener(listen: listen)
     }
 
     @discardableResult
-    public func onPong(_ listen: EventListener<Data>.Listen) -> EventListener<Data> {
+    public func onPong(_ listen: @escaping EventListener<Buffer>.Listen) -> EventListener<Buffer> {
         return pongEventEmitter.addListener(listen: listen)
     }
 
     @discardableResult
-    public func onClose(_ listen: EventListener<(code: CloseCode?, reason: String?)>.Listen) -> EventListener<(code: CloseCode?, reason: String?)> {
+    public func onClose(_ listen: @escaping EventListener<(code: CloseCode?, reason: String?)>.Listen) -> EventListener<(code: CloseCode?, reason: String?)> {
         return closeEventEmitter.addListener(listen: listen)
     }
 
     public func send(_ string: String) throws {
-        try send(.text, data: string.data)
+        try send(.text, data: Buffer(string))
     }
 
-    public func send(_ data: Data) throws {
+    public func send(_ data: Buffer) throws {
         try send(.binary, data: data)
     }
 
-    public func send(_ convertible: DataConvertible) throws {
-        try send(.binary, data: convertible.data)
+    public func send(_ convertible: BufferConvertible) throws {
+        try send(.binary, data: convertible.buffer)
     }
 
     public func close(_ code: CloseCode = .normal, reason: String? = nil) throws {
@@ -129,43 +126,43 @@ public final class WebSocket {
             closeState = .serverClose
         }
 
-        var data = Data(number: code.code)
+        var data = Buffer(number: code.code)
 
         if let reason = reason {
-            data += reason
+            data.append(Buffer(reason))
         }
 
         if closeState == .serverClose && code == .protocolError {
-            try stream.close()
+            stream.close()
         }
 
         try send(.close, data: data)
 
         if closeState == .clientClose {
-            try stream.close()
+            stream.close()
         }
     }
 
-    public func ping(_ data: Data = []) throws {
+    public func ping(_ data: Buffer = Buffer()) throws {
         try send(.ping, data: data)
     }
 
-    public func ping(_ convertible: DataConvertible) throws {
-        try send(.ping, data: convertible.data)
+    public func ping(_ convertible: BufferConvertible) throws {
+      try send(.ping, data: convertible.buffer)
     }
 
-    public func pong(_ data: Data = []) throws {
+    public func pong(_ data: Buffer = Buffer()) throws {
         try send(.pong, data: data)
     }
 
-    public func pong(_ convertible: DataConvertible) throws {
-        try send(.pong, data: convertible.data)
+    public func pong(_ convertible: BufferConvertible) throws {
+        try send(.pong, data: convertible.buffer)
     }
 
     public func start() throws {
         while !stream.closed {
             do {
-                let data = try stream.receive(upTo: 4096)
+                let data = try stream.read(upTo: 4096)
                 try processData(data)
             } catch StreamError.closedStream {
                 break
@@ -176,7 +173,7 @@ public final class WebSocket {
         }
     }
 
-    private func processData(_ data: Data) throws {
+    fileprivate func processData(_ data: Buffer) throws {
         guard data.count > 0 else {
             return
         }
@@ -184,7 +181,7 @@ public final class WebSocket {
         var totalBytesRead = 0
 
         while totalBytesRead < data.count {
-            let bytesRead = try readBytes(Data(data[totalBytesRead ..< data.count]))
+          let bytesRead = try readBytes(data.subdata(in:totalBytesRead ..< data.count))
 
             if bytesRead == 0 {
                 break
@@ -194,7 +191,7 @@ public final class WebSocket {
         }
     }
 
-    private func readBytes(_ data: Data) throws -> Int {
+    fileprivate func readBytes(_ data: Buffer) throws -> Int {
         if data.count == 0 {
             return 0
         }
@@ -207,7 +204,7 @@ public final class WebSocket {
             }
 
             // Use ! because if let will add data to a copy of the frame
-            remainingData = incompleteFrame!.add(data: remainingData)
+            remainingData = incompleteFrame!.add(remainingData)
 
             if incompleteFrame!.isComplete {
                 try validateFrame(incompleteFrame!)
@@ -219,8 +216,8 @@ public final class WebSocket {
         return data.count
     }
 
-    private func validateFrame(_ frame: Frame) throws {
-        func fail(_ error: ErrorProtocol) throws -> ErrorProtocol {
+    fileprivate func validateFrame(_ frame: Frame) throws {
+        func fail(_ error: Error) throws -> Error {
             try close(.protocolError)
             return error
         }
@@ -266,8 +263,8 @@ public final class WebSocket {
         }
     }
 
-    private func processFrame(_ frame: Frame) throws {
-        func fail(_ error: ErrorProtocol) throws -> ErrorProtocol {
+    fileprivate func processFrame(_ frame: Frame) throws {
+        func fail(_ error: Error) throws -> Error {
             try close(.protocolError)
             return error
         }
@@ -292,10 +289,10 @@ public final class WebSocket {
         case .binary:
             try binaryEventEmitter.emit(continuationFrames.payload)
         case .text:
-            if (try? String(data: continuationFrames.payload)) == nil {
+            if (try? String(buffer: continuationFrames.payload)) == nil {
                 throw try fail(WebSocketError.invalidUTF8Payload)
             }
-            try textEventEmitter.emit(try String(data: continuationFrames.payload))
+            try textEventEmitter.emit(try String(buffer: continuationFrames.payload))
         case .ping:
             try pingEventEmitter.emit(frame.payload)
         case .pong:
@@ -307,11 +304,11 @@ public final class WebSocket {
                 var data = frame.payload
 
                 if data.count >= 2 {
-                    rawCloseCode = UInt16(Data(data.prefix(2)).toInt(size: 2))
-                    data.removeFirst(2)
+                  rawCloseCode = UInt16(data.subdata(in:0..<2).buffer.toInt(2))
+                    data = data.subdata(in:2..<data.count).buffer // TODO: is this efficient?
 
                     if data.count > 0 {
-                        closeReason = try? String(data: data)
+                      closeReason = try? String(buffer:data)
                     }
 
                     if data.count > 0 && closeReason == nil {
@@ -324,7 +321,7 @@ public final class WebSocket {
                 if let rawCloseCode = rawCloseCode {
                     let closeCode = CloseCode(code: rawCloseCode)
                     if closeCode.isValid {
-                        try close(closeCode ?? .normal, reason: closeReason)
+                        try close(closeCode , reason: closeReason)
                         try closeEventEmitter.emit((closeCode, closeReason))
                     } else {
                         throw try fail(WebSocketError.invalidCloseCode)
@@ -334,7 +331,7 @@ public final class WebSocket {
                     try closeEventEmitter.emit((nil, nil))
                 }
             } else if self.closeState == .serverClose {
-                try stream.close()
+                stream.close()
             }
         default:
             break
@@ -345,20 +342,24 @@ public final class WebSocket {
         }
     }
 
-    private func send(_ opCode: Frame.OpCode, data: Data) throws {
-        let maskKey: Data
+    fileprivate func send(_ opCode: Frame.OpCode, data: Buffer) throws {
+        let maskKey: Buffer
         if mode == .client {
-            maskKey = try Data(randomBytes: 4)
+            maskKey = try Buffer(randomBytes: 4)
         } else {
-            maskKey = []
+            maskKey = Buffer()
         }
         let frame = Frame(opCode: opCode, data: data, maskKey: maskKey)
         let data = frame.data
-        try stream.send(data)
+        try stream.write(data)
         try stream.flush()
     }
 
     public static func accept(_ key: String) -> String? {
-        return Base64.encode(sha1((key + GUID).data))
-    }
+        let a = sha1(Buffer(key + GUID)).filter {_ in return true}
+        
+        let string = Data(bytes: a).base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+        return string
+
+  }
 }

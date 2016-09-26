@@ -23,13 +23,12 @@
 // SOFTWARE.
 
 @_exported import WebSocket
+import Foundation
 
 import HTTP
 import HTTPClient
-import HTTPSClient
-import Base64
 
-public enum ClientError: ErrorProtocol {
+public enum ClientError: Error {
     case unsupportedScheme
     case hostRequired
     case responseNotWebsocket
@@ -39,44 +38,40 @@ public struct Client {
     private let client: Responder
     private let didConnect: (WebSocket) throws -> Void
 
-    public init(uri: URI, didConnect: (WebSocket) throws -> Void) throws {
-        guard let scheme = uri.scheme where scheme == "ws" || scheme == "wss" else {
+    public init(url: URL, didConnect: @escaping (WebSocket) throws -> Void) throws {
+        guard let scheme = url.scheme , scheme == "ws" || scheme == "wss" else {
             throw ClientError.unsupportedScheme
         }
 
-        guard let host = uri.host else {
+        guard let _ = url.host else {
             throw ClientError.hostRequired
         }
-
-        let secure = scheme == "wss"
-        let port = uri.port ?? (secure ? 443 : 80)
-        let uri = URI(host: host, port: port, scheme: secure ? "https" : "http")
-
-        if secure {
-            self.client = try HTTPSClient.Client(uri: uri)
-        } else {
-            self.client = try HTTPClient.Client(uri: uri)
-        }
+        let urlStr = url.absoluteString
+        let urlhttp = URL(string: urlStr.replacingCharacters(in: urlStr.range(of:"ws")!, with: "http"))!
+        self.client = try HTTPClient.Client(url: urlhttp)
 
         self.didConnect = didConnect
     }
 
     public func connect(_ path: String) throws {
-        let key = try Base64.encode(Random.getBytes(16))
+        let a = try Random.bytes(16).filter {_ in return true}
+      
+        let key = Data(bytes: a).base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
 
         let headers: Headers = [
             "Connection": "Upgrade",
             "Upgrade": "websocket",
             "Sec-WebSocket-Version": "13",
-            "Sec-WebSocket-Key": [key],
+            "Sec-WebSocket-Key": key,
         ]
 
-        let request = try Request(method: .get, uri: path, headers: headers) { response, stream in
+        var request = Request(method: .get, url: path, headers: headers)
+        request?.upgradeConnection { response, stream in
             guard response.status == .switchingProtocols && response.isWebSocket else {
                 throw ClientError.responseNotWebsocket
             }
 
-            guard let accept = response.webSocketAccept where accept == WebSocket.accept(key) else {
+            guard let accept = response.webSocketAccept , accept == WebSocket.accept(key) else {
                 throw ClientError.responseNotWebsocket
             }
 
@@ -85,38 +80,39 @@ public struct Client {
             try webSocket.start()
         }
 
-        try client.respond(to: request)
+        _ = try client.respond(to: request!)
     }
 
-    public func connectInBackground(_ path: String, failure: (ErrorProtocol) -> Void = Client.logError) {
+    public func connectInBackground(_ path: String, failure: @escaping (Error) -> Void = Client.logError) {
         co {
             do {
                 try self.connect(path)
             } catch {
+                print ("toto")
                 failure(error)
             }
         }
     }
 
-    static func logError(error: ErrorProtocol) {
+    static func logError(error: Error) {
         print(error)
     }
 }
 
 public extension Response {
     public var webSocketVersion: String? {
-        return headers["Sec-Websocket-Version"].first
+        return headers["Sec-Websocket-Version"]
     }
 
     public var webSocketKey: String? {
-        return headers["Sec-Websocket-Key"].first
+        return headers["Sec-Websocket-Key"]
     }
 
     public var webSocketAccept: String? {
-        return headers["Sec-WebSocket-Accept"].first
+        return headers["Sec-WebSocket-Accept"]
     }
 
     public var isWebSocket: Bool {
-        return connection.first?.lowercased() == "upgrade" && upgrade.first?.lowercased() == "websocket"
+        return connection?.lowercased() == "upgrade" && upgrade?.lowercased() == "websocket"
     }
 }

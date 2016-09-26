@@ -22,29 +22,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import POSIX
-#if os(OSX)
+import Core
+
+#if os(Linux)
+    import Glibc
+#else
     import Security
 #endif
 
-extension Data {
+extension Buffer {
     init<T>(number: T) {
-        let totalBytes = sizeof(T)
-        let valuePointer = UnsafeMutablePointer<T>(allocatingCapacity: 1)
+        let totalBytes = MemoryLayout<T>.size
+        let valuePointer = UnsafeMutablePointer<T>.allocate(capacity: 1)
         valuePointer.pointee = number
-        let bytesPointer = UnsafeMutablePointer<Byte>(valuePointer)
-        var bytes = [UInt8](repeating: 0, count: totalBytes)
-        for j in 0 ..< totalBytes {
-            bytes[totalBytes - 1 - j] = (bytesPointer + j).pointee
-        }
-        valuePointer.deinitialize()
-        valuePointer.deallocateCapacity(1)
+      
+        let bytes = valuePointer.withMemoryRebound(to: UInt8.self, capacity: totalBytes, { (p) -> [UInt8] in
+          
+          var bytes = [UInt8](repeating: 0, count: totalBytes)
+          for j in 0 ..< totalBytes {
+            bytes[totalBytes - 1 - j] = (p + j).pointee
+          }
+          return bytes
+        })
+                valuePointer.deinitialize()
+        valuePointer.deallocate(capacity: 1)
         self.init(bytes)
     }
 
-    func toInt(size: Int, offset: Int = 0) -> UIntMax {
+    func toInt(_ size: Int, offset: Int = 0) -> UIntMax {
         guard size > 0 && size <= 8 && count >= offset+size else { return 0 }
-        let slice = self[startIndex.advanced(by: offset) ..< startIndex.advanced(by: offset+size)]
+      let slice = self.subdata(in:startIndex.advanced(by: offset) ..< startIndex.advanced(by: offset+size))
         var result: UIntMax = 0
         for (idx, byte) in slice.enumerated() {
             let shiftAmount = UIntMax(size.toIntMax() - idx - 1) * 8
@@ -76,6 +83,6 @@ extension Data {
             }
         #endif
 
-        self.bytes = bytes
+        self.init(bytes)
     }
 }

@@ -10,6 +10,8 @@
 // - Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 // - This notice may not be removed or altered from any source or binary distribution.
 
+import Core
+
 func rotateLeft(_ value: UInt8, count: UInt8) -> UInt8 {
     return ((value << count) & 0xFF) | (value >> (8 - count))
 }
@@ -43,19 +45,22 @@ func reverseBytes(_ value: UInt32) -> UInt32 {
 }
 
 func arrayOfBytes<T>(_ value: T, length: Int? = nil) -> [UInt8] {
-    let totalBytes = length ?? sizeof(T)
+    let totalBytes = length ?? MemoryLayout<T>.size
 
-    let valuePointer = UnsafeMutablePointer<T>(allocatingCapacity: 1)
+    let valuePointer = UnsafeMutablePointer<T>.allocate(capacity: 1)
     valuePointer.pointee = value
-
-    let bytesPointer = UnsafeMutablePointer<UInt8>(valuePointer)
-    var bytes = [UInt8](repeating: 0, count: totalBytes)
-    for j in 0..<min(sizeof(T),totalBytes) {
-        bytes[totalBytes - 1 - j] = (bytesPointer + j).pointee
+  
+    let bytes = valuePointer.withMemoryRebound(to: UInt8.self, capacity: totalBytes) { (p) -> [UInt8] in
+      var bytes = [UInt8](repeating: 0, count: totalBytes)
+      for j in 0..<min(MemoryLayout<T>.size,totalBytes) {
+        bytes[totalBytes - 1 - j] = (p + j).pointee
+      }
+      return bytes
     }
 
+
     valuePointer.deinitialize(count: 1)
-    valuePointer.deallocateCapacity(1)
+    valuePointer.deallocate(capacity: 1)
 
     return bytes
 }
@@ -63,7 +68,7 @@ func arrayOfBytes<T>(_ value: T, length: Int? = nil) -> [UInt8] {
 func toUInt32Array(_ slice: ArraySlice<UInt8>) -> Array<UInt32> {
     var result = Array<UInt32>()
     result.reserveCapacity(16)
-    for idx in stride(from: slice.startIndex, to: slice.endIndex, by: sizeof(UInt32)) {
+    for idx in stride(from: slice.startIndex, to: slice.endIndex, by: MemoryLayout<UInt32>.size) {
         let val1:UInt32 = (UInt32(slice[idx.advanced(by: 3)]) << 24)
         let val2:UInt32 = (UInt32(slice[idx.advanced(by: 2)]) << 16)
         let val3:UInt32 = (UInt32(slice[idx.advanced(by: 1)]) << 8)
@@ -78,10 +83,14 @@ func toUInt32Array(_ slice: ArraySlice<UInt8>) -> Array<UInt32> {
 let size: Int = 20 // 160 / 8
 let h: [UInt32] = [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0]
 
-func sha1(_ data: Data) -> Data {
+func sha1(_ buffer: Buffer) -> Buffer {
     let len = 64
-    let originalMessage = data.bytes
-    var tmpMessage = data.bytes
+    let originalMessage = buffer.filter { (u) -> Bool in
+      return true
+  }
+  var tmpMessage = buffer.filter { (u) -> Bool in
+    return true
+  }
 
     // Step 1. Append Padding Bits
     tmpMessage.append(0x80) // append one bit (UInt8 with one bit) to message
@@ -178,7 +187,7 @@ func sha1(_ data: Data) -> Data {
         result += [UInt8(item & 0xff), UInt8((item >> 8) & 0xff), UInt8((item >> 16) & 0xff), UInt8((item >> 24) & 0xff)]
     }
 
-    return Data(result)
+    return Buffer(result)
 }
 
 struct BytesSequence: Sequence {

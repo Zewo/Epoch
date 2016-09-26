@@ -17,10 +17,12 @@ let package = Package(
         Target(name: "HTTPServer", dependencies: ["HTTPFile", "TCP", "Venice"]),
         Target(name: "HTTPClient", dependencies: ["HTTPFile", "TCP", "Venice"]),
         Target(name: "WebSocket", dependencies: ["Core"]),
-        Target(name: "WebSocketServer", dependencies: ["WebSocket"]),
+        Target(name: "WebSocketServer", dependencies: ["WebSocket", "HTTP"]),
         Target(name: "WebSocketClient", dependencies: ["WebSocket", "HTTPClient"]),
 
         Target(name: "ExampleApplication", dependencies: ["HTTPServer"]),
+        Target(name: "WSServer", dependencies: ["WebSocketServer", "HTTPServer"]),
+        Target(name: "WSClient", dependencies: ["WebSocketClient"]),
     ],
     dependencies: [
         .Package(url: "https://github.com/Zewo/CLibvenice.git", majorVersion: 0, minor: 13),
