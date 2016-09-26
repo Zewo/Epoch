@@ -4,15 +4,13 @@ public struct ClientContentNegotiationMiddleware : Middleware {
         case stream
     }
 
-    public let mode: Mode
-    public let types: [MediaTypeConvertible.Type]
+    private let mode: Mode
+    private let types: [MediaTypeConverter.Type]
+    private let mediaTypes: [MediaType]
 
-    var mediaTypes: [MediaType] {
-        return types.map({$0.mediaType})
-    }
-
-    public init(mediaTypes: [MediaTypeConvertible.Type], mode: Mode = .stream) {
+    public init(mediaTypes: [MediaTypeConverter.Type], mode: Mode = .stream) {
         self.types = mediaTypes
+        self.mediaTypes = types.map({ $0.mediaType })
         self.mode = mode
     }
 

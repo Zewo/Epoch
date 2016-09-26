@@ -19,23 +19,19 @@ public final class BufferStream : Stream {
     }
     
     public func read(into targetBuffer: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int {
-        if closed && buffer.count == 0 {
+        guard !closed && !buffer.isEmpty else {
             throw StreamError.closedStream
         }
         
-        guard !buffer.isEmpty else {
-            return 0
-        }
-        
-        guard !targetBuffer.isEmpty else {
+        guard let targetBaseAddress = targetBuffer.baseAddress else {
             return 0
         }
         
         let read = min(buffer.count, targetBuffer.count)
-        buffer.copyBytes(to: targetBuffer.baseAddress!, count: read)
+        buffer.copyBytes(to: targetBaseAddress, count: read)
         
-        if buffer.count > read {
-            buffer = buffer.subdata(in: buffer.startIndex.advanced(by: read)..<buffer.endIndex)
+        if read < buffer.count {
+            buffer = buffer.subdata(in: read..<buffer.count)
         } else {
             buffer = Buffer.empty
         }

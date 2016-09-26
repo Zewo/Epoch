@@ -31,39 +31,39 @@ extension Buffer {
             guard bufferPtr.count > 1 else {
                 return Buffer()
             }
-            
+
             return bufferPtr.baseAddress!.withMemoryRebound(to: UInt8.self, capacity: bufferPtr.count) { ptr in
                 return Buffer(bytes: UnsafeBufferPointer<UInt8>(start: ptr, count: bufferPtr.count - 1))
             }
         }
     }
-    
+
     public init(_ bytes: [UInt8]) {
         self = bytes.withUnsafeBufferPointer { Buffer(bytes: $0) }
     }
-    
+
     public init() {
         self = Buffer.empty
     }
-    
+
     public init(count: Int, fill: (UnsafeMutableBufferPointer<UInt8>) throws -> Void) rethrows {
         self = try Buffer(capacity: count) {
             try fill($0)
             return count
         }
     }
-    
+
     public init(capacity: Int, fill: (UnsafeMutableBufferPointer<UInt8>) throws -> Int) rethrows {
         let bytes = UnsafeMutablePointer<UInt8>.allocate(capacity: capacity)
         let buffer = UnsafeMutableBufferPointer(start: bytes, count: capacity)
         let usedCapacity = try fill(buffer)
-        
+
         guard usedCapacity > 0 else {
             bytes.deallocate(capacity: capacity)
             self = Buffer.empty
             return
         }
-        
+
         guard Double(usedCapacity) > Double(capacity) * 0.25 else {
             defer {
                 bytes.deallocate(capacity: capacity)
@@ -71,10 +71,10 @@ extension Buffer {
             self = Buffer(bytes: UnsafeBufferPointer<UInt8>(start: bytes, count: usedCapacity))
             return
         }
-        
+
         self = Buffer(bytesNoCopy: UnsafeBufferPointer<UInt8>(start: bytes, count: usedCapacity), deallocator: .free)
     }
-    
+
     public subscript(_ range: Range<Int>) -> Buffer {
         return subdata(in: self.startIndex.advanced(by: range.lowerBound)..<self.startIndex.advanced(by: range.upperBound))
     }
@@ -125,7 +125,7 @@ public func ==(lhs: Buffer, rhs: Buffer) -> Bool {
     guard lhs.count > 0 && rhs.count > 0 else {
         return true
     }
-    
+
     return lhs.withUnsafeBytes { lhsBytes in
         rhs.withUnsafeBytes { rhsBytes in
             return memcmp(UnsafeRawPointer(lhsBytes), UnsafeRawPointer(rhsBytes), lhs.count) == 0

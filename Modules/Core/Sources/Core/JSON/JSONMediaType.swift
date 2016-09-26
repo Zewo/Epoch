@@ -1,6 +1,6 @@
 public enum JSON {}
 
-extension JSON : MediaTypeConvertible {
+extension JSON : MediaTypeConverter {
     public static var mediaType: MediaType {
         return MediaType(type: "application", subtype: "json", parameters: ["charset": "utf-8"])
     }

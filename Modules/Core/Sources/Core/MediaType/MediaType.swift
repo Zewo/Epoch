@@ -1,4 +1,4 @@
-public protocol MediaTypeConvertible {
+public protocol MediaTypeConverter {
     static var mediaType: MediaType { get }
     static var parser: MapParser.Type { get }
     static var serializer: MapSerializer.Type { get }

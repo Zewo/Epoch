@@ -1,6 +1,6 @@
 public enum URLEncodedForm {}
 
-extension URLEncodedForm : MediaTypeConvertible {
+extension URLEncodedForm : MediaTypeConverter {
     public static var mediaType: MediaType {
         return MediaType(
             type: "application",

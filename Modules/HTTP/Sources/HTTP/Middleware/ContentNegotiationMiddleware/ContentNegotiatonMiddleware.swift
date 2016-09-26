@@ -3,51 +3,43 @@ public enum ContentNegotiationMiddlewareError : Error {
     case noSuitableSerializer
 }
 
-func parserTypes(for mediaType: MediaType, `in` types: [MediaTypeConvertible.Type]) -> [(MediaType, MapParser.Type)] {
+func parserTypes(for mediaType: MediaType, `in` types: [MediaTypeConverter.Type]) -> [(MediaType, MapParser.Type)] {
     var parsers: [(MediaType, MapParser.Type)] = []
 
-    for type in types {
-        if type.mediaType.matches(other: mediaType) {
-            parsers.append(type.mediaType, type.parser)
-        }
+    for type in types where type.mediaType.matches(other: mediaType) {
+        parsers.append(type.mediaType, type.parser)
     }
 
     return parsers
 }
 
-func firstParserType(for mediaType: MediaType, `in` types: [MediaTypeConvertible.Type]) throws -> (MediaType, MapParser.Type) {
-    for type in types {
-        if type.mediaType.matches(other: mediaType) {
-            return (type.mediaType, type.parser)
-        }
+func firstParserType(for mediaType: MediaType, `in` types: [MediaTypeConverter.Type]) throws -> (MediaType, MapParser.Type) {
+    guard let first = parserTypes(for: mediaType, in: types).first else {
+        throw ContentNegotiationMiddlewareError.noSuitableParser
     }
 
-    throw ContentNegotiationMiddlewareError.noSuitableParser
+    return first
 }
 
-func serializerTypes(for mediaType: MediaType, `in` types: [MediaTypeConvertible.Type]) -> [(MediaType, MapSerializer.Type)] {
+func serializerTypes(for mediaType: MediaType, `in` types: [MediaTypeConverter.Type]) -> [(MediaType, MapSerializer.Type)] {
     var serializers: [(MediaType, MapSerializer.Type)] = []
 
-    for type in types {
-        if type.mediaType.matches(other: mediaType) {
-            serializers.append(type.mediaType, type.serializer)
-        }
+    for type in types where type.mediaType.matches(other: mediaType) {
+        serializers.append(type.mediaType, type.serializer)
     }
 
     return serializers
 }
 
-func firstSerializerType(for mediaType: MediaType, `in` types: [MediaTypeConvertible.Type]) throws -> (MediaType, MapSerializer.Type) {
-    for type in types {
-        if type.mediaType.matches(other: mediaType) {
-            return (type.mediaType, type.serializer)
-        }
+func firstSerializerType(for mediaType: MediaType, `in` types: [MediaTypeConverter.Type]) throws -> (MediaType, MapSerializer.Type) {
+    guard let first = serializerTypes(for: mediaType, in: types).first else {
+        throw ContentNegotiationMiddlewareError.noSuitableSerializer
     }
 
-    throw ContentNegotiationMiddlewareError.noSuitableSerializer
+    return first
 }
 
-func parse(stream: InputStream, deadline: Double, mediaType: MediaType, `in` types: [MediaTypeConvertible.Type]) throws -> (MediaType, Map) {
+func parse(stream: InputStream, deadline: Double, mediaType: MediaType, `in` types: [MediaTypeConverter.Type]) throws -> (MediaType, Map) {
     let (mediaType, parserType) = try firstParserType(for: mediaType, in: types)
 
     do {
@@ -59,7 +51,7 @@ func parse(stream: InputStream, deadline: Double, mediaType: MediaType, `in` typ
     }
 }
 
-func parse(buffer: Buffer, deadline: Double, mediaType: MediaType, `in` types: [MediaTypeConvertible.Type]) throws -> (MediaType, Map) {
+func parse(buffer: Buffer, deadline: Double, mediaType: MediaType, `in` types: [MediaTypeConverter.Type]) throws -> (MediaType, Map) {
     var lastError: Error?
 
     for (mediaType, parserType) in parserTypes(for: mediaType, in: types) {
@@ -81,7 +73,7 @@ func parse(buffer: Buffer, deadline: Double, mediaType: MediaType, `in` types: [
     }
 }
 
-func serializeToStream(from content: Map, deadline: Double, mediaTypes: [MediaType], `in` types: [MediaTypeConvertible.Type]) throws -> (MediaType, (OutputStream) throws -> Void)  {
+func serializeToStream(from content: Map, deadline: Double, mediaTypes: [MediaType], `in` types: [MediaTypeConverter.Type]) throws -> (MediaType, (OutputStream) throws -> Void)  {
     for acceptedType in mediaTypes {
         for (mediaType, serializerType) in serializerTypes(for: acceptedType, in: types) {
             return (mediaType, { stream in
@@ -94,7 +86,7 @@ func serializeToStream(from content: Map, deadline: Double, mediaTypes: [MediaTy
     throw ContentNegotiationMiddlewareError.noSuitableSerializer
 }
 
-func serializeToBuffer(from content: Map, deadline: Double, mediaTypes: [MediaType], `in` types: [MediaTypeConvertible.Type]) throws -> (MediaType, Buffer) {
+func serializeToBuffer(from content: Map, deadline: Double, mediaTypes: [MediaType], `in` types: [MediaTypeConverter.Type]) throws -> (MediaType, Buffer) {
     var lastError: Error?
 
     for acceptedType in mediaTypes {
