@@ -423,7 +423,7 @@ extension Map {
         }
     }
     
-    public func asArray(converting: Bool = false) throws -> [Map] {
+    public func asArr(converting: Bool = false) throws -> [Map] {
         guard converting else {
             return try get()
         }
@@ -504,7 +504,7 @@ extension Map {
         for element in indexPath {
             switch element.indexPathValue {
             case .index(let index):
-                let array = try value.asArray()
+                let array = try value.asArr()
                 if array.indices.contains(index) {
                     value = array[index]
                 } else {
@@ -819,8 +819,8 @@ extension Map: InMap {
         return try? get()
     }
     
-    public var asArray: [Map]? {
-        return try? asArray()
+    public func asArray() -> [Map]? {
+        return try? asArr()
     }
     
 }

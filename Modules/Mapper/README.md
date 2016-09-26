@@ -16,7 +16,7 @@ The maing advantage of **Mapper** is that you don't need to write multiple initi
 
 And while reducing boilerplate, **Mapper** is also amazingly fast. It doesn't use reflection, and generics allows the compiler to optimize code in the most effective way.
 
-**Mapper** itself is just a core mapping logic without any implementations. To actually use **Mapper**, you also have to import one of Mapper-conforming libraries. You can find a current list of them [here](#conformers). If you want to support **Mapper** for your data types, checkout [Adopting Mapper](#adopting-mapper) short guide.
+**Mapper** itself is just a core mapping logic without any implementations. To actually use **Mapper**, you also have to import one of Mapper-conforming libraries. You can find a current list of them [here](#mapper-compatible-libraries). If you want to support **Mapper** for your data types, checkout [Adopting Mapper](#adopting-mapper) short guide.
 
 **Mapper** is deeply inspired by Lyft's [Mapper](https://github.com/lyft/mapper). You can learn more about the concept behind their idea in [this talk](https://realm.io/news/slug-keith-smiley-embrace-immutability/).
 
@@ -320,13 +320,269 @@ extension NSDate : ExternalOutMappable { }
 
 Now `NSDate` can be mapped as usual.
 
-## Mapper-conforming libraries
+## Mapper-compatible libraries
 
 - Zewo/Map
 - Zewo/JSON
 - MongoKitten/BSON
 
-## Adopting Mapper short guide
+## Adopting Mapper
+
+Swift is in process of discovering its own native patterns. One thing for sure -- enum-based structured data types are among them. The problem is that they are completely disconnected from each other, although they are similar in many ways. **Mapper**'s mission is to build bridges between these types.
+
+There are two main protocols with which you should work: `InMap` (for *in mapping*) and `OutMap` (for *out mapping*).
+
+Let's work from example. Imagine that we have some pretty typical enum-based type:
+
+```swift
+public enum MapperMap {
+    case int(Int)
+    case double(Double)
+    case string(String)
+    case bool(Bool)
+    case array([MapperMap])
+    case dictionary([String: MapperMap])
+}
+```
+
+Let's look at `InMap` protocol:
+
+```swift
+public protocol InMap {
+    func get(at indexPath: IndexPathElement) -> Self?
+    func get(at indexPath: [IndexPathElement]) -> Self?
+    func asArray() -> [Self]?
+    func get<T>() -> T?
+}
+```
+
+Where `IndexPathElement` is basically any type that can be represented as `IndexPathValue`:
+
+```swift
+public enum IndexPathValue {
+    case index(Int)
+    case key(String)
+}
+```
+
+Also it's worth mentioning, that `get(at indexPath: [IndexPathElement])` method has default implementation, so you don't have to write it yourself.
+
+So, here is our `MapperMap : InMap` implementation:
+
+```swift
+extension MapperMap : InMap {
+    
+    public func get(at indexPath: IndexPathElement) -> MapperMap? {
+        switch (indexPath.indexPathValue, self) {
+        case (.key(let key), .dictionary(let dict)):
+            return dict[key]
+        case (.index(let index), .array(let array)):
+            if array.indices.contains(index) {
+                return array[index]
+            }
+            return nil
+        default:
+            return nil
+        }
+    }
+    
+    public func get<T>() -> T? {
+        switch self {
+        case .int(let int as T):
+            return int
+        case .double(let double as T):
+            return double
+        case .string(let string as T):
+            return string
+        case .bool(let bool as T):
+            return bool
+        case .array(let array as T):
+            return array
+        case .dictionary(let dict as T):
+            return dict
+        default:
+            return nil
+        }
+    }
+    
+    public func asArray() -> [MapperMap]? {
+        if case .array(let array) = self {
+            return array
+        }
+        return nil
+    }
+    
+}
+```
+
+That seems nice. But not always we have situation that ordinary. Let's pretend that now we have new format:
+
+```swift
+public enum MapperNeomap {
+    case bool(Bool)
+    case int32(Int32)
+    case uint(UInt)
+    case uint8(UInt8)
+    case string(String)
+    case float(Float)
+    case array([MapperNeomap])
+    case dictionary([String: MapperNeomap])
+}
+```
+
+Here, it's important to mention one thing.
+
+**All** Mapper-compatible libraries are expected to work with next "primitive" types:
+
+- `Int`
+- `Double`
+- `String`
+- `Bool`
+
+If your format supports more -- that's nice, but these four should be supported out-of-the-box.
+
+As you see, our `MapperNeomap` doesn't support `Int` and `Double`. So we should do this:
+
+```swift
+public func get<T>() -> T? {
+    switch self {
+    case .bool(let bool as T):
+        return bool
+    case .int32(let int32):
+        if T.self == Int.self {
+            return Int(int32) as? T
+        }
+        return int32 as? T
+    case .uint(let uint):
+        if T.self == Int.self {
+            return Int(uint) as? T
+        }
+        return uint as? T
+    case .string(let string as T):
+        return string
+    case .float(let float):
+        if T.self == Double.self {
+            return Double(float) as? T
+        }
+        return float as? T
+    case .array(let array as T):
+        return array
+    case .dictionary(let dict as T):
+        return dict
+    }
+}
+```
+
+Pretty verbose, yes, but necessary. Again, `Int`, `Double`, `String` and `Bool` are expected to work, even if they are not directly available in your data format.
+
+Now let's look at `OutMap`:
+
+```swift
+public protocol OutMap {
+    static var blank: Self { get }
+    mutating func set(_ map: Self, at indexPath: IndexPathElement) throws
+    mutating func set(_ map: Self, at indexPath: [IndexPathElement]) throws
+    static func fromArray(_ array: [Self]) -> Self?
+    static func from<T>(_ value: T) -> Self?
+}
+```
+
+Pretty much the same, but reversed. Again, `set(_ map: Self, at indexPath: [IndexPathElement])` has default implementation.
+
+So, let's look at `MapperMap : OutMap`:
+
+```swift
+extension MapperMap : OutMap {
+    
+    public static var blank: MapperMap {
+        return .dictionary([:])
+    }
+    
+    public mutating func set(_ map: MapperMap, at indexPath: IndexPathElement) throws {
+        switch (indexPath.indexPathValue, self) {
+        case (.key(let key), .dictionary(var dict)):
+            dict[key] = map
+            self = .dictionary(dict)
+        case (.index(let index), .array(var array)):
+            array[index] = map
+            self = .array(array)
+        default:
+            throw MapperMapOutMapError.incompatibleType
+        }
+    }
+    
+    public static func fromArray(_ array: [MapperMap]) -> MapperMap? {
+        return .array(array)
+    }
+    
+    public static func from<T>(_ value: T) -> MapperMap? {
+        if let int = value as? Int {
+            return .int(int)
+        }
+        if let double = value as? Double {
+            return .double(double)
+        }
+        if let string = value as? String {
+            return .string(string)
+        }
+        if let bool = value as? Bool {
+            return .bool(bool)
+        }
+        if let array = value as? [MapperMap] {
+            return .array(array)
+        }
+        if let dict = value as? [String: MapperMap] {
+            return .dictionary(dict)
+        }
+        return nil
+    }
+    
+}
+```
+
+And our neomap counterpart:
+
+```swift
+public static func from<T>(_ value: T) -> MapperNeomap? {
+    if let int = value as? Int {
+        let i32 = Int32(int)
+        return .int32(i32)
+    }
+    if let double = value as? Double {
+        let float = Float(double)
+        return .float(float)
+    }
+    if let string = value as? String {
+        return .string(string)
+    }
+    if let bool = value as? Bool {
+        return .bool(bool)
+    }
+    if let i32 = value as? Int32 {
+        return .int32(i32)
+    }
+    if let uint = value as? UInt {
+        return .uint(uint)
+    }
+    if let float = value as? Float {
+        return .float(float)
+    }
+    if let array = value as? [MapperNeomap] {
+        return .array(array)
+    }
+    if let dict = value as? [String: MapperNeomap] {
+        return .dictionary(dict)
+    }
+    return nil
+}
+
+```
+
+Well, that's it! Now one can easily map strongly-typed instances from and to your data type!
+
+```swift
+let user = try User(from: mapperMap)
+```
 
 ## Installation
 

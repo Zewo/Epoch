@@ -72,6 +72,17 @@ extension OutMapperProtocol {
         try destination.set(new, at: indexPath)
     }
     
+    /// Maps given value to `indexPath`, where value is `ExternalOutMappable`.
+    ///
+    /// - parameter value:     `ExternalOutMappable` value that needs to be mapped.
+    /// - parameter indexPath: path to set value to.
+    ///
+    /// - throws: `OutMapperError`.
+    public mutating func map<T : ExternalOutMappable>(_ value: T, to indexPath: IndexPath...) throws {
+        let new: Destination = try value.map()
+        try destination.set(new, at: indexPath)
+    }
+    
     /// Maps given value to `indexPath`, where value is `RawRepresentable` (in most cases - `enum` with raw type).
     ///
     /// - parameter value:     `RawRepresentable` value that needs to be mapped.
@@ -119,6 +130,18 @@ extension OutMapperProtocol {
         try destination.set(map, at: indexPath)
     }
     
+    /// Maps given array of `ExternalOutMappable` values to `indexPath`.
+    ///
+    /// - parameter array:     `ExternalOutMappable` values that needs to be mapped.
+    /// - parameter indexPath: path to set values to.
+    ///
+    /// - throws: `OutMapperError`.
+    public mutating func mapArray<T : ExternalOutMappable>(_ array: [T], to indexPath: IndexPath...) throws {
+        let maps: [Destination] = try array.map({ try $0.map() })
+        let map = try arrayMap(of: maps)
+        try destination.set(map, at: indexPath)
+    }
+    
     /// Maps given array of `RawRepresentable` values to `indexPath`.
     ///
     /// - parameter array:     `RawRepresentable` values that needs to be mapped.
@@ -160,6 +183,21 @@ public struct OutMapper<Destination : OutMap, Keys : IndexPathElement> : OutMapp
     /// Creates `OutMapper` of `destination`.
     ///
     /// - parameter destination: `OutMap` to which data will be mapped.
+    public init(of destination: Destination) {
+        self.destination = destination
+    }
+    
+}
+
+public struct ExternalOutMapper<Destination : OutMap> : OutMapperProtocol {
+    
+    public typealias IndexPath = IndexPathValue
+    public var destination: Destination
+    
+    public init() {
+        self.destination = .blank
+    }
+    
     public init(of destination: Destination) {
         self.destination = destination
     }

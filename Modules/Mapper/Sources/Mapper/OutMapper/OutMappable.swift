@@ -30,6 +30,12 @@ public protocol OutMappableWithContext : OutMappable {
     
 }
 
+public protocol ExternalOutMappable {
+    
+    func outMap<Destination : OutMap>(mapper: inout ExternalOutMapper<Destination>) throws
+    
+}
+
 extension OutMappableWithContext {
     
     public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Keys>) throws {
@@ -42,7 +48,6 @@ extension OutMappableWithContext {
 
 extension OutMappable {
     
-    
     /// Maps `self` to `Destination` structured data instance.
     ///
     /// - parameter destination: instance to map to. Leave it .blank if you want to create your instance from scratch.
@@ -52,6 +57,23 @@ extension OutMappable {
     /// - returns: structured data instance created from `self`.
     public func map<Destination : OutMap>(to destination: Destination = .blank) throws -> Destination {
         var mapper = OutMapper<Destination, Keys>(of: destination)
+        try outMap(mapper: &mapper)
+        return mapper.destination
+    }
+    
+}
+
+extension ExternalOutMappable {
+    
+    /// Maps `self` to `Destination` structured data instance.
+    ///
+    /// - parameter destination: instance to map to. Leave it .blank if you want to create your instance from scratch.
+    ///
+    /// - throws: `OutMapperError`.
+    ///
+    /// - returns: structured data instance created from `self`.
+    public func map<Destination : OutMap>(to destination: Destination = .blank) throws -> Destination {
+        var mapper = ExternalOutMapper<Destination>(of: destination)
         try outMap(mapper: &mapper)
         return mapper.destination
     }

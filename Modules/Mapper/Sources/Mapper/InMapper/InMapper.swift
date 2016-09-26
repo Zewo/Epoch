@@ -40,7 +40,7 @@ fileprivate extension InMapperProtocol {
     }
     
     func array(from source: Source) throws -> [Source] {
-        if let array = source.asArray {
+        if let array = source.asArray() {
             return array
         } else {
             throw InMapperError.cannotRepresentAsArray

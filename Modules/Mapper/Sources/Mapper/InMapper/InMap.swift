@@ -20,8 +20,7 @@ public protocol InMap {
 
     
     /// The representation of `self` as an array of `Self`; `nil` if `self` is not an array.
-    var asArray: [Self]? { get }
-
+    func asArray() -> [Self]?
     
     /// Returns representation of `self` as desired `T`, if possible.
     func get<T>() -> T?
