@@ -54,3 +54,9 @@ extension IndexPathElement where Self : RawRepresentable, Self.RawValue : IndexP
         return rawValue.indexPathValue
     }
 }
+
+public enum NoKeys : IndexPathElement {
+    public var indexPathValue: IndexPathValue {
+        return .index(0)
+    }
+}

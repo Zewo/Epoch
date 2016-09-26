@@ -56,7 +56,7 @@ extension OutMapperProtocol {
     /// - parameter indexPath: path to set value to.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func map<T>(_ value: T, to indexPath: IndexPath) throws {
+    public mutating func map<T>(_ value: T, to indexPath: IndexPath...) throws {
         let map = try getMap(from: value)
         try destination.set(map, at: indexPath)
     }
@@ -67,7 +67,7 @@ extension OutMapperProtocol {
     /// - parameter indexPath: path to set value to.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func map<T : OutMappable>(_ value: T, to indexPath: IndexPath) throws {
+    public mutating func map<T : OutMappable>(_ value: T, to indexPath: IndexPath...) throws {
         let new: Destination = try value.map()
         try destination.set(new, at: indexPath)
     }
@@ -78,8 +78,9 @@ extension OutMapperProtocol {
     /// - parameter indexPath: path to set value to.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func map<T : RawRepresentable>(_ value: T, to indexPath: IndexPath) throws {
-        try map(value.rawValue, to: indexPath)
+    public mutating func map<T : RawRepresentable>(_ value: T, to indexPath: IndexPath...) throws {
+        let map = try getMap(from: value.rawValue)
+        try destination.set(map, at: indexPath)
     }
     
     /// Maps given value to `indexPath` using the defined context of value.
@@ -89,7 +90,7 @@ extension OutMapperProtocol {
     /// - parameter context: value-specific context, used to describe the way of mapping.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func map<T : OutMappableWithContext>(_ value: T, to indexPath: IndexPath, usingContext context: T.Context) throws {
+    public mutating func map<T : OutMappableWithContext>(_ value: T, to indexPath: IndexPath..., usingContext context: T.Context) throws {
         let new = try value.map(withContext: context) as Destination
         try destination.set(new, at: indexPath)
     }
@@ -100,7 +101,7 @@ extension OutMapperProtocol {
     /// - parameter indexPath: path to set values to.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func mapArray<T>(_ array: [T], to indexPath: IndexPath) throws {
+    public mutating func mapArray<T>(_ array: [T], to indexPath: IndexPath...) throws {
         let maps = try array.map({ try self.getMap(from: $0) })
         let map = try arrayMap(of: maps)
         try destination.set(map, at: indexPath)
@@ -112,7 +113,7 @@ extension OutMapperProtocol {
     /// - parameter indexPath: path to set values to.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func mapArray<T : OutMappable>(_ array: [T], to indexPath: IndexPath) throws {
+    public mutating func mapArray<T : OutMappable>(_ array: [T], to indexPath: IndexPath...) throws {
         let maps: [Destination] = try array.map({ try $0.map() })
         let map = try arrayMap(of: maps)
         try destination.set(map, at: indexPath)
@@ -124,8 +125,10 @@ extension OutMapperProtocol {
     /// - parameter indexPath: path to set values to.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func mapArray<T : RawRepresentable>(_ array: [T], to indexPath: IndexPath) throws {
-        try mapArray(array.map({ $0.rawValue }), to: indexPath)
+    public mutating func mapArray<T : RawRepresentable>(_ array: [T], to indexPath: IndexPath...) throws {
+        let maps = try array.map({ try self.getMap(from: $0.rawValue) })
+        let map = try arrayMap(of: maps)
+        try destination.set(map, at: indexPath)
     }
     
     /// Maps given array of values to `indexPath` using the value-defined context.
@@ -135,7 +138,7 @@ extension OutMapperProtocol {
     /// - parameter context: values-specific context, used to describe the way of mapping.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func mapArray<T : OutMappableWithContext>(_ array: [T], to indexPath: IndexPath, usingContext context: T.Context) throws {
+    public mutating func mapArray<T : OutMappableWithContext>(_ array: [T], to indexPath: IndexPath..., usingContext context: T.Context) throws {
         let maps: [Destination] = try array.map({ try $0.map(withContext: context) })
         let map = try arrayMap(of: maps)
         try destination.set(map, at: indexPath)
@@ -193,7 +196,7 @@ public struct ContextualOutMapper<Destination : OutMap, Keys : IndexPathElement,
     /// - parameter indexPath: path to set values to.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func map<T : OutMappableWithContext>(_ value: T, to indexPath: IndexPath) throws where T.Context == Context {
+    public mutating func map<T : OutMappableWithContext>(_ value: T, to indexPath: IndexPath...) throws where T.Context == Context {
         let new: Destination = try value.map(withContext: self.context)
         try destination.set(new, at: indexPath)
     }
@@ -204,7 +207,7 @@ public struct ContextualOutMapper<Destination : OutMap, Keys : IndexPathElement,
     /// - parameter indexPath: path to set values to.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func mapArray<T : OutMappableWithContext>(_ array: [T], to indexPath: IndexPath) throws where T.Context == Context {
+    public mutating func mapArray<T : OutMappableWithContext>(_ array: [T], to indexPath: IndexPath...) throws where T.Context == Context {
         let maps: [Destination] = try array.map({ try $0.map(withContext: context) })
         let map = try arrayMap(of: maps)
         try destination.set(map, at: indexPath)
@@ -213,6 +216,8 @@ public struct ContextualOutMapper<Destination : OutMap, Keys : IndexPathElement,
 }
 
 /// Mapper which use string as keys.
-public typealias StringOutMapper<Map : OutMap> = OutMapper<Map, String>
+public typealias StringOutMapper<Destination : OutMap> = OutMapper<Destination, String>
 /// Mapper which use string as keys.
-public typealias StringContextualOutMapper<Map : OutMap, Context> = ContextualOutMapper<Map, String, Context>
+public typealias StringContextualOutMapper<Destination : OutMap, Context> = ContextualOutMapper<Destination, String, Context>
+
+public typealias FlatOutMapper<Destination : OutMap> = OutMapper<Destination, NoKeys>

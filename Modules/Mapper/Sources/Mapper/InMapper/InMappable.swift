@@ -9,6 +9,10 @@ public protocol InMappable {
     
 }
 
+public protocol ExternalInMappable {
+    init<Source : InMap>(mapper: ExternalInMapper<Source>) throws
+}
+
 
 /// Entity which can be mapped (initialized) from any structured data type in multiple ways using user-determined context instance.
 public protocol InMappableWithContext : InMappable {

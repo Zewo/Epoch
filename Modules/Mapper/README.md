@@ -31,14 +31,14 @@ struct City : InMappable, OutMappable {
         self.name = try mapper.map(from: .name)
         self.population = try mapper.map(from: .population)
     }
+    
     func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, City.Keys>) throws {
         try mapper.map(self.name, to: .name)
         try mapper.map(self.population, to: .population)
     }
     
     enum Keys : String, IndexPathElement {
-        case name
-        case population
+        case name, population
     }
 }
 
@@ -64,6 +64,7 @@ struct Person : Mappable {
         self.isRegistered = try mapper.map(from: .registered)
         self.biographyPoints = try mapper.mapArray(from: .biographyPoints)
     }
+    
     func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Person.Keys>) throws {
         try mapper.map(self.name, to: .name)
         try mapper.map(self.gender, to: .gender)
@@ -74,12 +75,7 @@ struct Person : Mappable {
     }
     
     enum Keys : String, IndexPathElement {
-        case name
-        case gender
-        case city
-        case identifier
-        case registered
-        case biographyPoints
+        case name, gender, city, identifier, registered, biographyPoints
     }
 }
 
@@ -91,239 +87,246 @@ let michael = Person(from: mongoBSON)
 
 ## Usage
 
-**Mapper** allows you to map data in both ways, and so it has two major parts: **in** mapping (for example, *JSON -> your model*) and **out** mapping (*your model -> JSON*). So the two main protocols of **Mapper** is `InMappable` and `OutMappable`.
-
-One of the main advantages of **Mapper** is extreme type-safety. We want to get away from "stringy" API even in mappings, so we want you to create `Keys` enum inside each of your data model. That way you can boost your productivity and also avoid some painful typos:
-
-```swift
-struct Club : Mappable {
-    
-    let name: String
-    let country: String
-    let homeStadium: String
-    let yearOfCreation: Int
-    
-    enum Keys : String, IndexPathElement {
-        case name
-        case country
-        case homeStadium = "home-stadium"
-        case yearOfCreation = "year-of-creation"
-    }
-    
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
-        self.name = try mapper.map(from: .name)
-        self.country = try mapper.map(from: .country)
-        self.homeStadium = try mapper.map(from: .homeStadium)
-        self.yearOfCreation = try mapper.map(from: .yearOfCreation)
-    }
-    
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Keys>) throws {
-        try mapper.map(self.name, to: .name)
-        try mapper.map(self.country, to: .country)
-        try mapper.map(self.homeStadium, to: .homeStadium)
-        try mapper.map(self.yearOfCreation, to: .yearOfCreation)
-    }
-    
-}
-```
-
-As you see, both mappers has two generic arguments: `Source`/`Destination`, which is the structured data format, and `Keys`, which is type-specific `Keys` defined for your model. 
-
----
-
-**NOTE**: as you can see, `Keys` enum conforms to `IndexPathElement`, which is protocol defined by **Mapper**. Conformance is done automatically, but you should declare it. We also want to warn you that due to some unknown reasons, SourceKit is going crazy when you're starting writing `enum Keys : String, IndexPathElement { ...`, so we recommend you to first write your enum, and then declare `IndexPathElement` conformance.
-
----
-
-This kind of behavior is expected by default, but you can substitute `Keys` with `String` if you don't want it:
-
-```swift
-struct Club : Mappable {
-    
-    let name: String
-    let country: String
-    let homeStadium: String
-    let yearOfCreation: Int
-    
-    init<Source : InMap>(mapper: InMapper<Source, String>) throws {
-        self.name = try mapper.map(from: "name")
-        self.country = try mapper.map(from: "country")
-        self.homeStadium = try mapper.map(from: "home-stadium")
-        self.yearOfCreation = try mapper.map(from: "year-of-creation")
-    }
-    
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, String>) throws {
-        try mapper.map(self.name, to: "name")
-        try mapper.map(self.country, to: "county")
-        try mapper.map(self.homeStadium, to: "home-stadium")
-        try mapper.map(self.yearOfCreation, to: "year-of-creation")
-    }
-    
-}
-```
-
-``` swift
-import Mapper
-
-struct User: Mappable {
-    let id: Int
-    let username: String
-    let city: String?
-    
-    // Mappable requirement
-    init(mapper: Mapper) throws {
-        id = try mapper.map(from: "id")
-        username = try mapper.map(from: "username")
-        city = mapper.map(optionalFrom: "city")
-    }
-}
-
-let content: StructuredData = [
-    "id": 1654,
-    "username": "fireringer",
-    "city": "Houston"
-]
-let user = User.makeWith(structuredData: content) // User?
-```
-
 #### Basics
 
+**Mapper** allows you to map data in both ways, and so it has two major parts: **in** mapping (for example, *JSON -> your model*) and **out** mapping (*your model -> JSON*). So the two main protocols of **Mapper** is `InMappable` and `OutMappable`.
+
+To use **Mapper** in it's full glory, first you need to define nested `Keys` enum. `Keys` are needed to represent keys from/to which your properties will be mapped. Using nested `Keys` is a win for type-safety and can save you from some painful typos:
+
 ```swift
-struct Club {
+struct City {
+    
     let name: String
-    let season: Int?
-    let qualified: Bool
+    let population: Int
     
     enum Keys : String, IndexPathElement {
-        case name
-        case season
-        case qualified
+        case name, population
     }
+    
 }
+```
 
-extension Club : InMappable {
+Make sure to declare `Keys` as `IndexPathElement`!
+
+Now we're going to write mapping code. Let's start with *in mapping*:
+
+```swift
+extension City : InMappable {
     init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
         self.name = try mapper.map(from: .name)
-        self.season = try? mapper.map(from: .season)
-        self.qualified = try mapper.map(from: .qualified)
+        self.population = try mapper.map(from: .population)
     }
 }
 
-extension Club : OutMappable {
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Club.Keys>) throws {
+let city = try City(from: json)
+```
+
+Actually, that's it! Now your `City` can be created from JSON, BSON, MessagePack and a whole range of other data formats. And that's all thanks to the amazing power of generics. As you see, that's why your initializer is generic. And `from: .name` is actually where your `Keys` are used.
+
+Each call to `mapper` is marked with `try` because, obviously, it can fail. In this case initializer will throw with `InMapperError`. If one of your properties is optional, you can just write `try?`.
+
+Let's continue with *out mapping*:
+
+```swift
+extension City : OutMappable {
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Keys>) throws {
         try mapper.map(self.name, to: .name)
-        try mapper.map(self.season ?? 0, to: .season)
-        try mapper.map(self.qualified, to: .qualified)
+        try mapper.map(self.population, to: .population)
     }
 }
+
+let json: JSON = city.map()
+```
+
+As you see, the code is pretty similar, easy to reason about, and very expressive.
+
+As you see, both mappers have two generic arguments: `Source`/`Destination`, which is the structured data format, and `Keys`, which is specific `Keys` defined for your model. 
+
+Actually, if you don't want to write that `Keys`, we made `StringInMappable`/`StringOutMappable` just for you.
+
+```swift
+struct Planet : StringInMappable, StringOutMappable {
+    
+    let radius: Int
+    
+    init<Source : InMap>(mapper: StringInMapper<Source>) throws {
+        self.radius = try mapper.map(from: "radius")
+    }
+    
+    func outMap<Destination : OutMap>(mapper: inout StringOutMapper<Destination>) throws {
+        try mapper.map(self.radius, to: "radius")
+    }
+    
+}
+
 ```
 
 #### Mapping arrays
 
-**Be careful!** If you use `map(from:)` instead of `mapArray(from:)`, mapping will fail. And if you get `wrongType` error, most likely that you've made that mistake.
+To map array, you need to use `mapArray` functions instead of `map`. Please, be careful here -- you will get `wrongType` error if you forget to use `mapArray`.
 
 ```swift
-struct Album: Mappable {
+struct Album : Mappable {
+    
     let songs: [String]
-    init(mapper: Mapper) throws {
-        songs = try mapper.map(arrayFrom: "songs")
+    
+    enum Keys : String, IndexPathElement {
+        case songs
     }
-}
-
-struct Album: Mappable {
-    let songs: [String]?
-    init(mapper: Mapper) throws {
-        songs = try mapper.map(optionalArrayFrom: "songs")
+    
+    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+        self.songs = try mapper.mapArray(from: .songs)
     }
+    
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Album.Keys>) throws {
+        try mapper.mapArray(self.songs, to: .songs)
+    }
+    
 }
 ```
 
 #### Mapping enums
-You can use **Mapper** for mapping enums with raw values. Right now you can use only `String`, `Int` and `Double` as raw value.
+**Mapper** can also automatically map enums with raw values, which is neat.
 
 ```swift
-enum GuitarType: String {
-    case acoustic
-    case electric
+enum Wood : String {
+    case mahogany
+    case koa
+    case cedar
+    case spruce
 }
 
-struct Guitar: Mappable {
-    let vendor: String
-    let type: GuitarType
+enum Strings : Int {
+    case four = 4
+    case six = 6
+    case seven = 7
+}
+
+struct Guitar : Mappable {
     
-    init(mapper: Mapper) throws {
-        vendor = try mapper.map(from: "vendor")
-        type = try mapper.map(from: "type")
+    let wood: Wood
+    let strings: Strings
+    
+    enum Keys : String, IndexPathElement {
+        case wood, strings
     }
+    
+    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+        self.wood = try mapper.map(from: .wood)
+        self.strings = try mapper.map(from: .strings)
+    }
+    
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Guitar.Keys>) throws {
+        try mapper.map(self.wood, to: .wood)
+        try mapper.map(self.strings, to: .strings)
+    }
+    
 }
 ```
 
-#### Nested `Mappable` objects
+#### Nesting `Mappable`s
+
+Cool thing about **Mapper** is that you can easily map instances which are itself `Mappable`:
 
 ```swift
-struct League: Mappable {
+struct Sport : Mappable {
+    
     let name: String
-    init(mapper: Mapper) throws {
-        name = try mapper.map(from: "name")
+    
+    enum Keys : String, IndexPathElement {
+        case name
     }
+    
+    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+        self.name = try mapper.map(from: .name)
+    }
+    
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Sport.Keys>) throws {
+        try mapper.map(self.name, to: .name)
+    }
+    
 }
 
-struct Club: Mappable {
+struct Team : Mappable {
+    
+    let sport: Sport
     let name: String
-    let league: League
-    init(mapper: Mapper) throws {
-        name = try mapper.map(from: "name")
-        league = try mapper.map(from: "league")
+    let foundationYear: Int
+    
+    enum Keys : String, IndexPathElement {
+        case sport
+        case name
+        case foundationYear = "foundation-year"
     }
+    
+    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+        self.sport = try mapper.map(from: .sport)
+        self.name = try mapper.map(from: .name)
+        self.foundationYear = try mapper.map(from: .foundationYear)
+    }
+    
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Team.Keys>) throws {
+        try mapper.map(self.sport, to: .sport)
+        try mapper.map(self.name, to: .name)
+        try mapper.map(self.foundationYear, to: .foundationYear)
+    }
+    
 }
 ```
 
-#### Using `StructuredDataInitializable`
-`Mappable` is great for complex entities, but for the simplest one you can use `StructuredDataInitializable` protocol. `StructuredDataInitializable` objects can be initializaed from `StructuredData` itself, not from its `Mapper`. For example, **Mapper** uses `StructuredDataInitializable` to allow seamless `Int` conversion:
+#### Flat mapping
+
+Tutorial by example: making **Foundation**'s `Date` conform to `Mappable`.
 
 ```swift
-extension Int: StructuredDataInitializable {
-    public init(structuredData value: StructuredData) throws {
-        switch value {
-        case .numberValue(let number):
-            self.init(number)
-        default:
-            throw InitializableError.cantBindToNeededType
-        }
+extension Date : Mappable {
+    
+    public init<Source : InMap>(mapper: FlatInMapper<Source>) throws {
+        let interval: Double = try mapper.map()
+        self.init(timeIntervalSince1970: interval)
     }
+    
+    public func outMap<Destination : OutMap>(mapper: inout FlatOutMapper<Destination>) throws {
+        try mapper.map(self.timeIntervalSince1970)
+    }
+    
 }
 ```
 
-Now you can map `Int` using `from(_:)` just like anything else:
+Mappers take variadic parameter as index path, so it's possible to pass no index path at all. We call it "flat mapping".
+
+#### Mapping of external classes
+
+If you have some classes that you don't have direct access to (for example, **Cocoa** classes), and you want to make them `Mappable` for some reason, you should use `ExternalInMappable`/`ExternalOutMappable` with this approach:
 
 ```swift
-struct Generation: Mappable {
-    let number: Int
-    init(mapper: Mapper) throws {
-        number = try mapper.map(from: "number")
-    }
-}
-```
-
-Conversion of `Int` is available in **Mapper** out of the box, and you can extend any other type to conform to `StructuredDataInitializable` yourself, for example, `NSDate`:
-
-```swift
-import Foundation
-import Mapper
-
-extension StructuredDataInitializable where Self: NSDate {
-    public init(structuredData value: StructuredData) throws {
-        switch value {
-        case .numberValue(let number):
-            self.init(timeIntervalSince1970: number)
-        default:
-            throw InitializableError.cantBindToNeededType
-        }
+extension ExternalInMappable where Self : NSDate {
+    public init<Source : InMap>(mapper: ExternalInMapper<Source>) throws {
+        let interval: TimeInterval = try mapper.map()
+        self.init(timeIntervalSince1970: interval)
     }
 }
 
-extension NSDate: StructuredDataInitializable { }
+extension NSDate : ExternalInMappable { }
+
+extension ExternalOutMappable where Self : NSDate {
+    public func outMap<Destination : OutMap>(mapper: inout ExternalOutMapper<Destination>) throws {
+        try mapper.map(self.timeIntervalSince1970)
+    }
+}
+
+extension NSDate : ExternalOutMappable { }
 ```
+
+Now `NSDate` can be mapped as usual.
+
+## Mapper-conforming libraries
+
+- Zewo/Map
+- Zewo/JSON
+- MongoKitten/BSON
+
+## Adopting Mapper short guide
 
 ## Installation
 
