@@ -8,9 +8,8 @@ sudo: required
 dist: trusty
 osx_image: xcode8
 install:
-  - eval "$(curl -sL https://raw.githubusercontent.com/Zewo/Zewo/6a73bf8fcec5a86bb0ac66a084144046c85c23b0/Scripts/Travis/install.sh)"
+  - eval "$(curl -sL https://raw.githubusercontent.com/Zewo/Zewo/master/Scripts/Travis/install.sh)"
 script:
   - swift build
   - swift build --configuration release
   - swift test
-
