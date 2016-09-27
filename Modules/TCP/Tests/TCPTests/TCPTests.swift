@@ -9,7 +9,7 @@ public class TCPTests : XCTestCase {
     }
 
     func testSendClosedSocket() throws {
-        let host = try TCPHost(configuration: [])
+        let host = try TCPHost()
 
         co {
             do {
@@ -28,7 +28,7 @@ public class TCPTests : XCTestCase {
 
     func testFlushClosedSocket() throws {
         let port = 3333
-        let host = try TCPHost(configuration: ["host": "127.0.0.1", "port": Map(port), "reusePort": true])
+        let host = try TCPHost(host: "1270.0.0.1", port: port, reusePort: true)
 
         co {
             do {
@@ -47,7 +47,7 @@ public class TCPTests : XCTestCase {
 
     func testReceiveClosedSocket() throws {
         let port = 4444
-        let host = try TCPHost(configuration: ["host": "127.0.0.1", "port": Map(port), "reusePort": true])
+        let host = try TCPHost(host: "127.0.0.1", port: port, reusePort: true)
 
         co {
             do {
@@ -66,7 +66,7 @@ public class TCPTests : XCTestCase {
 
     func testSendReceive() throws {
         let port = 5555
-        let host = try TCPHost(configuration: ["host": "127.0.0.1", "port": Map(port), "reusePort": true])
+        let host = try TCPHost(host: "127.0.0.1", port: port, reusePort: true)
 
         co {
             do {
@@ -88,7 +88,7 @@ public class TCPTests : XCTestCase {
 
     func testClientServer() throws {
         let port = 6666
-        let host = try TCPHost(configuration: ["host": "127.0.0.1", "port": Map(port), "reusePort": true])
+        let host = try TCPHost(host: "127.0.0.1", port: port, reusePort: true)
 
         co {
             do {

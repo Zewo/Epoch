@@ -2,17 +2,9 @@ public struct TCPTLSHost : Host {
     public let host: TCPHost
     public let context: Context
 
-    public init(configuration: Map) throws {
-        let certificate: String = try configuration.get("certificate")
-        let privateKey: String = try configuration.get("privateKey")
-        let certificateChain = configuration["certificateChain"].string
-
+    public init(configuration: TCPHost.Configuration, context: Context) throws {
         self.host = try TCPHost(configuration: configuration)
-        self.context = try Context(
-            certificate: certificate,
-            privateKey: privateKey,
-            certificateChain: certificateChain
-        )
+        self.context = context
     }
 
     public func accept(deadline: Double) throws -> Stream {

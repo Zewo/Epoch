@@ -8,109 +8,35 @@ public struct Server {
     public let port: Int
     public let bufferSize: Int
 
-    public init(host: String = "0.0.0.0", port: Int = 8080, middleware: [Middleware] = [], responder: Responder, failure: @escaping (Error) -> Void =  Server.log(error:)) throws {
-        let backlog = 128
-        let reusePort = false
-
-        let bufferSize = 2048
-        let enableLog = true
-        let enableSession = true
-        let enableContentNegotiation = true
-
-        self.tcpHost = try TCPHost(
-            configuration: [
-                "host": Map(host),
-                "port": Map(port),
-                "backlog": Map(backlog),
-                "reusePort": Map(reusePort),
-                ]
-        )
-
-        var chain: [Middleware] = []
-
-        if enableLog {
-            chain.append(LogMiddleware())
-        }
-
-        if enableSession {
-            chain.append(SessionMiddleware())
-        }
-
-        if enableContentNegotiation {
-            chain.append(ContentNegotiationMiddleware(mediaTypes: [JSON.self, URLEncodedForm.self]))
-        }
-
-        chain.append(contentsOf: middleware)
-
-        self.host = host
-        self.port = port
-        self.bufferSize = bufferSize
-        self.middleware = chain
+    public init(configuration: Server.Configuration, middleware: [Middleware] = [], responder: Responder, failure: @escaping (Error) -> Void = Server.log(error:)) throws {
+        self.tcpHost = try TCPHost(configuration: configuration.tcp)
+        self.middleware = middleware
         self.responder = responder
         self.failure = failure
+        self.host = configuration.tcp.host
+        self.port = configuration.tcp.port
+        self.bufferSize = configuration.bufferSize
     }
 
-    public init(configuration: Map, middleware: [Middleware], responder: Responder, failure: @escaping (Error) -> Void =  Server.log(error:)) throws {
-        let host = configuration["tcp", "host"].string ?? "0.0.0.0"
-        let port = configuration["tcp", "port"].int ?? 8080
-        let backlog = configuration["tcp", "backlog"].int ?? 128
-        let reusePort = configuration["tcp", "reusePort"].bool ?? false
+    public init(host: String = "0.0.0.0", port: Int = 8080, backlog: Int, reusePort: Bool = false, bufferSize: Int = 2048,  middleware: [Middleware] = [], responder: Responder, failure: @escaping (Error) -> Void =  Server.log(error:)) throws {
 
-        let certificate = configuration["tls", "certificate"].string
-        let privateKey = configuration["tls", "privateKey"].string
-        let certificateChain = configuration["tls", "certificateChain"].string
+        try self.init(configuration: Server.Configuration.init(
+                tcp: .init(
+                    host: host,
+                    port: port,
+                    backlog: backlog,
+                    reusePort: reusePort
+                ),
+                bufferSize: bufferSize
+            ),
+            middleware: middleware,
+            responder: responder,
+            failure: failure
+        )
+    }
 
-        let bufferSize = configuration["bufferSize"].int ?? 2048
-        let enableLog = configuration["log"].bool ?? true
-        let enableSession = configuration["session"].bool ?? true
-        let enableContentNegotiation = configuration["contentNegotiation"].bool ?? true
-
-        if let c = certificate, let pk = privateKey {
-            self.tcpHost = try TCPTLSHost(
-                configuration: [
-                    "host": Map(host),
-                    "port": Map(port),
-                    "backlog": Map(backlog),
-                    "reusePort": Map(reusePort),
-
-                    "certificate": Map(c),
-                    "privateKey": Map(pk),
-                    "certificateChain": Map(certificateChain),
-                ]
-            )
-        } else {
-            self.tcpHost = try TCPHost(
-                configuration: [
-                    "host": Map(host),
-                    "port": Map(port),
-                    "backlog": Map(backlog),
-                    "reusePort": Map(reusePort),
-                ]
-            )
-        }
-
-        var chain: [Middleware] = []
-
-        if enableLog {
-            chain.append(LogMiddleware())
-        }
-
-        if enableSession {
-            chain.append(SessionMiddleware())
-        }
-
-        if enableContentNegotiation {
-            chain.append(ContentNegotiationMiddleware(mediaTypes: [JSON.self, URLEncodedForm.self]))
-        }
-
-        chain.append(contentsOf: middleware)
-
-        self.host = host
-        self.port = port
-        self.bufferSize = bufferSize
-        self.middleware = chain
-        self.responder = responder
-        self.failure = failure
+    public init(configuration map: Map, middleware: [Middleware] = [], responder: Responder, failure: @escaping (Error) -> Void =  Server.log(error:)) throws {
+        try self.init(configuration: Configuration(map: map), middleware: middleware, responder: responder, failure: failure)
     }
 
     public init(configuration: Map, middleware: [Middleware] = [], responder representable: ResponderRepresentable, failure: @escaping (Error) -> Void = Server.log(error:)) throws {
@@ -217,5 +143,24 @@ extension Server {
         header += "================================================================================\n"
         header += "Started HTTP server at \(host), listening on port \(port)."
         print(header)
+    }
+}
+
+extension Server {
+    public struct Configuration {
+        public let tcp: TCPHost.Configuration
+        public let bufferSize: Int
+
+        public init(tcp: TCPHost.Configuration = .init(), bufferSize: Int = 2048) {
+            self.tcp = tcp
+            self.bufferSize = bufferSize
+        }
+    }
+}
+
+extension Server.Configuration : MapInitializable {
+    public init(map: Map) throws {
+        self.bufferSize = map["bufferSize"].int ?? 2048
+        self.tcp = try (map["tcp"].dictionary?.map).flatMap(TCPHost.Configuration.init(map:)) ?? .init()
     }
 }
