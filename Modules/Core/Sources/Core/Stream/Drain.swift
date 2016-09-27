@@ -2,7 +2,7 @@ public final class Drain : BufferRepresentable, Stream {
     public private(set) var buffer: Buffer
     public var closed = false
 
-    public init(stream: InputStream, deadline: Double = .never) {
+    public init(stream: InputStream, deadline: Double = 1.minute.fromNow()) {
         if stream.closed {
             self.closed = true
         }
@@ -26,7 +26,7 @@ public final class Drain : BufferRepresentable, Stream {
         closed = true
     }
     
-    public func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double = .never) throws -> Int {
+    public func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double = 1.minute.fromNow()) throws -> Int {
         if closed && buffer.count == 0 {
             throw StreamError.closedStream(buffer: Buffer.empty)
         }
@@ -51,9 +51,9 @@ public final class Drain : BufferRepresentable, Stream {
         return read
     }
     
-    public func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double = .never) {
+    public func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double = 1.minute.fromNow()) {
         self.buffer.append(Buffer(bytes: buffer))
     }
 
-    public func flush(deadline: Double = .never) throws {}
+    public func flush(deadline: Double = 1.minute.fromNow()) throws {}
 }

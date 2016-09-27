@@ -1,43 +1,89 @@
-import CLibvenice
-import Core
-
+import POSIX
+import Venice
 
 public final class TCPConnection : Connection {
-    public var ip: IP
-    var socket: tcpsock?
-    public private(set) var closed = true
+    private var socket: FileDescriptor?
 
-    internal init(with socket: tcpsock) throws {
-        let address = tcpaddr(socket)
-        try ensureLastOperationSucceeded()
-        self.ip = IP(address: address)
+    public private(set) var ip: IP
+    public private(set) var closed: Bool
+
+    internal init(socket: FileDescriptor, ip: IP) {
+        self.ip = ip
         self.socket = socket
         self.closed = false
     }
 
-    public init(host: String, port: Int, deadline: Double = .never) throws {
-        self.ip = try IP(remoteAddress: host, port: port, deadline: deadline)
+    public init(host: String, port: Int, deadline: Double = 1.minute.fromNow()) throws {
+        self.ip = try IP(address: host, port: port, deadline: deadline)
+        self.socket = nil
+        self.closed = true
     }
 
-    public func open(deadline: Double = .never) throws {
-        self.socket = tcpconnect(ip.address, deadline.int64milliseconds)
-        try ensureLastOperationSucceeded()
+    public func open(deadline: Double = 1.minute.fromNow()) throws {
+        let address = ip.address
+
+        guard let socket = try? POSIX.socket(family: address.family, type: .stream, protocol: 0) else {
+            throw TCPError.failedToCreateSocket
+        }
+
+        try TCP.tune(socket: socket)
+
+        do {
+            try POSIX.connect(socket: socket, address: address)
+        } catch SystemError.operationNowInProgress {
+            do {
+                try poll(socket, events: .write, deadline: deadline)
+            } catch PollError.timeout {
+                try TCP.close(socket: socket)
+                throw TCPError.connectTimedOut
+            }
+            try POSIX.checkError(socket: socket)
+        } catch {
+            try TCP.close(socket: socket)
+            throw TCPError.failedToConnectSocket
+        }
+
+        self.socket = socket
         self.closed = false
     }
-
+    
     public func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double) throws {
         guard !buffer.isEmpty else {
             return
         }
         
         let socket = try getSocket()
-        try ensureStreamIsOpen()
+        try ensureStillOpen()
         
-        let bytesWritten = tcpsend(socket, buffer.baseAddress!, buffer.count, deadline.int64milliseconds)
-        
-        guard bytesWritten == buffer.count else {
-            try ensureLastOperationSucceeded()
-            throw SystemError.other(errorNumber: -1)
+        loop: while true {
+            var remaining: UnsafeBufferPointer<UInt8> = buffer
+            do {
+                let bytesWritten = try POSIX.send(socket: socket, buffer: remaining.baseAddress!, count: remaining.count, flags: .noSignal)
+                guard bytesWritten > 0 else {
+                    throw SystemError.other(errorNumber: -1)
+                }
+                guard bytesWritten < remaining.count else {
+                    return
+                }
+                
+                let remainingCount = remaining.startIndex.advanced(by: bytesWritten).distance(to: remaining.endIndex)
+                remaining = UnsafeBufferPointer<UInt8>(start: remaining.baseAddress!.advanced(by: bytesWritten), count: remainingCount)
+            } catch {
+                switch error {
+                case SystemError.resourceTemporarilyUnavailable, SystemError.operationWouldBlock:
+                    do {
+                        try poll(socket, events: .write, deadline: deadline)
+                    } catch PollError.timeout {
+                        throw StreamError.timeout(buffer: Buffer())
+                    }
+                    continue loop
+                case SystemError.connectionResetByPeer, SystemError.brokenPipe:
+                    close()
+                    throw StreamError.closedStream(buffer: Buffer())
+                default:
+                    throw error
+                }
+            }
         }
     }
     
@@ -47,54 +93,63 @@ public final class TCPConnection : Connection {
         }
         
         let socket = try getSocket()
-        try ensureStreamIsOpen()
+        try ensureStillOpen()
         
-        let bytesRead = tcprecvlh(socket, into.baseAddress!, 1, into.count, deadline.int64milliseconds)
-        
-        if bytesRead == 0 {
+        loop: while true {
             do {
-                try ensureLastOperationSucceeded()
-            } catch SystemError.connectionResetByPeer {
-                closed = true
-                throw StreamError.closedStream(buffer: Buffer())
+                
+                let bytesRead = try POSIX.receive(socket: socket, buffer: into.baseAddress!, count: into.count)
+                guard bytesRead != 0 else {
+                    close()
+                    throw StreamError.closedStream(buffer: Buffer())
+                }
+                return bytesRead
+            } catch {
+                switch error {
+                case SystemError.resourceTemporarilyUnavailable, SystemError.operationWouldBlock:
+                    do {
+                        try poll(socket, events: .read, deadline: deadline)
+                    } catch PollError.timeout {
+                        throw StreamError.timeout(buffer: Buffer())
+                    }
+                    continue loop
+                default:
+                    throw error
+                }
             }
         }
-        
-        return bytesRead
     }
 
     public func flush(deadline: Double) throws {
-        let socket = try getSocket()
-        try ensureStreamIsOpen()
-
-        tcpflush(socket, deadline.int64milliseconds)
-        try ensureLastOperationSucceeded()
+        try getSocket()
+        try ensureStillOpen()
     }
 
     public func close() {
-        if !closed, let socket = try? getSocket() {
-            tcpclose(socket)
+        guard !closed, let socket = try? getSocket() else {
+            return
         }
 
-        closed = true
+        try? TCP.close(socket: socket)
+        self.socket = nil
+        self.closed = true
     }
 
-    private func getSocket() throws -> tcpsock {
+    @discardableResult
+    private func getSocket() throws -> FileDescriptor {
         guard let socket = self.socket else {
             throw SystemError.socketIsNotConnected
         }
         return socket
     }
 
-    private func ensureStreamIsOpen() throws {
+    private func ensureStillOpen() throws {
         if closed {
             throw StreamError.closedStream(buffer: Buffer())
         }
     }
 
     deinit {
-        if let socket = socket, !closed {
-            tcpclose(socket)
-        }
+        close()
     }
 }

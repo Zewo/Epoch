@@ -8,6 +8,7 @@ import XCTest
 @testable import POSIX
 
 let map: [Int32: SystemError] = [
+    0: .success,
     EPERM: .operationNotPermitted,
     ENOENT: .noSuchFileOrDirectory,
     ESRCH: .noSuchProcess,
@@ -104,11 +105,8 @@ let map: [Int32: SystemError] = [
 
 public class POSIXTests : XCTestCase {
     func testCreation() {
-        XCTAssertNil(SystemError(errorNumber: 0))
         for (errorNumber, error) in map {
-            guard let initializedError = SystemError(errorNumber: errorNumber) else {
-                return XCTFail("Initializing with \(errorNumber) should not be nil")
-            }
+            let initializedError = SystemError(errorNumber: errorNumber)
             XCTAssertEqual(initializedError, error)
         }
         XCTAssertEqual(SystemError(errorNumber: EWOULDBLOCK), .operationWouldBlock)
@@ -121,9 +119,6 @@ public class POSIXTests : XCTestCase {
     }
 
     func testLastOperationError() throws {
-        errno = 0
-        XCTAssertNil(SystemError.lastOperationError)
-        try ensureLastOperationSucceeded()
         for (errorNumber, error) in map {
             errno = errorNumber
             XCTAssertEqual(SystemError.lastOperationError, error)

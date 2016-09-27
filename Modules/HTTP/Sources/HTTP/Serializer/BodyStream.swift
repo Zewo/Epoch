@@ -34,7 +34,7 @@ final class BodyStream : Stream {
         try transport.write(newLine, deadline: deadline)
     }
 
-    func flush(deadline: Double = .never) throws {
+    func flush(deadline: Double = 1.minute.fromNow()) throws {
         try transport.flush()
     }
 }

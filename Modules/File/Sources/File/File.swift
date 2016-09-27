@@ -5,6 +5,7 @@
 #endif
 
 @_exported import Core
+import POSIX
 import CLibvenice
 
 public enum FileMode {
@@ -113,7 +114,7 @@ extension File {
             throw SystemError.other(errorNumber: -1)
         }
     }
-
+    
     public func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double = .never) throws -> Int {
         guard !into.isEmpty else {
             return 0

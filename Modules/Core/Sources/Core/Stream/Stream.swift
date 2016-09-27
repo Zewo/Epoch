@@ -16,7 +16,7 @@ extension InputStream {
         return try read(into: into, deadline: .never)
     }
     
-    public func read(upTo count: Int, deadline: Double = .never) throws -> Buffer {
+    public func read(upTo count: Int, deadline: Double = 1.minute.fromNow()) throws -> Buffer {
         return try Buffer(capacity: count) { try read(into: $0, deadline: deadline) }
     }
 }
@@ -37,7 +37,7 @@ extension OutputStream {
         try write(buffer, deadline: .never)
     }
     
-    public func write(_ buffer: Buffer, deadline: Double = .never) throws {
+    public func write(_ buffer: Buffer, deadline: Double = 1.minute.fromNow()) throws {
         guard !buffer.isEmpty else {
             return
         }
@@ -57,11 +57,11 @@ extension OutputStream {
         }
     }
     
-    public func write(_ converting: BufferRepresentable, deadline: Double = .never) throws {
-        try write(converting.buffer, deadline: .never)
+    public func write(_ converting: BufferRepresentable, deadline: Double = 1.minute.fromNow()) throws {
+        try write(converting.buffer, deadline: deadline)
     }
     
-    public func write(_ bytes: [UInt8], deadline: Double = .never) throws {
+    public func write(_ bytes: [UInt8], deadline: Double = 1.minute.fromNow()) throws {
         guard !bytes.isEmpty else {
             return
         }

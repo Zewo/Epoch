@@ -16,7 +16,7 @@ public final class Lock {
         let result = pthread_mutex_init(&mutex, nil)
 
         guard result == 0 else {
-            throw SystemError(errorNumber: result)!
+            throw SystemError(errorNumber: result)
         }
     }
 
@@ -54,7 +54,7 @@ public final class Lock {
         let result = pthread_mutex_lock(&mutex)
 
         guard result == 0 else {
-            throw SystemError(errorNumber: result)!
+            throw SystemError(errorNumber: result)
         }
     }
 

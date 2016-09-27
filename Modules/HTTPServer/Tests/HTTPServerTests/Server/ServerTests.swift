@@ -1,4 +1,5 @@
 import XCTest
+import POSIX
 @testable import HTTPServer
 
 extension Server {
@@ -28,7 +29,7 @@ final class ServerStream : Core.Stream {
         closed = true
     }
 
-    func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int {
+    func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double = 1.minute.fromNow()) throws -> Int {
         guard !closed && !inputBuffer.isEmpty else {
             throw StreamError.closedStream(buffer: Buffer())
         }
@@ -51,11 +52,11 @@ final class ServerStream : Core.Stream {
         return read
     }
     
-    func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double) throws {
+    func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double = 1.minute.fromNow()) throws {
         outputBuffer.append(buffer)
     }
     
-    func flush(deadline: Double = .never) throws {
+    func flush(deadline: Double = 1.minute.fromNow()) throws {
         if closeOnFlush {
             close()
         }

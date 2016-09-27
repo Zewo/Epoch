@@ -1,5 +1,5 @@
-@_exported import Core
-import CLibvenice
+import POSIX
+import Venice
 
 public enum IPError : Error {
     case invalidPort
@@ -14,60 +14,79 @@ extension IPError : CustomStringConvertible {
 }
 
 public enum IPMode {
-    case ipV4
-    case ipV6
-    case ipV4Prefered
-    case ipV6Prefered
-
-    var code: Int32 {
-        switch self {
-        case .ipV4: return 1
-        case .ipV6: return 2
-        case .ipV4Prefered: return 3
-        case .ipV6Prefered: return 4
-        }
-    }
+    case ipv4
+    case ipv6
+    case ipv4Prefered
+    case ipv6Prefered
 }
 
 public struct IP {
-    public let address: ipaddr
+    public let address: Address
 
-    public init(address: ipaddr) {
+    public var port: Int {
+        return address.port
+    }
+
+    public var family: AddressFamily {
+        return address.family
+    }
+
+    public init(address: Address) {
         self.address = address
     }
 
-    public init(port: Int = 0, mode: IPMode = .ipV4Prefered) throws {
-        try IP.assertValid(port)
-        let address = iplocal(nil, Int32(port), mode.code)
-        try ensureLastOperationSucceeded()
-        self.init(address: address)
-    }
-
-    public init(localAddress: String, port: Int = 0, mode: IPMode = .ipV4Prefered) throws {
-        try IP.assertValid(port)
-        let address = iplocal(localAddress, Int32(port), mode.code)
-        try ensureLastOperationSucceeded()
-        self.init(address: address)
-    }
-
-    public init(remoteAddress: String, port: Int, mode: IPMode = .ipV4Prefered, deadline: Double = .never) throws {
-        try IP.assertValid(port)
-        let address = ipremote(remoteAddress, Int32(port), mode.code, deadline.int64milliseconds)
-        try ensureLastOperationSucceeded()
-        self.init(address: address)
-    }
-
-    private static func assertValid(_ port: Int) throws {
-        if port < 0 || port > 0xffff {
-            throw IPError.invalidPort
+    public init(port: Int, mode: IPMode = .ipv4Prefered) throws {
+        try assertValidPort(port)
+        let address: Address
+        switch mode {
+        case .ipv4, .ipv4Prefered:
+            address = Address(family: .ipv4, port: port)
+        case .ipv6, .ipv6Prefered:
+            address = Address(family: .ipv6, port: port)
         }
+        self.init(address: address)
+    }
+
+    // TODO:
+    // get address from interface name
+
+    public init(address literal: String, port: Int, mode: IPMode = .ipv4Prefered, deadline: Double = 10.seconds.fromNow()) throws {
+        try assertValidPort(port)
+        let address: Address
+        do {
+            switch mode {
+            case .ipv4:
+                address = try Address(family: .ipv4, address: literal, port: port)
+            case .ipv4Prefered:
+                do {
+                    address = try Address(family: .ipv4, address: literal, port: port)
+                } catch {
+                    address = try Address(family: .ipv6, address: literal, port: port)
+                }
+            case .ipv6:
+                address = try Address(family: .ipv6, address: literal, port: port)
+            case .ipv6Prefered:
+                do {
+                    address = try Address(family: .ipv6, address: literal, port: port)
+                } catch {
+                    address = try Address(family: .ipv4, address: literal, port: port)
+                }
+            }
+        } catch {
+            address = try Address(address: literal, port: port, mode: mode, deadline: deadline)
+        }
+        self.init(address: address)
+    }
+}
+
+func assertValidPort(_ port: Int) throws {
+    guard (0...0xffff).contains(port) else {
+        throw IPError.invalidPort
     }
 }
 
 extension IP : CustomStringConvertible {
     public var description: String {
-        var buffer = [Int8](repeating: 0, count: 46)
-        ipaddrstr(address, &buffer)
-        return String(cString: buffer)
+        return address.description
     }
 }

@@ -7,100 +7,93 @@ public class IPTests : XCTestCase {
     }
 
     func testIPV4() throws {
-        _ = try IP(port: 5555, mode: .ipV4)
+        let ip = try IP(port: 5555, mode: .ipv4)
+        XCTAssertEqual(ip.port, 5555)
     }
 
     func testIPV6() throws {
-        _ = try IP(port: 5555, mode: .ipV6)
+        let ip = try IP(port: 5555, mode: .ipv6)
+        XCTAssertEqual(ip.port, 5555)
     }
 
     func testIPV4Prefered() throws {
-        _ = try IP(port: 5555, mode: .ipV4Prefered)
+        let ip = try IP(port: 5555, mode: .ipv4Prefered)
+        XCTAssertEqual(ip.port, 5555)
     }
 
     func testIPV6Prefered() throws {
-        _ = try IP(port: 5555, mode: .ipV6Prefered)
+        let ip = try IP(port: 5555, mode: .ipv6Prefered)
+        XCTAssertEqual(ip.port, 5555)
     }
 
     func testLocalIPV4() throws {
-        _ = try IP(localAddress: "127.0.0.1", port: 5555, mode: .ipV4)
+        let ip = try IP(address: "127.0.0.1", port: 5555, mode: .ipv4)
+        XCTAssertEqual(String(describing: ip), "127.0.0.1")
+        XCTAssertEqual(ip.port, 5555)
     }
 
     func testLocalIPV6() throws {
-        _ = try IP(localAddress: "::1", port: 5555, mode: .ipV6)
+        let ip = try IP(address: "::1", port: 5555, mode: .ipv6)
+        XCTAssertEqual(String(describing: ip), "::1")
+        XCTAssertEqual(ip.port, 5555)
     }
 
     func testLocalIPV4Prefered() throws {
-        _ = try IP(localAddress: "127.0.0.1", port: 5555, mode: .ipV4Prefered)
+        let ip = try IP(address: "127.0.0.1", port: 5555, mode: .ipv4Prefered)
+        XCTAssertEqual(String(describing: ip), "127.0.0.1")
+        XCTAssertEqual(ip.port, 5555)
     }
 
     func testLocalIPV6Prefered() throws {
-        _ = try IP(localAddress: "::1", port: 5555, mode: .ipV6Prefered)
+        let ip = try IP(address: "::1", port: 5555, mode: .ipv6Prefered)
+        XCTAssertEqual(String(describing: ip), "::1")
+        XCTAssertEqual(ip.port, 5555)
     }
 
-    func testRemoteIPV4() throws {
-        let ip = try IP(remoteAddress: "127.0.0.1", port: 5555, mode: .ipV4)
-        XCTAssertEqual(String(describing: ip), "127.0.0.1")
+    func testRemoteIPV4DNS() throws {
+        let ip = try IP(address: "www.example.org", port: 80, mode: .ipv4, deadline: 30.seconds.fromNow())
+        XCTAssertEqual(ip.family, .ipv4)
+        XCTAssertEqual(ip.port, 80)
     }
 
-    func testRemoteIPV6() throws {
-        _ = try IP(remoteAddress: "::1", port: 5555, mode: .ipV6)
+    func testRemoteIPV4DNSTimeout() throws {
+        XCTAssertThrowsError(try IP(address: "www.example.org", port: 80, mode: .ipv4, deadline: 1.millisecond.fromNow()))
     }
 
-    func testRemoteIPV4Prefered() throws {
-        _ = try IP(remoteAddress: "127.0.0.1", port: 5555, mode: .ipV4Prefered)
-    }
-
-    func testRemoteIPV6Prefered() throws {
-        _ = try IP(remoteAddress: "::1", port: 5555, mode: .ipV6Prefered)
+    func testRemoteIPV6DNSTimeout() throws {
+        XCTAssertThrowsError(try IP(address: "www.example.org", port: 80, mode: .ipv6, deadline: 1.millisecond.fromNow()))
     }
 
     func testInvalidPortIPV4() throws {
-        XCTAssertThrowsError(try IP(port: 70000, mode: .ipV4))
+        XCTAssertThrowsError(try IP(port: 70000, mode: .ipv4))
     }
 
     func testInvalidPortIPV6() throws {
-        XCTAssertThrowsError(try IP(port: 70000, mode: .ipV6))
+        XCTAssertThrowsError(try IP(port: 70000, mode: .ipv6))
     }
 
     func testInvalidPortIPV4Prefered() throws {
-        XCTAssertThrowsError(try IP(port: 70000, mode: .ipV4Prefered))
+        XCTAssertThrowsError(try IP(port: 70000, mode: .ipv4Prefered))
     }
 
     func testInvalidPortIPV6Prefered() throws {
-        XCTAssertThrowsError(try IP(port: 70000, mode: .ipV6Prefered))
+        XCTAssertThrowsError(try IP(port: 70000, mode: .ipv6Prefered))
     }
 
     func testInvalidLocalIPV4() throws {
-        XCTAssertThrowsError(try IP(localAddress: "yo-yo ma", port: 5555, mode: .ipV4))
+        XCTAssertThrowsError(try IP(address: "yo-yo ma", port: 5555, mode: .ipv4, deadline: 100.millisecond.fromNow()))
     }
 
     func testInvalidLocalIPV6() throws {
-        XCTAssertThrowsError(try IP(localAddress: "yo-yo ma", port: 5555, mode: .ipV6))
+        XCTAssertThrowsError(try IP(address: "yo-yo ma", port: 5555, mode: .ipv6, deadline: 100.millisecond.fromNow()))
     }
 
     func testInvalidLocalIPV4Prefered() throws {
-        XCTAssertThrowsError(try IP(localAddress: "yo-yo ma", port: 5555, mode: .ipV4Prefered))
+        XCTAssertThrowsError(try IP(address: "yo-yo ma", port: 5555, mode: .ipv4Prefered, deadline: 100.millisecond.fromNow()))
     }
 
     func testInvalidLocalIPV6Prefered() throws {
-        XCTAssertThrowsError(try IP(localAddress: "yo-yo ma", port: 5555, mode: .ipV6Prefered))
-    }
-
-    func testRemoteInvalidPortIPV4() throws {
-        XCTAssertThrowsError(try IP(remoteAddress: "127.0.0.1", port: 70000, mode: .ipV4))
-    }
-
-    func testRemoteInvalidPortIPV6() throws {
-        XCTAssertThrowsError(try IP(remoteAddress: "::1", port: 70000, mode: .ipV6))
-    }
-
-    func testRemoteInvalidPortIPV4Prefered() throws {
-        XCTAssertThrowsError(try IP(remoteAddress: "127.0.0.1", port: 70000, mode: .ipV4Prefered))
-    }
-
-    func testRemoteInvalidPortIPV6Prefered() throws {
-        XCTAssertThrowsError(try IP(remoteAddress: "::1", port: 70000, mode: .ipV6Prefered))
+        XCTAssertThrowsError(try IP(address: "yo-yo ma", port: 5555, mode: .ipv6Prefered, deadline: 100.millisecond.fromNow()))
     }
 }
 
@@ -116,10 +109,6 @@ extension IPTests {
             ("testLocalIPV6", testLocalIPV6),
             ("testLocalIPV4Prefered", testLocalIPV4Prefered),
             ("testLocalIPV6Prefered", testLocalIPV6Prefered),
-            ("testRemoteIPV4", testRemoteIPV4),
-            ("testRemoteIPV6", testRemoteIPV6),
-            ("testRemoteIPV4Prefered", testRemoteIPV4Prefered),
-            ("testRemoteIPV6Prefered", testRemoteIPV6Prefered),
             ("testInvalidPortIPV4", testInvalidPortIPV4),
             ("testInvalidPortIPV6", testInvalidPortIPV6),
             ("testInvalidPortIPV4Prefered", testInvalidPortIPV4Prefered),
@@ -128,10 +117,6 @@ extension IPTests {
             ("testInvalidLocalIPV6", testInvalidLocalIPV6),
             ("testInvalidLocalIPV4Prefered", testInvalidLocalIPV4Prefered),
             ("testInvalidLocalIPV6Prefered", testInvalidLocalIPV6Prefered),
-            ("testRemoteInvalidPortIPV4", testRemoteInvalidPortIPV4),
-            ("testRemoteInvalidPortIPV6", testRemoteInvalidPortIPV6),
-            ("testRemoteInvalidPortIPV4Prefered", testRemoteInvalidPortIPV4Prefered),
-            ("testRemoteInvalidPortIPV6Prefered", testRemoteInvalidPortIPV6Prefered),
         ]
     }
 }

@@ -38,27 +38,33 @@ extension TimeUnitRepresentable {
         }
         return self.seconds / 1000
     }
+
     public var millisecond: Double {
         return self.milliseconds
     }
+
     public var second: Double {
         return self.seconds
     }
+
     public var minutes: Double {
         if self.seconds == .never {
             return .never
         }
         return self.seconds * 60
     }
+
     public var minute: Double {
         return self.minutes
     }
+
     public var hours: Double {
         if self.seconds == .never {
             return .never
         }
         return self.minutes * 60
     }
+
     public var hour: Double {
         return self.hours
     }

@@ -1,3 +1,4 @@
+import POSIX
 import CLibvenice
 
 public enum PollError : Error {
@@ -17,7 +18,8 @@ public struct PollEvent : OptionSet {
 }
 
 /// Polls file descriptor for events
-public func poll(_ fileDescriptor: FileDescriptor, events: PollEvent, deadline: Double = .never) throws -> PollEvent {
+@discardableResult
+public func poll(_ fileDescriptor: FileDescriptor, events: PollEvent, deadline: Double = 1.minute.fromNow()) throws -> PollEvent {
     let event = mill_fdwait(fileDescriptor, Int32(events.rawValue), deadline.int64milliseconds, "pollFileDescriptor")
 
     if event == 0 {

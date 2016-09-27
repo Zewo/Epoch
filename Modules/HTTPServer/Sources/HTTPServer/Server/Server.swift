@@ -1,3 +1,5 @@
+import POSIX
+
 public struct Server {
     public let tcpHost: Host
     public let middleware: [Middleware]

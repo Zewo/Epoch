@@ -1,3 +1,4 @@
+import POSIX
 import CLibvenice
 
 public typealias PID = pid_t
@@ -70,6 +71,15 @@ public var yield: Void {
 /// Fork the current process.
 public func fork() -> PID {
     return mfork()
+}
+
+/**
+ Drops any cached state associated with the file descriptor. It has to be called before the file descriptor is closed. If it is not, undefined behaviour may ensue.
+
+ It should also be used when you are temporarily provided with a file descriptor by a third party library, just before returning the descriptor back to the original owner.
+*/
+public func clean(fileDescriptor: FileDescriptor) {
+    fdclean(fileDescriptor)
 }
 
 /// Get the number of logical CPU cores available. This might return a bigger number than the physical CPU Core number if the CPU supports hyper-threading.

@@ -16,7 +16,7 @@ public final class Condition {
         let result = pthread_cond_init(&condition, nil)
 
         guard result == 0 else {
-            throw SystemError(errorNumber: result)!
+            throw SystemError(errorNumber: result)
         }
     }
 
