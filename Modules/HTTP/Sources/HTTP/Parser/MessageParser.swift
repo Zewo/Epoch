@@ -174,21 +174,33 @@ public class MessageParser: Parser {
                 break
                 
             case .url:
-                let string = String(bytes: buffer, encoding: String.Encoding.utf8)!
+                buffer.append(0)
+                let string = buffer.withUnsafeBufferPointer { (ptr: UnsafeBufferPointer<UInt8>) -> String in
+                    return String(cString: ptr.baseAddress!)
+                }
                 context.url = URL(string: string)!
                 
             case .status:
-                let string = String(bytes: buffer, encoding: String.Encoding.utf8)!
+                buffer.append(0)
+                let string = buffer.withUnsafeBufferPointer { (ptr: UnsafeBufferPointer<UInt8>) -> String in
+                    return String(cString: ptr.baseAddress!)
+                }
                 context.status = Response.Status(statusCode: Int(parser.status_code),
                                                  reasonPhrase: string)
                 
             case .headerField:
-                let string = String(bytes: buffer, encoding: String.Encoding.utf8)!
+                buffer.append(0)
+                let string = buffer.withUnsafeBufferPointer { (ptr: UnsafeBufferPointer<UInt8>) -> String in
+                    return String(cString: ptr.baseAddress!)
+                }
                 context.currentHeaderField = CaseInsensitiveString(string)
                 
                 
             case .headerValue:
-                let string = String(bytes: buffer, encoding: String.Encoding.utf8)!
+                buffer.append(0)
+                let string = buffer.withUnsafeBufferPointer { (ptr: UnsafeBufferPointer<UInt8>) -> String in
+                    return String(cString: ptr.baseAddress!)
+                }
                 context.addValueForCurrentHeaderField(string)
                 
             case .headersComplete:
