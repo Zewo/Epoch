@@ -74,7 +74,7 @@ let statuses: [Response.Status] = [
 public class ResponseParserTests : XCTestCase {
     func testInvalidHTTPVersion() throws {
         let data = Buffer("HUEHUE 200 OK\r\n\r\n")
-        let parser = Parser(mode: .response)
+        let parser = MessageParser(mode: .response)
         XCTAssertThrowsError(try parser.parse(data) { _ in })
     }
 
@@ -85,7 +85,7 @@ public class ResponseParserTests : XCTestCase {
             data += response
         }
 
-        let parser = Parser(mode: .response)
+        let parser = MessageParser(mode: .response)
         
         for _ in 0 ..< count {
             try parser.parse(data) { message in

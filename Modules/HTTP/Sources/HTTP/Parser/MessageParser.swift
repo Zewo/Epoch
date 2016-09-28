@@ -1,7 +1,7 @@
 import CHTTPParser
 import Core
 
-public class Parser: Core.Parser {
+public class MessageParser: Parser {
     public typealias Result = Message
     public typealias Error = http_errno
     
@@ -66,35 +66,35 @@ public class Parser: Core.Parser {
         http_parser_settings_init(&parserSettings)
         
         parserSettings.on_message_begin = { (parser: UnsafeMutablePointer<http_parser>?) -> Int32 in
-            let ref = Unmanaged<Parser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
+            let ref = Unmanaged<MessageParser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
             return ref.processOnMessageBegin()
         }
         parserSettings.on_url = { (parser: UnsafeMutablePointer<http_parser>?, data: UnsafePointer<Int8>?, length: Int) -> Int32 in
-            let ref = Unmanaged<Parser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
+            let ref = Unmanaged<MessageParser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
             return ref.processOnURL(data: data!, length: length)
         }
         parserSettings.on_status = { (parser: UnsafeMutablePointer<http_parser>?, data: UnsafePointer<Int8>?, length: Int) -> Int32 in
-            let ref = Unmanaged<Parser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
+            let ref = Unmanaged<MessageParser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
             return ref.processOnStatus(data: data!, length: length)
         }
         parserSettings.on_header_field = { (parser: UnsafeMutablePointer<http_parser>?, data: UnsafePointer<Int8>?, length: Int) -> Int32 in
-            let ref = Unmanaged<Parser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
+            let ref = Unmanaged<MessageParser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
             return ref.processOnHeaderField(data: data!, length: length)
         }
         parserSettings.on_header_value = { (parser: UnsafeMutablePointer<http_parser>?, data: UnsafePointer<Int8>?, length: Int) -> Int32 in
-            let ref = Unmanaged<Parser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
+            let ref = Unmanaged<MessageParser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
             return ref.processOnHeaderValue(data: data!, length: length)
         }
         parserSettings.on_headers_complete = { (parser: UnsafeMutablePointer<http_parser>?) -> Int32 in
-            let ref = Unmanaged<Parser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
+            let ref = Unmanaged<MessageParser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
             return ref.processOnHeadersComplete()
         }
         parserSettings.on_body = { (parser: UnsafeMutablePointer<http_parser>?, data: UnsafePointer<Int8>?, length: Int) -> Int32 in
-            let ref = Unmanaged<Parser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
+            let ref = Unmanaged<MessageParser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
             return ref.processOnBody(data: data!, length: length)
         }
         parserSettings.on_message_complete = { (parser: UnsafeMutablePointer<http_parser>?) -> Int32 in
-            let ref = Unmanaged<Parser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
+            let ref = Unmanaged<MessageParser>.fromOpaque(parser!.pointee.data).takeUnretainedValue()
             return ref.processOnMessageComplete()
         }
         
@@ -118,7 +118,7 @@ public class Parser: Core.Parser {
             return http_parser_execute(&self.parser, &self.parserSettings, $0, from.count)
         }
         guard processedCount == from.count else {
-            throw Parser.Error(parser.http_errno)
+            throw MessageParser.Error(parser.http_errno)
         }
         
         while !messages.isEmpty {
@@ -253,7 +253,7 @@ public class Parser: Core.Parser {
     
 }
 
-extension Parser.Error: Error, CustomStringConvertible {
+extension MessageParser.Error: Error, CustomStringConvertible {
     
     public var description: String {
         return String(cString: http_errno_description(self))

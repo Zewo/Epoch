@@ -24,7 +24,7 @@ public final class Client : Responder {
 
     var connection: Connection?
     var serializer: RequestSerializer?
-    var parser: HTTP.Parser?
+    var parser: MessageParser?
 
     public init(url: URL, configuration: Map = nil) throws {
         self.secure = try isSecure(url: url)
@@ -82,7 +82,7 @@ extension Client {
             
             var response: Response!
             while !connection.closed {
-                let chunk = try connection.read(upTo: 16384, deadline: requestDeadline)
+                let chunk = try connection.read(upTo: bufferSize, deadline: requestDeadline)
                 try parser.parse(chunk) { message in
                     response = message as! Response
                 }
@@ -149,11 +149,11 @@ extension Client {
         return RequestSerializer(stream: connection)
     }
 
-    private func getParser(connection: Connection) -> HTTP.Parser {
+    private func getParser(connection: Connection) -> MessageParser {
         if let parser = self.parser {
             return parser
         }
-        return Parser(mode: .response)
+        return MessageParser(mode: .response)
     }
 }
 

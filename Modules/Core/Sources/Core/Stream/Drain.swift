@@ -43,7 +43,7 @@ public final class Drain : BufferRepresentable, Stream {
         buffer.copyBytes(to: into.baseAddress!, count: read)
         
         if buffer.count > read {
-            buffer = buffer[buffer.startIndex.advanced(by: read)..<buffer.endIndex]
+            buffer = buffer.suffix(from: read)
         } else {
             buffer = Buffer()
         }
@@ -52,7 +52,7 @@ public final class Drain : BufferRepresentable, Stream {
     }
     
     public func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double = .never) {
-        self.buffer.append(Buffer(bytes: buffer))
+        self.buffer.append(Buffer(buffer))
     }
 
     public func flush(deadline: Double = .never) throws {}

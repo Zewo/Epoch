@@ -22,12 +22,8 @@ public struct Buffer : RandomAccessCollection {
         self.bytes = bytes
     }
     
-    public init(bytes: [Byte]) {
-        self.bytes = bytes
-    }
-    
-    public init(bytes buffer: UnsafeBufferPointer<Byte>) {
-        self.bytes = [Byte](buffer)
+    public init(_ bytes: UnsafeBufferPointer<Byte>) {
+        self.bytes = [Byte](bytes)
     }
     
     public mutating func append(_ other: Buffer) {
@@ -57,11 +53,11 @@ public struct Buffer : RandomAccessCollection {
     }
     
     public subscript(bounds: Range<Int>) -> Buffer {
-        return Buffer(bytes: [Byte](bytes[bounds]))
+        return Buffer([Byte](bytes[bounds]))
     }
     
     public subscript(bounds: CountableRange<Int>) -> Buffer {
-        return Buffer(bytes: [Byte](bytes[bounds]))
+        return Buffer([Byte](bytes[bounds]))
     }
     
     public var startIndex: Int {
@@ -149,7 +145,7 @@ extension Buffer {
             return
         }
         
-        self = Buffer(bytes: [Byte](bytes[0..<usedCapacity]))
+        self = Buffer([Byte](bytes.prefix(usedCapacity)))
     }
 }
 

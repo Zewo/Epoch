@@ -46,7 +46,7 @@ final class ServerStream : Core.Stream {
             return read
         }
         
-        inputBuffer = inputBuffer[inputBuffer.startIndex.advanced(by: read)..<inputBuffer.endIndex]
+        inputBuffer = inputBuffer.suffix(from: read)
         
         return read
     }

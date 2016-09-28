@@ -29,6 +29,6 @@ public class Random {
             throw SSLRandomError.error(description: lastSSLErrorDescription)
         }
         
-        return Buffer(bytes: UnsafeBufferPointer(start: pointer, count: size))
+        return Buffer(UnsafeBufferPointer(start: pointer, count: size))
     }
 }

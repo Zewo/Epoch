@@ -55,37 +55,37 @@ let methods: [Request.Method] = [
 public class RequestParserTests : XCTestCase {
     func testInvalidMethod() {
         let data = "INVALID / HTTP/1.1\r\n\r\n"
-        let parser = Parser(mode: .request)
+        let parser = MessageParser(mode: .request)
         XCTAssertThrowsError(try parser.parse(data) { _ in })
     }
 
     func testInvalidURL() {
         let data = "GET huehue HTTP/1.1\r\n\r\n"
-        let parser = Parser(mode: .request)
+        let parser = MessageParser(mode: .request)
         XCTAssertThrowsError(try parser.parse(data) { _ in })
     }
 
     func testNoURL() {
         let data = "GET HTTP/1.1\r\n\r\n"
-        let parser = Parser(mode: .request)
+        let parser = MessageParser(mode: .request)
         XCTAssertThrowsError(try parser.parse(data) { _ in })
     }
 
     func testInvalidHTTPVersion() {
         let data = "GET / HUEHUE\r\n\r\n"
-        let parser = Parser(mode: .request)
+        let parser = MessageParser(mode: .request)
         XCTAssertThrowsError(try parser.parse(data) { _ in })
     }
 
     func testInvalidDoubleConnectMethod() {
         let data = "CONNECT / HTTP/1.1\r\n\r\nCONNECT / HTTP/1.1\r\n\r\n"
-        let parser = Parser(mode: .request)
+        let parser = MessageParser(mode: .request)
         XCTAssertThrowsError(try parser.parse(data) { _ in })
     }
 
     func testConnectMethod() throws {
         let data = "CONNECT / HTTP/1.1\r\n\r\n"
-        let parser = Parser(mode: .request)
+        let parser = MessageParser(mode: .request)
         try parser.parse(data) { message in
             let request = message as! Request
             XCTAssert(request.method == .connect)
@@ -104,7 +104,7 @@ public class RequestParserTests : XCTestCase {
             data += request
         }
 
-        let parser = Parser(mode: .request)
+        let parser = MessageParser(mode: .request)
         try parser.parse(data) { message in
             let request = message as! Request
             test(request)

@@ -159,11 +159,11 @@ extension Server {
     public func process(stream: Stream) throws {
         let chunkBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
         defer { chunkBytes.deallocate(capacity: bufferSize) }
-        let chunk = UnsafeMutableBufferPointer<UInt8>(start: chunkBytes, count: bufferSize)
+        let chunk = UnsafeMutableBufferPointer(start: chunkBytes, count: bufferSize)
         
-        let parser = Parser(mode: .request)
+        let parser = MessageParser(mode: .request)
         let serializer = ResponseSerializer(stream: stream, bufferSize: bufferSize)
-        
+
         while !stream.closed {
             do {
                 let bytesRead = try stream.read(into: chunk)
@@ -196,7 +196,6 @@ extension Server {
                 if let error = unrecoveredError {
                     throw error
                 }
-
             }
         }
     }
