@@ -8,26 +8,26 @@ import Darwin
 public typealias Byte = UInt8
 
 public struct Buffer : RandomAccessCollection {
-    public typealias Iterator = BufferIterator
+    public typealias Iterator = Array<Byte>.Iterator
     public typealias Index = Int
     public typealias Indices = DefaultRandomAccessIndices<Buffer>
     
-    public private(set) var bytes: ContiguousArray<Byte>
+    public private(set) var bytes: [Byte]
     
     public var count: Int {
         return bytes.count
     }
     
     public init(_ bytes: [Byte] = []) {
-        self.bytes = ContiguousArray(bytes)
+        self.bytes = bytes
     }
     
     public init(bytes: [Byte]) {
-        self.bytes = ContiguousArray(bytes)
+        self.bytes = bytes
     }
     
-    public init(bytes buffer: UnsafeBufferPointer<UInt8>) {
-        self.bytes = ContiguousArray(buffer)
+    public init(bytes buffer: UnsafeBufferPointer<Byte>) {
+        self.bytes = [Byte](buffer)
     }
     
     public mutating func append(_ other: Buffer) {
@@ -80,8 +80,8 @@ public struct Buffer : RandomAccessCollection {
         return i + 1
     }
     
-    public func makeIterator() -> BufferIterator {
-        return BufferIterator(bytes: bytes)
+    public func makeIterator() -> Iterator {
+        return bytes.makeIterator()
     }
     
     public func copyBytes(to pointer: UnsafeMutablePointer<Byte>, count: Int) {
@@ -109,32 +109,6 @@ public struct Buffer : RandomAccessCollection {
         }
         
     }
-}
-
-public struct BufferIterator : IteratorProtocol, Sequence {
-    
-    private var bytes: ContiguousArray<Byte>
-    private var position: Buffer.Index
-    private var count: Int
-    
-    fileprivate init(bytes: ContiguousArray<Byte>) {
-        self.bytes = bytes
-        self.position = bytes.startIndex
-        self.count = bytes.count
-    }
-    
-    public mutating func next() -> Byte? {
-        if position == count {
-            return nil
-        }
-        let element = bytes[position]
-        position = position + 1
-        return element
-        
-    }
-    
-    
-    
 }
 
 public protocol BufferInitializable {
