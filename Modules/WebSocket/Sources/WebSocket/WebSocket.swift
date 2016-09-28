@@ -356,7 +356,7 @@ public final class WebSocket {
     }
 
     public static func accept(_ key: String) -> String? {
-        let a = sha1(Buffer(key + GUID)).filter {_ in return true}
+      let a = [UInt8](sha1(Buffer(key + GUID)))
         
         let string = Data(bytes: a).base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
         return string
