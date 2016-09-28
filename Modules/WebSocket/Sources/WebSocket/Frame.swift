@@ -1,27 +1,3 @@
-// Frame.swift
-//
-// The MIT License (MIT)
-//
-// Copyright (c) 2015 Zewo
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 //	0                   1                   2                   3
 //	0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 //	+-+-+-+-+-------+-+-------------+-------------------------------+
@@ -54,13 +30,13 @@ struct Frame {
     fileprivate static let payloadLenMask: UInt8 = 0b01111111
 
     enum OpCode: UInt8 {
-        case continuation	= 0x0
-        case text			= 0x1
-        case binary			= 0x2
+        case continuation   = 0x0
+        case text           = 0x1
+        case binary         = 0x2
         // 0x3 -> 0x7 reserved
-        case close			= 0x8
-        case ping			= 0x9
-        case pong			= 0xA
+        case close          = 0x8
+        case ping           = 0x9
+        case pong           = 0xA
         // 0xB -> 0xF reserved
         case invalid        = 0x10
 
@@ -111,10 +87,10 @@ struct Frame {
 
         if masked {
             offset += 4
-          
-          var unmaskedPayloadData = [UInt8](repeating: 0, count: data.count - offset)
-            
-          data.subdata(in:offset ..< data.count).copyBytes(to: &unmaskedPayloadData, count: data.count - offset)
+
+            var unmaskedPayloadData = [UInt8](repeating: 0, count: data.count - offset)
+
+            data.subdata(in:offset ..< data.count).copyBytes(to: &unmaskedPayloadData, count: data.count - offset)
 
             var maskOffset = 0
             let maskKey = self.maskKey
@@ -133,8 +109,10 @@ struct Frame {
         switch data.count {
         case 0..<2,
              0..<4 where payloadLength == 126,
-             0..<10 where payloadLength == 127: return false
-        case let count: return UInt64(count) >= totalFrameSize
+             0..<10 where payloadLength == 127:
+            return false
+        case let count:
+            return UInt64(count) >= totalFrameSize
         }
     }
 
@@ -167,10 +145,10 @@ struct Frame {
     init() {}
 
     init(opCode: OpCode, data: Buffer, maskKey: Buffer) {
-      self.data.append([(1 << 7) | (0 << 6) | (0 << 5) | (0 << 4) | UInt8(opCode.rawValue)], count: 1)
-      
+        self.data.append([(1 << 7) | (0 << 6) | (0 << 5) | (0 << 4) | UInt8(opCode.rawValue)], count: 1)
+
         let masked: Bool = maskKey.count == 4
-      let mask: UInt8 = masked ? 1 : 0
+        let mask: UInt8 = masked ? 1 : 0
         let payloadLength = UInt64(data.count)
 
         if payloadLength > UInt64(UInt16.max) {
@@ -185,9 +163,9 @@ struct Frame {
         if masked {
             self.data.append(maskKey)
 
-          
-          var maskedData = [UInt8](repeating: 0, count: data.count)
-          data.copyBytes(to: &maskedData, count: data.count)
+
+            var maskedData = [UInt8](repeating: 0, count: data.count)
+            data.copyBytes(to: &maskedData, count: data.count)
 
             var maskOffset = 0
             for i in 0..<maskedData.count {
@@ -195,7 +173,7 @@ struct Frame {
                 maskOffset += 1
             }
 
-          self.data.append(maskedData, count: maskedData.count)
+            self.data.append(maskedData, count: maskedData.count)
         } else {
             self.data.append(data)
         }
@@ -206,8 +184,8 @@ struct Frame {
 
         if isComplete {
             // Int(totalFrameSize) cast is bad, will break spec max frame size of UInt64
-          let remainingData = self.data.subdata(in: Int(totalFrameSize)..<self.data.count)
-          self.data = self.data.subdata(in: 0..<Int(totalFrameSize))
+            let remainingData = self.data.subdata(in: Int(totalFrameSize)..<self.data.count)
+            self.data = self.data.subdata(in: 0..<Int(totalFrameSize))
             return remainingData
         }
 

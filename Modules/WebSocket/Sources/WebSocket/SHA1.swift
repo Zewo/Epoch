@@ -1,15 +1,3 @@
-// Originally based on CryptoSwift by Marcin Krzyżanowski <marcin.krzyzanowski@gmail.com>
-// Copyright (C) 2014 Marcin Krzyżanowski <marcin.krzyzanowski@gmail.com>
-// This software is provided 'as-is', without any express or implied warranty.
-//
-// In no event will the authors be held liable for any damages arising from the use of this software.
-//
-// Permission is granted to anyone to use this software for any purpose,including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
-//
-// - The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation is required.
-// - Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-// - This notice may not be removed or altered from any source or binary distribution.
-
 import Core
 
 func rotateLeft(_ value: UInt8, count: UInt8) -> UInt8 {
@@ -49,13 +37,13 @@ func arrayOfBytes<T>(_ value: T, length: Int? = nil) -> [UInt8] {
 
     let valuePointer = UnsafeMutablePointer<T>.allocate(capacity: 1)
     valuePointer.pointee = value
-  
+
     let bytes = valuePointer.withMemoryRebound(to: UInt8.self, capacity: totalBytes) { (p) -> [UInt8] in
-      var bytes = [UInt8](repeating: 0, count: totalBytes)
-      for j in 0..<min(MemoryLayout<T>.size,totalBytes) {
-        bytes[totalBytes - 1 - j] = (p + j).pointee
-      }
-      return bytes
+        var bytes = [UInt8](repeating: 0, count: totalBytes)
+        for j in 0..<min(MemoryLayout<T>.size,totalBytes) {
+            bytes[totalBytes - 1 - j] = (p + j).pointee
+        }
+        return bytes
     }
 
 
@@ -86,11 +74,11 @@ let h: [UInt32] = [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0]
 func sha1(_ buffer: Buffer) -> Buffer {
     let len = 64
     let originalMessage = buffer.filter { (u) -> Bool in
-      return true
-  }
-  var tmpMessage = buffer.filter { (u) -> Bool in
-    return true
-  }
+        return true
+    }
+    var tmpMessage = buffer.filter { (u) -> Bool in
+        return true
+    }
 
     // Step 1. Append Padding Bits
     tmpMessage.append(0x80) // append one bit (UInt8 with one bit) to message
@@ -124,10 +112,8 @@ func sha1(_ buffer: Buffer) -> Buffer {
                 let end = start + sizeofValue(M[x])
                 let le = toUInt32Array(chunk[start..<end])[0]
                 M[x] = le.bigEndian
-                break
             default:
                 M[x] = rotateLeft(M[x-3] ^ M[x-8] ^ M[x-14] ^ M[x-16], count: 1)
-                break
             }
         }
 
@@ -146,19 +132,15 @@ func sha1(_ buffer: Buffer) -> Buffer {
             case 0...19:
                 f = (B & C) | ((~B) & D)
                 k = 0x5A827999
-                break
             case 20...39:
                 f = B ^ C ^ D
                 k = 0x6ED9EBA1
-                break
             case 40...59:
                 f = (B & C) | (B & D) | (C & D)
                 k = 0x8F1BBCDC
-                break
             case 60...79:
                 f = B ^ C ^ D
                 k = 0xCA62C1D6
-                break
             default:
                 break
             }
@@ -200,9 +182,9 @@ struct BytesSequence: Sequence {
         return AnyIterator {
             var end: Int
             if self.chunkSize < self.data.count - offset {
-              end = self.chunkSize
+                end = self.chunkSize
             } else {
-              end = self.data.count - offset
+                end = self.data.count - offset
             }
             let result = self.data[offset ..< offset + end]
             offset += result.count

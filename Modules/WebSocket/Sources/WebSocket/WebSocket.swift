@@ -1,27 +1,3 @@
-// Socket.swift
-//
-// The MIT License (MIT)
-//
-// Copyright (c) 2015 Zewo
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 import Core
 import Foundation
 
@@ -148,7 +124,7 @@ public final class WebSocket {
     }
 
     public func ping(_ convertible: BufferConvertible) throws {
-      try send(.ping, data: convertible.buffer)
+        try send(.ping, data: convertible.buffer)
     }
 
     public func pong(_ data: Buffer = Buffer()) throws {
@@ -181,7 +157,7 @@ public final class WebSocket {
         var totalBytesRead = 0
 
         while totalBytesRead < data.count {
-          let bytesRead = try readBytes(data.subdata(in:totalBytesRead ..< data.count))
+            let bytesRead = try readBytes(data.subdata(in:totalBytesRead ..< data.count))
 
             if bytesRead == 0 {
                 break
@@ -304,11 +280,11 @@ public final class WebSocket {
                 var data = frame.payload
 
                 if data.count >= 2 {
-                  rawCloseCode = UInt16(data.subdata(in:0..<2).buffer.toInt(2))
+                    rawCloseCode = UInt16(data.subdata(in:0..<2).buffer.toInt(2))
                     data = data.subdata(in:2..<data.count).buffer // TODO: is this efficient?
 
                     if data.count > 0 {
-                      closeReason = try? String(buffer:data)
+                        closeReason = try? String(buffer:data)
                     }
 
                     if data.count > 0 && closeReason == nil {
@@ -356,10 +332,10 @@ public final class WebSocket {
     }
 
     public static func accept(_ key: String) -> String? {
-      let a = [UInt8](sha1(Buffer(key + GUID)))
-        
+        let a = [UInt8](sha1(Buffer(key + GUID)))
+
         let string = Data(bytes: a).base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
         return string
 
-  }
+    }
 }

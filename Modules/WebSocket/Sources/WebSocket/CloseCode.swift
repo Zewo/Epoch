@@ -1,27 +1,3 @@
-// CloseCode.swift
-//
-// The MIT License (MIT)
-//
-// Copyright (c) 2015 Zewo
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 public enum CloseCode: Equatable {
     case normal
     case goingAway
@@ -61,21 +37,21 @@ public enum CloseCode: Equatable {
 
     var code: UInt16 {
         switch self {
-        case .normal:			return 1000
-        case .goingAway:		return 1001
-        case .protocolError:	return 1002
-        case .unsupported:		return 1003
-        case .noStatus:			return 1005
-        case .abnormal:			return 1006
-        case .unsupportedData:	return 1007
-        case .policyViolation:	return 1008
-        case .tooLarge:			return 1009
-        case .missingExtension:	return 1010
-        case .internalError:	return 1011
-        case .serviceRestart:	return 1012
-        case .tryAgainLater:	return 1013
-        case .tlsHandshake:		return 1015
-        case .raw(let code):	return code
+        case .normal:           return 1000
+        case .goingAway:        return 1001
+        case .protocolError:    return 1002
+        case .unsupported:      return 1003
+        case .noStatus:         return 1005
+        case .abnormal:         return 1006
+        case .unsupportedData:  return 1007
+        case .policyViolation:  return 1008
+        case .tooLarge:         return 1009
+        case .missingExtension: return 1010
+        case .internalError:    return 1011
+        case .serviceRestart:   return 1012
+        case .tryAgainLater:    return 1013
+        case .tlsHandshake:     return 1015
+        case .raw(let code):    return code
         }
     }
 
@@ -83,8 +59,8 @@ public enum CloseCode: Equatable {
         let code = self.code
 
         if code >= 1000 && code <= 5000 {
-            return code != 1004 && code != 1005 && code != 1006 && code != 1014 && code != 1015 &&
-                code != 1016 && code != 1100 && code != 2000 && code != 2999
+            return code != 1004 && code != 1005 && code != 1006 && code != 1014 && code != 1015
+                && code != 1016 && code != 1100 && code != 2000 && code != 2999
         }
 
         return false
