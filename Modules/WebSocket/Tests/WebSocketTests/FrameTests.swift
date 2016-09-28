@@ -1,7 +1,7 @@
 import XCTest
 @testable import WebSocket
 
-class FrameTests: XCTestCase {
+public class FrameTests: XCTestCase {
     func testMaskPong() {
         let maskKey = Data([0x39, 0xfa, 0xab, 0x35])
         let frame = Frame(opCode: .pong, data: [], maskKey: maskKey)

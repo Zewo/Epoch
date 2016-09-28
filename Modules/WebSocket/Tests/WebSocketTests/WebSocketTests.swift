@@ -1,7 +1,7 @@
 import XCTest
 @testable import WebSocket
 
-class WebSocketTests: XCTestCase {
+public class WebSocketTests: XCTestCase {
     func testReality() {
         XCTAssert(2 + 2 == 4, "Something is severely wrong here.")
     }

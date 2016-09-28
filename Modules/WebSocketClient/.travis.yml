@@ -6,23 +6,10 @@ os:
 language: generic
 sudo: required
 dist: trusty
-osx_image: xcode7.3
-before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        brew update;
-        brew install openssl;
-        brew link openssl --force;
-    fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-        sudo apt-get -qq update;
-        sudo apt-get -y install libssl-dev;
-        sudo apt-get -y install uuid-dev;
-    fi
+osx_image: xcode8
 install:
-  - eval "$(curl -sL https://raw.githubusercontent.com/Zewo/Zewo/5254525d9da56df29346fd76e99529c22034d61d/Scripts/install-swiftenv.sh)"
+  - eval "$(curl -sL https://raw.githubusercontent.com/Zewo/Zewo/master/Scripts/Travis/install.sh)"
 script:
-  - swift build --fetch # clones all dependencies
-  - rm -rf Packages/*/Tests # deletes dependency's tests until duplicate Package.tests issue can be resolved in SPM. At that point, remove.
-  - swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib -Xlinker -rpath -Xlinker $(pwd)/.build/debug/
-  - swift build --configuration release -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib -Xlinker -rpath -Xlinker $(pwd)/.build/release/
+  - swift build
+  - swift build --configuration release
   - swift test
