@@ -39,6 +39,7 @@ public enum JSONMapStreamParseError : Error, CustomStringConvertible {
 public final class JSONMapStreamParser : MapStreamParser {
     let stream: Stream
     var buffer: Buffer
+    var offset: Int = 0
 
     public init(stream: Stream) {
         self.stream = stream
@@ -106,7 +107,7 @@ extension JSONMapStreamParser {
     }
 
     private var bytesInBuffer: Int {
-        return buffer.count
+        return buffer.count - offset
     }
 
     private func getCurrentByte() throws -> Byte {
@@ -116,7 +117,7 @@ extension JSONMapStreamParser {
         guard bytesInBuffer >= 1 else {
             throw insufficientTokenError(reason: "unexpected end of tokens")
         }
-        return buffer[0]
+        return buffer[offset]
     }
 
     private func getCurrentSymbol() throws -> Character {
@@ -432,8 +433,8 @@ extension JSONMapStreamParser {
     }
 
     private func advance() throws {
-        if !buffer.isEmpty {
-            buffer = buffer[buffer.startIndex.advanced(by: 1)..<buffer.endIndex]
+        if bytesInBuffer > 0 {
+            offset += 1
         }
         
         if bytesInBuffer > 0 {
