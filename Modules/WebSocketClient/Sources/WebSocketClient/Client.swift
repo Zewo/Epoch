@@ -1,6 +1,5 @@
 @_exported import WebSocket
 import Foundation
-
 import HTTP
 import HTTPClient
 
@@ -12,6 +11,7 @@ public enum ClientError: Error {
 
 public struct WebSocketClient {
     private let client: Responder
+    private let url: URL
     private let didConnect: (WebSocket) throws -> Void
 
     public init(url: URL, didConnect: @escaping (WebSocket) throws -> Void) throws {
@@ -27,9 +27,10 @@ public struct WebSocketClient {
         self.client = try HTTPClient.Client(url: urlhttp)
 
         self.didConnect = didConnect
+        self.url = url
     }
 
-    public func connect(_ path: String) throws {
+    public func connect() throws {
         let key = try Data(bytes: Array(Random.bytes(16))).base64EncodedString(options: [])
 
         let headers: Headers = [
@@ -39,9 +40,7 @@ public struct WebSocketClient {
             "Sec-WebSocket-Key": key,
         ]
 
-        guard var request = Request(method: .get, url: path, headers: headers) else {
-            throw URLError.invalidURL
-        }
+        var request = Request(method: .get, url: url, headers: headers)
 
         request.upgradeConnection { response, stream in
             guard response.status == .switchingProtocols && response.isWebSocket else {
@@ -60,10 +59,10 @@ public struct WebSocketClient {
         _ = try client.respond(to: request)
     }
 
-    public func connectInBackground(_ path: String, failure: @escaping (Error) -> Void = WebSocketClient.logError) {
+    public func connectInBackground(failure: @escaping (Error) -> Void = WebSocketClient.logError) {
         co {
             do {
-                try self.connect(path)
+                try self.connect()
             } catch {
                 failure(error)
             }
