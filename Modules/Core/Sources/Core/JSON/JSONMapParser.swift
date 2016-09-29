@@ -505,7 +505,7 @@ fileprivate let hexMapping: [UnicodeScalar: UInt32] = [
     "f": 0xF, "F": 0xF
 ]
 
-fileprivate let digitMapping: [UnicodeScalar:Int] = [
+fileprivate let digitMapping: [UnicodeScalar: Int] = [
     "0": 0,
     "1": 1,
     "2": 2,
