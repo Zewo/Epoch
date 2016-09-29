@@ -4,8 +4,6 @@
     import Darwin
 #endif
 
-@_exported import struct Dispatch.DispatchData
-
 public typealias Byte = UInt8
 
 public struct Buffer : RandomAccessCollection {
