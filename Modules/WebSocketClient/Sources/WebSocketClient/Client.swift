@@ -30,9 +30,7 @@ public struct Client {
     }
 
     public func connect(_ path: String) throws {
-        let a = try Random.bytes(16).filter {_ in return true}
-
-        let key = Data(bytes: a).base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
+        let key = try Data(bytes: Array(Random.bytes(16))).base64EncodedString(options: [])
 
         let headers: Headers = [
             "Connection": "Upgrade",
@@ -41,13 +39,16 @@ public struct Client {
             "Sec-WebSocket-Key": key,
         ]
 
-        var request = Request(method: .get, url: path, headers: headers)
-        request?.upgradeConnection { response, stream in
+        guard var request = Request(method: .get, url: path, headers: headers) else {
+            throw URLError.invalidURL
+        }
+
+        request.upgradeConnection { response, stream in
             guard response.status == .switchingProtocols && response.isWebSocket else {
                 throw ClientError.responseNotWebsocket
             }
 
-            guard let accept = response.webSocketAccept , accept == WebSocket.accept(key) else {
+            guard let accept = response.webSocketAccept, accept == WebSocket.accept(key) else {
                 throw ClientError.responseNotWebsocket
             }
 
@@ -56,7 +57,7 @@ public struct Client {
             try webSocket.start()
         }
 
-        _ = try client.respond(to: request!)
+        _ = try client.respond(to: request)
     }
 
     public func connectInBackground(_ path: String, failure: @escaping (Error) -> Void = Client.logError) {
@@ -64,7 +65,6 @@ public struct Client {
             do {
                 try self.connect(path)
             } catch {
-                print ("toto")
                 failure(error)
             }
         }
@@ -89,6 +89,7 @@ public extension Response {
     }
 
     public var isWebSocket: Bool {
-        return connection?.lowercased() == "upgrade" && upgrade?.lowercased() == "websocket"
+        return connection?.lowercased() == "upgrade"
+            && upgrade?.lowercased() == "websocket"
     }
 }

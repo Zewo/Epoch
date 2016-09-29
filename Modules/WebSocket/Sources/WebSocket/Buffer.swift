@@ -7,22 +7,31 @@ import Core
 #endif
 
 extension Buffer {
-    init<T>(number: T) {
+    public mutating func append(_ byte: UInt8) {
+        var byte = byte
+        self.append(&byte, count: 1)
+    }
+
+    public mutating func append(_ bytes: [UInt8]) {
+        self.append(bytes, count: bytes.count)
+    }
+
+    init<T: Integer>(number: T) {
         let totalBytes = MemoryLayout<T>.size
+
         let valuePointer = UnsafeMutablePointer<T>.allocate(capacity: 1)
         valuePointer.pointee = number
+        defer {
+            valuePointer.deinitialize()
+            valuePointer.deallocate(capacity: 1)
+        }
 
-        let bytes = valuePointer.withMemoryRebound(to: UInt8.self, capacity: totalBytes, { (p) -> [UInt8] in
-
-            var bytes = [UInt8](repeating: 0, count: totalBytes)
-            for j in 0 ..< totalBytes {
-                bytes[totalBytes - 1 - j] = (p + j).pointee
+        self = valuePointer.withMemoryRebound(to: UInt8.self, capacity: totalBytes) { bytes in
+            for i in 0..<totalBytes {
+                bytes[totalBytes - 1 - i] = (bytes + i).pointee
             }
-            return bytes
-        })
-        valuePointer.deinitialize()
-        valuePointer.deallocate(capacity: 1)
-        self.init(bytes)
+            return Buffer(bytes: UnsafeBufferPointer(start: bytes, count: totalBytes))
+        }
     }
 
     func toInt(_ size: Int, offset: Int = 0) -> UIntMax {

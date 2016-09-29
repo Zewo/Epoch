@@ -88,13 +88,12 @@ struct Frame {
         if masked {
             offset += 4
 
-            var unmaskedPayloadData = [UInt8](repeating: 0, count: data.count - offset)
-
-            data.subdata(in:offset ..< data.count).copyBytes(to: &unmaskedPayloadData, count: data.count - offset)
+            // TODO: remove copy
+            var unmaskedPayloadData = Array(data.subdata(in: offset..<data.count))
 
             var maskOffset = 0
             let maskKey = self.maskKey
-            for i in 0 ..< unmaskedPayloadData.count {
+            for i in 0..<unmaskedPayloadData.count {
                 unmaskedPayloadData[i] ^= maskKey[maskOffset % 4]
                 maskOffset += 1
             }
@@ -102,7 +101,7 @@ struct Frame {
             return Buffer(unmaskedPayloadData)
         }
 
-        return data.subdata(in:offset ..< data.count)
+        return data.subdata(in: offset..<data.count)
     }
 
     var isComplete: Bool {
@@ -127,9 +126,9 @@ struct Frame {
 
     fileprivate var maskKey: Buffer {
         if payloadLength <= 125 {
-            return data.subdata(in:2 ..< 6)
+            return data.subdata(in:2..<6)
         } else if payloadLength == 126 {
-            return data.subdata(in:4 ..< 8)
+            return data.subdata(in:4..<8)
         }
         return data.subdata(in:10 ..< 14)
     }
@@ -144,28 +143,31 @@ struct Frame {
 
     init() {}
 
-    init(opCode: OpCode, data: Buffer, maskKey: Buffer) {
-        self.data.append([(1 << 7) | (0 << 6) | (0 << 5) | (0 << 4) | UInt8(opCode.rawValue)], count: 1)
+    init(opCode: OpCode, data: BufferRepresentable, maskKey: BufferRepresentable) {
+        let data = data.buffer
+        let maskKey = maskKey.buffer
+
+        let op = (1 << 7) | (0 << 6) | (0 << 5) | (0 << 4) | opCode.rawValue
+        self.data.append(op)
 
         let masked: Bool = maskKey.count == 4
         let mask: UInt8 = masked ? 1 : 0
         let payloadLength = UInt64(data.count)
 
         if payloadLength > UInt64(UInt16.max) {
-            self.data.append([mask << 7 | 127], count: 1)
+            self.data.append(mask << 7 | 127)
             self.data.append(Buffer(number: payloadLength))
         } else if payloadLength > 125 {
-            self.data.append([mask << 7 | 126], count: 1)
+            self.data.append(mask << 7 | 126)
             self.data.append(Buffer(number: UInt16(payloadLength)))
         } else {
-            self.data.append([mask << 7 | (UInt8(payloadLength) & 0x7F)], count: 1)
+            self.data.append(mask << 7 | (UInt8(payloadLength) & 0x7F))
         }
         if masked {
             self.data.append(maskKey)
 
-
-            var maskedData = [UInt8](repeating: 0, count: data.count)
-            data.copyBytes(to: &maskedData, count: data.count)
+            // TODO: get rid of this copy
+            var maskedData = Array(data)
 
             var maskOffset = 0
             for i in 0..<maskedData.count {

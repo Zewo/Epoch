@@ -332,10 +332,10 @@ public final class WebSocket {
     }
 
     public static func accept(_ key: String) -> String? {
-        let a = [UInt8](sha1(Buffer(key + GUID)))
+        let hashed = sha1(Array((key + GUID).utf8))
 
-        let string = Data(bytes: a).base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
-        return string
+        let encoded = Data(bytes: hashed).base64EncodedString(options: [])
+        return encoded
 
     }
 }

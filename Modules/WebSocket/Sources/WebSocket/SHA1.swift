@@ -37,20 +37,17 @@ func arrayOfBytes<T>(_ value: T, length: Int? = nil) -> [UInt8] {
 
     let valuePointer = UnsafeMutablePointer<T>.allocate(capacity: 1)
     valuePointer.pointee = value
-
-    let bytes = valuePointer.withMemoryRebound(to: UInt8.self, capacity: totalBytes) { (p) -> [UInt8] in
-        var bytes = [UInt8](repeating: 0, count: totalBytes)
-        for j in 0..<min(MemoryLayout<T>.size,totalBytes) {
-            bytes[totalBytes - 1 - j] = (p + j).pointee
-        }
-        return bytes
+    defer {
+        valuePointer.deinitialize()
+        valuePointer.deallocate(capacity: 1)
     }
 
-
-    valuePointer.deinitialize(count: 1)
-    valuePointer.deallocate(capacity: 1)
-
-    return bytes
+    return valuePointer.withMemoryRebound(to: UInt8.self, capacity: totalBytes) { bytes in
+        for i in 0..<min(MemoryLayout<T>.size, totalBytes) {
+            bytes[totalBytes - 1 - i] = (bytes + i).pointee
+        }
+        return Array(UnsafeBufferPointer(start: bytes, count: totalBytes))
+    }
 }
 
 func toUInt32Array(_ slice: ArraySlice<UInt8>) -> Array<UInt32> {
@@ -71,14 +68,10 @@ func toUInt32Array(_ slice: ArraySlice<UInt8>) -> Array<UInt32> {
 let size: Int = 20 // 160 / 8
 let h: [UInt32] = [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0]
 
-func sha1(_ buffer: Buffer) -> Buffer {
+func sha1(_ data: [UInt8]) -> [UInt8] {
     let len = 64
-    let originalMessage = buffer.filter { (u) -> Bool in
-        return true
-    }
-    var tmpMessage = buffer.filter { (u) -> Bool in
-        return true
-    }
+    let originalMessage = data
+    var tmpMessage = originalMessage
 
     // Step 1. Append Padding Bits
     tmpMessage.append(0x80) // append one bit (UInt8 with one bit) to message
@@ -92,12 +85,15 @@ func sha1(_ buffer: Buffer) -> Buffer {
         msgLength += 1
     }
 
-    tmpMessage += Array<UInt8>(repeating: 0, count: counter)
+    for _ in 0..<counter {
+        tmpMessage.append(0)
+    }
+
     // hash values
     var hh = h
 
     // append message length, in a 64-bit big-endian integer. So now the message length is a multiple of 512 bits.
-    tmpMessage += arrayOfBytes(originalMessage.count * 8, length: 64 / 8)
+    tmpMessage.append(contentsOf: arrayOfBytes(originalMessage.count * 8, length: 64 / 8))
 
     // Process the message in successive 512-bit chunks:
     let chunkSizeBytes = 512 / 8 // 64
@@ -169,7 +165,7 @@ func sha1(_ buffer: Buffer) -> Buffer {
         result += [UInt8(item & 0xff), UInt8((item >> 8) & 0xff), UInt8((item >> 16) & 0xff), UInt8((item >> 24) & 0xff)]
     }
 
-    return Buffer(result)
+    return result
 }
 
 struct BytesSequence: Sequence {
