@@ -106,6 +106,13 @@ public final class MessageParser {
         self.parser.data = Unmanaged.passUnretained(self).toOpaque()
     }
     
+    public func parse(_ from: BufferRepresentable, handler: (Message) throws -> Void) throws {
+        let buffer = from.buffer
+        try buffer.withUnsafeBytes {
+            try self.parse(UnsafeBufferPointer(start: $0, count: buffer.count), handler: handler)
+        }
+    }
+    
     public func parse(_ from: UnsafeBufferPointer<UInt8>, handler: (Message) throws -> Void) throws {
         while !messages.isEmpty {
             try handler(messages.remove(at: 0))
