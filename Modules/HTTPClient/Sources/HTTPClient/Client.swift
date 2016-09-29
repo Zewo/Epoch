@@ -22,7 +22,7 @@ public final class Client : Responder {
 
     var stream: Stream?
     var serializer: RequestSerializer?
-    var parser: ResponseParser?
+    var parser: MessageParser?
 
     public init(url: URL, configuration: Map = nil) throws {
         self.secure = try isSecure(url: url)
@@ -66,7 +66,7 @@ extension Client {
 
         let stream = try getStream()
         let serializer = getSerializer(stream: stream)
-        let parser = getParser(stream: stream)
+        let parser = getParser()
 
         self.stream = stream
         self.serializer = serializer
@@ -76,8 +76,16 @@ extension Client {
 
         do {
             // TODO: Add deadline to serializer
+
             try serializer.serialize(request, deadline: requestDeadline)
-            let response = try parser.parse(deadline: requestDeadline)
+            
+            var response: Response!
+            while !stream.closed {
+                let chunk = try stream.read(upTo: bufferSize, deadline: requestDeadline)
+                try parser.parse(chunk) { message in
+                    response = message as! Response
+                }
+            }
 
             if let upgrade = request.upgradeConnection {
                 try upgrade(response, stream)
@@ -140,102 +148,106 @@ extension Client {
         return RequestSerializer(stream: stream)
     }
 
-    private func getParser(stream: Stream) -> ResponseParser {
+
+    private func getParser() -> MessageParser {
         if let parser = self.parser {
             return parser
         }
-        return ResponseParser(stream: stream, bufferSize: self.bufferSize)
+        return MessageParser(mode: .response)
     }
 }
 
-//extension Client {
-//    public func get(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .get, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    public func head(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .head, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    public func post(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .post, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    public func put(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .put, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    public func patch(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .patch, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    public func delete(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .delete, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    public func options(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .options, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    private func request(method: Request.Method, uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        let req = try Request(method: method, uri: URI(uri), headers: headers, body: body.data)
-//        return try request(req, middleware: middleware)
-//    }
-//}
-//
-//extension Client {
-//    public static func get(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .get, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    public static func head(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .head, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    public static func post(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .post, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    public static func put(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .put, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    public static func patch(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .patch, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    public static func delete(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .delete, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    public static func options(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> Response {
-//        return try request(method: .options, uri: uri, headers: headers, body: body, middleware: middleware)
-//    }
-//
-//    fileprivate static func request(method: Request.Method, url: String, headers: Headers = [:], body: DataRepresentable, middleware: [Middleware] = []) throws -> Response {
-//        guard let clientURI = URL(string: url) else {
-//            throw URLError.invalidURL
-//        }
-//
-//        let client = try getCachedClient(uri: clientURI)
-//        let requestURI = URL(path: clientURI.path ?? "/", query: clientURI.query, fragment: clientURI.fragment)
-//        let request = Request(method: method, uri: requestURI, headers: headers, body: body.data)
-//        return try client.request(request, middleware: middleware)
-//    }
-//
-//    private static func getCachedClient(url: URL) throws -> Client {
-//        let (host, port) = try getHostPort(uri: uri)
-//        let hash = host.hashValue ^ port.hashValue
-//
-//        guard let client = cachedClients[hash] else {
-//            let client = try Client(uri: uri)
-//            cachedClients[hash] = client
-//            return client
-//        }
-//
-//        return client
-//    }
-//}
+extension Client {
+    public func get(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .get, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    public func head(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .head, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    public func post(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .post, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    public func put(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .put, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    public func patch(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .patch, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    public func delete(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .delete, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    public func options(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .options, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    private func request(method: Request.Method, url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        guard let url = URL(string: url) else {
+            throw URLError.invalidURL
+        }
+        let req = Request(method: method, url: url, headers: headers, body: body.buffer)
+        return try request(req, middleware: middleware)
+    }
+}
+
+extension Client {
+    public static func get(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .get, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    public static func head(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .head, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    public static func post(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .post, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    public static func put(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .put, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    public static func patch(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .patch, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    public static func delete(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .delete, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    public static func options(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> Response {
+        return try request(method: .options, url: url, headers: headers, body: body, middleware: middleware)
+    }
+
+    fileprivate static func request(method: Request.Method, url: String, headers: Headers = [:], body: BufferRepresentable, middleware: [Middleware] = []) throws -> Response {
+        guard let clientUrl = URL(string: url) else {
+            throw URLError.invalidURL
+        }
+
+        let client = try getCachedClient(url: clientUrl)
+
+        let request = Request(method: method, url: clientUrl, headers: headers, body: body.buffer)
+        return try client.request(request, middleware: middleware)
+    }
+
+    private static func getCachedClient(url: URL) throws -> Client {
+        let (host, port) = try getHostPort(url: url)
+        let hash = host.hashValue ^ port.hashValue
+
+        guard let client = cachedClients[hash] else {
+            let client = try Client(url: url)
+            cachedClients[hash] = client
+            return client
+        }
+
+        return client
+    }
+}
 
 public class TypedResponse<T : MapInitializable> {
     public let response: Response
@@ -251,11 +263,11 @@ public class TypedResponse<T : MapInitializable> {
 }
 
 //extension Client {
-//    public static func get<T : MapInitializable>(_ uri: String, headers: Headers = [:], body: DataRepresentable = Data(), middleware: [Middleware] = []) throws -> TypedResponse<T> {
+//    public static func get<T : MapInitializable>(_ url: String, headers: Headers = [:], body: BufferRepresentable = Buffer(), middleware: [Middleware] = []) throws -> TypedResponse<T> {
 //        let contentNegotiation = ContentNegotiationMiddleware(mediaTypes: [JSON.self], mode: .client)
 //        var chain: [Middleware] = [contentNegotiation]
 //        chain += middleware
-//        let response = try request(method: .get, uri: uri, headers: headers, body: body, middleware: chain)
+//        let response = try request(method: .get, url: url, headers: headers, body: body, middleware: chain)
 //        return try TypedResponse(response: response)
 //    }
 //}

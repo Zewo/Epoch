@@ -7,7 +7,106 @@
 @_exported import struct Dispatch.DispatchData
 
 public typealias Byte = UInt8
-public typealias Buffer = DispatchData
+
+public struct Buffer : RandomAccessCollection {
+    public typealias Iterator = Array<Byte>.Iterator
+    public typealias Index = Int
+    public typealias Indices = DefaultRandomAccessIndices<Buffer>
+    
+    public private(set) var bytes: [Byte]
+    
+    public var count: Int {
+        return bytes.count
+    }
+    
+    public init(_ bytes: [Byte] = []) {
+        self.bytes = bytes
+    }
+    
+    public init(_ bytes: UnsafeBufferPointer<Byte>) {
+        self.bytes = [Byte](bytes)
+    }
+    
+    public mutating func append(_ other: Buffer) {
+        bytes += other.bytes
+    }
+    
+    public mutating func append(_ other: [Byte]) {
+        bytes += other
+    }
+    
+    public mutating func append(_ other: UnsafeBufferPointer<Byte>) {
+        guard other.count > 0 else {
+            return
+        }
+        bytes += [Byte](other)
+    }
+    
+    public mutating func append(_ other: UnsafePointer<Byte>, count: Int) {
+        guard count > 0 else {
+            return
+        }
+        bytes += [UInt8](UnsafeBufferPointer(start: other, count: count))
+    }
+    
+    public subscript(index: Index) -> Byte {
+        return bytes[index]
+    }
+    
+    public subscript(bounds: Range<Int>) -> Buffer {
+        return Buffer([Byte](bytes[bounds]))
+    }
+    
+    public subscript(bounds: CountableRange<Int>) -> Buffer {
+        return Buffer([Byte](bytes[bounds]))
+    }
+    
+    public var startIndex: Int {
+        return 0
+    }
+    
+    public var endIndex: Int {
+        return count
+    }
+    
+    public func index(before i: Int) -> Int {
+        return i - 1
+    }
+    
+    public func index(after i: Int) -> Int {
+        return i + 1
+    }
+    
+    public func makeIterator() -> Iterator {
+        return bytes.makeIterator()
+    }
+    
+    public func copyBytes(to pointer: UnsafeMutablePointer<Byte>, count: Int) {
+        copyBytes(to: UnsafeMutableBufferPointer(start: pointer, count: count))
+    }
+    
+    public func copyBytes(to pointer: UnsafeMutableBufferPointer<Byte>) {
+        guard pointer.count > 0 else {
+            return
+        }
+        
+        precondition(bytes.endIndex >= 0)
+        precondition(bytes.endIndex <= pointer.count, "The pointer is not large enough")
+        
+        _ = bytes.withUnsafeBufferPointer {
+            memcpy(pointer.baseAddress!, $0.baseAddress!, count)
+        }
+        
+    }
+    
+    public func withUnsafeBytes<Result, ContentType>(body: (UnsafePointer<ContentType>) throws -> Result) rethrows -> Result {
+        return try bytes.withUnsafeBufferPointer {
+            let capacity = count / MemoryLayout<ContentType>.stride
+            return try $0.baseAddress!.withMemoryRebound(to: ContentType.self, capacity: capacity) { try body($0) }
+        }
+        
+    }
+}
 
 public protocol BufferInitializable {
     init(buffer: Buffer) throws
@@ -27,62 +126,35 @@ public protocol BufferConvertible : BufferInitializable, BufferRepresentable {}
 
 extension Buffer {
     public init(_ string: String) {
-        self = string.utf8CString.withUnsafeBufferPointer { bufferPtr in
-            guard bufferPtr.count > 1 else {
-                return Buffer()
-            }
 
-            return bufferPtr.baseAddress!.withMemoryRebound(to: UInt8.self, capacity: bufferPtr.count) { ptr in
-                return Buffer(bytes: UnsafeBufferPointer<UInt8>(start: ptr, count: bufferPtr.count - 1))
-            }
-        }
+        self = Buffer([Byte](string.utf8))
     }
-
-    public init(_ bytes: [UInt8]) {
-        self = bytes.withUnsafeBufferPointer { Buffer(bytes: $0) }
-    }
-
-    public init() {
-        self = Buffer.empty
-    }
-
-    public init(count: Int, fill: (UnsafeMutableBufferPointer<UInt8>) throws -> Void) rethrows {
+    
+    public init(count: Int, fill: (UnsafeMutableBufferPointer<Byte>) throws -> Void) rethrows {
         self = try Buffer(capacity: count) {
             try fill($0)
             return count
         }
     }
 
-    public init(capacity: Int, fill: (UnsafeMutableBufferPointer<UInt8>) throws -> Int) rethrows {
-        let bytes = UnsafeMutablePointer<UInt8>.allocate(capacity: capacity)
-        let buffer = UnsafeMutableBufferPointer(start: bytes, count: capacity)
-        let usedCapacity = try fill(buffer)
+    
+    public init(capacity: Int, fill: (UnsafeMutableBufferPointer<Byte>) throws -> Int) rethrows {
+        var bytes = [Byte](repeating: 0, count: capacity)
+        let usedCapacity = try bytes.withUnsafeMutableBufferPointer { try fill($0) }
 
         guard usedCapacity > 0 else {
-            bytes.deallocate(capacity: capacity)
-            self = Buffer.empty
+            self = Buffer()
             return
         }
 
-        guard Double(usedCapacity) > Double(capacity) * 0.25 else {
-            defer {
-                bytes.deallocate(capacity: capacity)
-            }
-            self = Buffer(bytes: UnsafeBufferPointer<UInt8>(start: bytes, count: usedCapacity))
-            return
-        }
-
-        self = Buffer(bytesNoCopy: UnsafeBufferPointer<UInt8>(start: bytes, count: usedCapacity), deallocator: .free)
-    }
-
-    public subscript(_ range: Range<Int>) -> Buffer {
-        return subdata(in: self.startIndex.advanced(by: range.lowerBound)..<self.startIndex.advanced(by: range.upperBound))
+        
+        self = Buffer([Byte](bytes.prefix(usedCapacity)))
     }
 }
 
 extension String : BufferConvertible {
     public init(buffer: Buffer) throws {
-        guard let string = String(bytes: buffer, encoding: .utf8) else {
+        guard let string = String(bytes: buffer.bytes, encoding: .utf8) else {
             throw StringError.invalidString
         }
         self = string
@@ -126,9 +198,5 @@ public func ==(lhs: Buffer, rhs: Buffer) -> Bool {
         return true
     }
 
-    return lhs.withUnsafeBytes { lhsBytes in
-        rhs.withUnsafeBytes { rhsBytes in
-            return memcmp(UnsafeRawPointer(lhsBytes), UnsafeRawPointer(rhsBytes), lhs.count) == 0
-        }
-    }
+    return lhs.bytes == rhs.bytes
 }

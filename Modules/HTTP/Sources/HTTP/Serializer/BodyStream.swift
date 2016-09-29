@@ -1,4 +1,4 @@
-public enum BodyStreamError: Error {
+public enum BodyStreamError : Error {
     case receiveUnsupported
 }
 

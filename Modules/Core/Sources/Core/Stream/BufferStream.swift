@@ -2,7 +2,7 @@ public final class BufferStream : Stream {
     public private(set) var buffer: Buffer
     public private(set) var closed = false
 
-    public init(buffer: Buffer = Buffer.empty) {
+    public init(buffer: Buffer = Buffer()) {
         self.buffer = buffer
     }
 
@@ -19,7 +19,7 @@ public final class BufferStream : Stream {
     }
     
     public func read(into targetBuffer: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int {
-        guard !closed && !buffer.isEmpty else {
+        guard !closed else {
             throw StreamError.closedStream
         }
         
@@ -31,16 +31,16 @@ public final class BufferStream : Stream {
         buffer.copyBytes(to: targetBaseAddress, count: read)
         
         if read < buffer.count {
-            buffer = buffer.subdata(in: read..<buffer.count)
+            buffer = buffer.suffix(from: read)
         } else {
-            buffer = Buffer.empty
+            buffer = Buffer()
         }
         
         return read
     }
     
     public func write(_ sourceBuffer: UnsafeBufferPointer<UInt8>, deadline: Double) {
-        buffer.append(Buffer(bytes: sourceBuffer))
+        buffer.append(Buffer(sourceBuffer))
     }
 
     public func flush(deadline: Double) throws {}

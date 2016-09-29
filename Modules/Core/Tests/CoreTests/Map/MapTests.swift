@@ -465,7 +465,7 @@ public class MapTests : XCTestCase {
         XCTAssertEqual(try null.asDouble(converting: true), 0)
         XCTAssertEqual(try null.asInt(converting: true), 0)
         XCTAssertEqual(try null.asString(converting: true), "null")
-        XCTAssertEqual(try null.asBuffer(converting: true), Buffer.empty)
+        XCTAssertEqual(try null.asBuffer(converting: true), Buffer())
         XCTAssertEqual(try null.asArray(converting: true), [])
         XCTAssertEqual(try null.asDictionary(converting: true), [:])
 

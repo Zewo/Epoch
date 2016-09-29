@@ -73,10 +73,9 @@ let statuses: [Response.Status] = [
 
 public class ResponseParserTests : XCTestCase {
     func testInvalidHTTPVersion() throws {
-        let data = "HUEHUE 200 OK\r\n\r\n"
-        let stream = BufferStream(buffer: data)
-        let parser = ResponseParser(stream: stream)
-        XCTAssertThrowsError(try parser.parse(deadline: .never))
+        let data = Buffer("HUEHUE 200 OK\r\n\r\n")
+        let parser = MessageParser(mode: .response)
+        XCTAssertThrowsError(try parser.parse(data) { _ in })
     }
 
     func check(response: String, count: Int, bufferSize: Int, test: (Response) -> Void) throws {
@@ -86,11 +85,13 @@ public class ResponseParserTests : XCTestCase {
             data += response
         }
 
-        let stream = BufferStream(buffer: data)
-        let parser = ResponseParser(stream: stream, bufferSize: bufferSize)
-
+        let parser = MessageParser(mode: .response)
+        
         for _ in 0 ..< count {
-            try test(parser.parse(deadline: .never))
+            try parser.parse(data) { message in
+                let response = message as! Response
+                test(response)
+            }
         }
     }
 

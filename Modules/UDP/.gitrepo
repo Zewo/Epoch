@@ -4,8 +4,8 @@
 ; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
 ;
 [subrepo]
-	remote = https://github.com/Zewo/HTTPClient
+	remote = https://github.com/Zewo/UDP
 	branch = master
-	commit = 44f6caaeef7ff789a6a05d607dec4a8c7489ef68
-	parent = 089ab18788b4d856763f8826677fb90a2122137e
+	commit = c7bad36fa928d5bda0914a5f0e48907cba97243a
+	parent = 9394b4aeceee67ef6cfa594e9c9aebf755baecfa
 	cmdver = 0.3.0

@@ -8,22 +8,32 @@ public class ResponseSerializer {
     }
 
     public func serialize(_ response: Response, deadline: Double) throws {
-        let newLine: [UInt8] = [13, 10]
-
-        try stream.write("HTTP/\(response.version.major).\(response.version.minor) \(response.status.statusCode) \(response.status.reasonPhrase)", deadline: deadline)
-        try stream.write(newLine, deadline: deadline)
-
+        var header = "HTTP/"
+        header += response.version.major.description
+        header += "."
+        header += response.version.minor.description
+        header += " "
+        header += response.status.statusCode.description
+        header += " "
+        header += response.reasonPhrase
+        header += "\r\n"
+        
         for (name, value) in response.headers.headers {
-            try stream.write("\(name): \(value)", deadline: deadline)
-            try stream.write(newLine, deadline: deadline)
+            header += name.string
+            header += ": "
+            header += value
+            header += "\r\n"
         }
 
         for cookie in response.cookieHeaders {
-            try stream.write("Set-Cookie: \(cookie)", deadline: deadline)
-            try stream.write(newLine, deadline: deadline)
+            header += "Set-Cookie: "
+            header += cookie
+            header += "\r\n"
         }
+        
+        header += "\r\n"
 
-        try stream.write(newLine, deadline: deadline)
+        try stream.write(header, deadline: deadline)
 
         switch response.body {
         case .buffer(let buffer):
@@ -31,26 +41,24 @@ public class ResponseSerializer {
         case .reader(let reader):
             while !reader.closed {
                 let buffer = try reader.read(upTo: bufferSize, deadline: deadline)
+                
                 guard !buffer.isEmpty else {
                     break
                 }
 
                 try stream.write(String(buffer.count, radix: 16), deadline: deadline)
-                try stream.write(newLine, deadline: deadline)
+                try stream.write("\r\n", deadline: deadline)
                 try stream.write(buffer, deadline: deadline)
-                try stream.write(newLine, deadline: deadline)
+                try stream.write("\r\n", deadline: deadline)
             }
 
-            try stream.write("0", deadline: deadline)
-            try stream.write(newLine, deadline: deadline)
-            try stream.write(newLine, deadline: deadline)
+            try stream.write("0\r\n\r\n", deadline: deadline)
         case .writer(let writer):
             let body = BodyStream(stream)
             try writer(body)
 
-            try stream.write("0", deadline: deadline)
-            try stream.write(newLine, deadline: deadline)
-            try stream.write(newLine, deadline: deadline)
+
+            try stream.write("0\r\n\r\n", deadline: deadline)
         }
 
         try stream.flush(deadline: deadline)

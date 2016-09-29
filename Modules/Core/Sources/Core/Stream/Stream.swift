@@ -19,7 +19,7 @@ extension InputStream {
 
     /// Drains the `Stream` and returns the contents in a `Buffer`. At the end of this operation the stream will be closed.
     public func drain(deadline: Double) throws -> Buffer {
-        var buffer = Buffer.empty
+        var buffer = Buffer()
 
         while !self.closed, let chunk = try? self.read(upTo: 2048, deadline: deadline), chunk.count > 0 {
             buffer.append(chunk)
@@ -46,21 +46,11 @@ extension OutputStream {
             return
         }
         
-        var rethrowError: Error? = nil
-        buffer.enumerateBytes { bufferPtr, _, stop in
-            do {
-                try write(bufferPtr, deadline: deadline)
-            } catch {
-                rethrowError = error
-                stop = true
-            }
-        }
-        
-        if let error = rethrowError {
-            throw error
+        try buffer.bytes.withUnsafeBufferPointer {
+            try write($0, deadline: deadline)
         }
     }
-    
+
     public func write(_ converting: BufferRepresentable, deadline: Double) throws {
         try write(converting.buffer, deadline: deadline)
     }

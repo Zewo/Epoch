@@ -32,9 +32,8 @@ public class IO {
 
 	public convenience init(buffer: BufferRepresentable) throws {
 		try self.init()
-        let bufferBuffer = buffer.buffer
-        _ = try bufferBuffer.withUnsafeBytes {
-            try write(UnsafeBufferPointer<UInt8>(start: $0, count: bufferBuffer.count))
+        _ = try buffer.buffer.bytes.withUnsafeBufferPointer {
+            try write($0)
         }
         
 	}

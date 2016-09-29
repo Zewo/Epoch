@@ -172,7 +172,7 @@ extension Request {
         }
 
         set(accept) {
-            headers["Accept"] = accept.map({"\($0.type)/\($0.subtype)"}).joined(separator: ", ")
+            headers["Accept"] = accept.map({$0.type + "/" + $0.subtype}).joined(separator: ", ")
         }
     }
 

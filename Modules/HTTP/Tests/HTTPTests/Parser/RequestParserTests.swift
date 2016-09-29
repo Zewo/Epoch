@@ -55,63 +55,58 @@ let methods: [Request.Method] = [
 public class RequestParserTests : XCTestCase {
     func testInvalidMethod() {
         let data = "INVALID / HTTP/1.1\r\n\r\n"
-        let stream = BufferStream(buffer: data)
-        let parser = RequestParser(stream: stream)
-        XCTAssertThrowsError(try parser.parse(deadline: .never))
+        let parser = MessageParser(mode: .request)
+        XCTAssertThrowsError(try parser.parse(data) { _ in })
     }
 
     func testInvalidURL() {
         let data = "GET huehue HTTP/1.1\r\n\r\n"
-        let stream = BufferStream(buffer: data)
-        let parser = RequestParser(stream: stream)
-        XCTAssertThrowsError(try parser.parse(deadline: .never))
+        let parser = MessageParser(mode: .request)
+        XCTAssertThrowsError(try parser.parse(data) { _ in })
     }
 
     func testNoURL() {
         let data = "GET HTTP/1.1\r\n\r\n"
-        let stream = BufferStream(buffer: data)
-        let parser = RequestParser(stream: stream)
-        XCTAssertThrowsError(try parser.parse(deadline: .never))
+        let parser = MessageParser(mode: .request)
+        XCTAssertThrowsError(try parser.parse(data) { _ in })
     }
 
     func testInvalidHTTPVersion() {
         let data = "GET / HUEHUE\r\n\r\n"
-        let stream = BufferStream(buffer: data)
-        let parser = RequestParser(stream: stream)
-        XCTAssertThrowsError(try parser.parse(deadline: .never))
+        let parser = MessageParser(mode: .request)
+        XCTAssertThrowsError(try parser.parse(data) { _ in })
     }
 
     func testInvalidDoubleConnectMethod() {
         let data = "CONNECT / HTTP/1.1\r\n\r\nCONNECT / HTTP/1.1\r\n\r\n"
-        let stream = BufferStream(buffer: data)
-        let parser = RequestParser(stream: stream)
-        XCTAssertThrowsError(try parser.parse(deadline: .never))
+        let parser = MessageParser(mode: .request)
+        XCTAssertThrowsError(try parser.parse(data) { _ in })
     }
 
     func testConnectMethod() throws {
         let data = "CONNECT / HTTP/1.1\r\n\r\n"
-        let stream = BufferStream(buffer: data)
-        let parser = RequestParser(stream: stream)
-        let request = try parser.parse(deadline: .never)
-        XCTAssert(request.method == .connect)
-        XCTAssert(request.url.path == "/")
-        XCTAssert(request.version.major == 1)
-        XCTAssert(request.version.minor == 1)
-        XCTAssert(request.headers.count == 0)
+        let parser = MessageParser(mode: .request)
+        try parser.parse(data) { message in
+            let request = message as! Request
+            XCTAssert(request.method == .connect)
+            XCTAssert(request.url.path == "/")
+            XCTAssert(request.version.major == 1)
+            XCTAssert(request.version.minor == 1)
+            XCTAssertEqual(request.headers.count, 0)
+        }
     }
 
-    func check(request: String, count: Int, bufferSize: Int, test: (Request) -> Void) throws {
+    func check(request: String, count: Int, bufferSize: Int, test: @escaping (Request) -> Void) throws {
         var data = ""
 
         for _ in 0 ..< count {
             data += request
         }
 
-        let stream = BufferStream(buffer: data)
-        let parser = RequestParser(stream: stream, bufferSize: bufferSize)
-
-        for _ in 0 ..< count {
-            try test(parser.parse(deadline: .never))
+        let parser = MessageParser(mode: .request)
+        try parser.parse(data) { message in
+            let request = message as! Request
+            test(request)
         }
     }
 
@@ -213,7 +208,7 @@ public class RequestParserTests : XCTestCase {
     }
 
     func testUnknownMethod() {
-        XCTAssertEqual(Request.Method(code: 1969), .other(method: "UNKNOWN"))
+        XCTAssertEqual(Request.Method(code: http_method(rawValue: 1969)), .other(method: "UNKNOWN"))
     }
 
     func testDuplicateHeaders() throws {
