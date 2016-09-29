@@ -20,7 +20,7 @@ var testCases = [
     testCase(EnvironmentTests.allTests),
     testCase(ThreadTests.allTests),
     testCase(LockTests.allTests),
-    testCase(POSIXRegexTests.allTests),
+    testCase(RegexTests.allTests),
 
     // Axis
     testCase(JSONTests.allTests),

@@ -6,4 +6,5 @@ XCTMain([
     testCase(EnvironmentTests.allTests),
     testCase(ThreadTests.allTests),
     testCase(LockTests.allTests),
+    testCase(RegexTests.allTests),
 ])
