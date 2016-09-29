@@ -10,7 +10,7 @@ public enum ClientError: Error {
     case responseNotWebsocket
 }
 
-public struct Client {
+public struct WebSocketClient {
     private let client: Responder
     private let didConnect: (WebSocket) throws -> Void
 
@@ -60,7 +60,7 @@ public struct Client {
         _ = try client.respond(to: request)
     }
 
-    public func connectInBackground(_ path: String, failure: @escaping (Error) -> Void = Client.logError) {
+    public func connectInBackground(_ path: String, failure: @escaping (Error) -> Void = WebSocketClient.logError) {
         co {
             do {
                 try self.connect(path)
