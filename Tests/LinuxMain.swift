@@ -8,7 +8,6 @@ import HTTPTests
 import IPTests
 // import OpenSSLTests
 import POSIXTests
-import POSIXRegexTests
 import ReflectionTests
 import TCPTests
 import UDPTests

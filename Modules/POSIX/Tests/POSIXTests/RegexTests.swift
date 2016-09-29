@@ -85,6 +85,18 @@ public class RegexTests: XCTestCase {
         let string = regex.replace(in: "hello world", with: "bye")
         XCTAssert(string == "hello world")
     }
+    
+    func testReplaceUTF8() throws {
+        let r0 = try Regex(pattern: "coffee")
+        let actual0 = r0.replace(in: "Paulo loves coffee", with: "☕️")
+        XCTAssertEqual(actual0, "Paulo loves ☕️")
+    }
+    
+    func testMultipleReplacesUTF8() throws {
+        let r1 = try Regex(pattern: "[[:digit:]]{4}")
+        let actual1 = r1.replace(in: "1234-2345-3456-4567", with: "💳")
+        XCTAssertEqual(actual1, "💳-💳-💳-💳")
+    }
 
 
     /// MARK: - matching test
