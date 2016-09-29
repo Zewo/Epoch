@@ -8,7 +8,7 @@ public class TickerTests : XCTestCase {
         co {
             var last: Double = ticker.channel.receive()!
             for time in ticker.channel {
-                XCTAssertEqualWithAccuracy(time - last, tickerPeriod, accuracy: tickerPeriod / 2)
+                XCTAssertEqualWithAccuracy(time - last, tickerPeriod, accuracy: 1)
                 last = time
             }
         }
