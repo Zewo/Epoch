@@ -1,9 +1,10 @@
 import CHTTPParser
 import Core
 
-public class MessageParser: Parser {
+public typealias MessageParserError = http_errno
+
+public final class MessageParser {
     public typealias Result = Message
-    public typealias Error = http_errno
     
     public enum Mode {
         case request
@@ -118,7 +119,7 @@ public class MessageParser: Parser {
             return http_parser_execute(&self.parser, &self.parserSettings, $0, from.count)
         }
         guard processedCount == from.count else {
-            throw MessageParser.Error(parser.http_errno)
+            throw MessageParserError(parser.http_errno)
         }
         
         while !messages.isEmpty {
@@ -265,7 +266,7 @@ public class MessageParser: Parser {
     
 }
 
-extension MessageParser.Error: Error, CustomStringConvertible {
+extension MessageParserError : Error, CustomStringConvertible {
     
     public var description: String {
         return String(cString: http_errno_description(self))
