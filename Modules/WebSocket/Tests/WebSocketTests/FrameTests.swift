@@ -24,7 +24,7 @@ public class FrameTests: XCTestCase {
 }
 
 extension FrameTests {
-    static var allTests: [(String, (FrameTests) -> () throws -> Void)] {
+    public static var allTests: [(String, (FrameTests) -> () throws -> Void)] {
         return [
             ("testMaskPong", testMaskPong),
             ("testMaskText", testMaskText),
