@@ -1,3 +1,9 @@
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin.C
+#endif
+
 import CYAJL
 
 public struct JSONParserOptions : OptionSet {
