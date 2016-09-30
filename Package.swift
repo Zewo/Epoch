@@ -25,5 +25,6 @@ let package = Package(
         .Package(url: "https://github.com/Zewo/COpenSSL", majorVersion: 0, minor: 13),
         .Package(url: "https://github.com/Zewo/CPOSIX.git", majorVersion: 0, minor: 13),
         .Package(url: "https://github.com/Zewo/CHTTPParser.git", majorVersion: 0, minor: 13),
+        .Package(url: "https://github.com/Zewo/CYAJL.git", majorVersion: 0, minor: 13),
     ]
 )
