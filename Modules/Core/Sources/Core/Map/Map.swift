@@ -66,9 +66,12 @@ public protocol MapParser {
     ///         }
     ///     }
     ///
-    /// - Parameter pointer: `UnsafeBufferPointer` that points to the chunk
+    /// - parameter buffer: `UnsafeBufferPointer` that points to the chunk
     ///   used to update the state of the parser.
-    /// - Returns: Returns `nil` if the parser is was not able to produce a result yet.
+    ///
+    /// - throws: Throws when `buffer` is an invalid input for the given parser.
+    ///
+    /// - returns: Returns `nil` if the parser was not able to produce a result yet.
     ///   Otherwise returns the parsed value.
     @discardableResult func parse(_ buffer: UnsafeBufferPointer<Byte>) throws -> Map?
     @discardableResult func parse(_ buffer: BufferRepresentable) throws -> Map?
