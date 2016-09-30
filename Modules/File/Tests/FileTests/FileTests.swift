@@ -9,24 +9,26 @@ import XCTest
 
 public class FileTests : XCTestCase {
     func testReadWrite() throws {
-        var buffer = Buffer()
+        let deadline = 2.seconds.fromNow()
+        var buffer: Buffer
         let file = try File(path: "/tmp/zewo-test-file", mode: .truncateReadWrite)
-        try file.write("abc", deadline: 1.second.fromNow())
-        try file.flush(deadline: 1.second.fromNow())
+
+        try file.write("abc", deadline: deadline)
+        try file.flush(deadline: deadline)
         XCTAssertEqual(try file.cursorPosition(), 3)
         _ = try file.seek(cursorPosition: 0)
-        buffer = try file.read(upTo: 3, deadline: 1.second.fromNow())
+        buffer = try file.read(upTo: 3, deadline: deadline)
         XCTAssertEqual(buffer.count, 3)
-        XCTAssertEqual(buffer[0..<3], Buffer("abc"))
+        XCTAssertEqual(buffer, Buffer("abc"))
         XCTAssertFalse(file.cursorIsAtEndOfFile)
-        buffer = try file.read(upTo: 3, deadline: 1.second.fromNow())
+        buffer = try file.read(upTo: 3, deadline: deadline)
         XCTAssertEqual(buffer.count, 0)
         XCTAssertTrue(file.cursorIsAtEndOfFile)
         _ = try file.seek(cursorPosition: 0)
         XCTAssertFalse(file.cursorIsAtEndOfFile)
         _ = try file.seek(cursorPosition: 3)
         XCTAssertFalse(file.cursorIsAtEndOfFile)
-        buffer = try file.read(upTo: 6, deadline: 1.second.fromNow())
+        buffer = try file.read(upTo: 6, deadline: deadline)
         XCTAssertEqual(buffer.count, 0)
         XCTAssertTrue(file.cursorIsAtEndOfFile)
     }
