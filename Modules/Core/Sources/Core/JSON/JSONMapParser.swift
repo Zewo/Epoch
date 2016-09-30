@@ -6,20 +6,20 @@
 
 import CYAJL
 
-public struct JSONParserOptions : OptionSet {
+public struct JSONMapParserOptions : OptionSet {
     public let rawValue: Int
-    public static let allowComments = JSONParserOptions(rawValue: 1 << 0)
-    public static let dontValidateStrings = JSONParserOptions(rawValue: 1 << 1)
-    public static let allowTrailingGarbage = JSONParserOptions(rawValue: 1 << 2)
-    public static let allowMultipleValues = JSONParserOptions(rawValue: 1 << 3)
-    public static let allowPartialValues = JSONParserOptions(rawValue: 1 << 4)
+    public static let allowComments = JSONMapParserOptions(rawValue: 1 << 0)
+    public static let dontValidateStrings = JSONMapParserOptions(rawValue: 1 << 1)
+    public static let allowTrailingGarbage = JSONMapParserOptions(rawValue: 1 << 2)
+    public static let allowMultipleValues = JSONMapParserOptions(rawValue: 1 << 3)
+    public static let allowPartialValues = JSONMapParserOptions(rawValue: 1 << 4)
 
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
 }
 
-public struct JSONParserError : Error, CustomStringConvertible {
+public struct JSONMapParserError : Error, CustomStringConvertible {
     let reason: String
 
     public var description: String {
@@ -28,22 +28,22 @@ public struct JSONParserError : Error, CustomStringConvertible {
 }
 
 public final class JSONMapParser : MapParser {
-    public static func parse(_ bytes: UnsafeBufferPointer<Byte>, options: JSONParserOptions = []) throws -> Map {
+    public static func parse(_ bytes: UnsafeBufferPointer<Byte>, options: JSONMapParserOptions = []) throws -> Map {
         let parser = JSONMapParser(options: options)
         try parser.parse(bytes)
         return try parser.finish()
     }
 
-    public static func parse(_ bytes: [Byte], options: JSONParserOptions = []) throws -> Map {
+    public static func parse(_ bytes: [Byte], options: JSONMapParserOptions = []) throws -> Map {
         return try bytes.withUnsafeBufferPointer {
             try self.parse($0, options: options)
         }
     }
 
-    public let options: JSONParserOptions
+    public let options: JSONMapParserOptions
 
-    fileprivate var state: JSONParserState = JSONParserState(dictionary: true)
-    fileprivate var stack: [JSONParserState] = []
+    fileprivate var state: JSONMapParserState = JSONMapParserState(dictionary: true)
+    fileprivate var stack: [JSONMapParserState] = []
 
     fileprivate let bufferCapacity = 8*1024
     fileprivate let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: 8*1024)
@@ -56,7 +56,7 @@ public final class JSONMapParser : MapParser {
         self.init(options: [])
     }
 
-    public init(options: JSONParserOptions = []) {
+    public init(options: JSONMapParserOptions = []) {
         self.options = options
         self.state.dictionaryKey = "root"
         self.stack.reserveCapacity(12)
@@ -83,7 +83,7 @@ public final class JSONMapParser : MapParser {
 
         guard result == nil else {
             guard final else {
-                throw JSONParserError(reason: "Unexpected bytes. Parser already completed.")
+                throw JSONMapParserError(reason: "Unexpected bytes. Parser already completed.")
             }
             return result
         }
@@ -101,7 +101,7 @@ public final class JSONMapParser : MapParser {
                 yajl_free_error(handle, reasonBytes)
             }
             let reason = String(cString: reasonBytes!)
-            throw JSONParserError(reason: reason)
+            throw JSONMapParserError(reason: reason)
         }
 
         if stack.count == 0 || final {
@@ -114,7 +114,7 @@ public final class JSONMapParser : MapParser {
         }
 
         guard !final || result != nil else {
-            throw JSONParserError(reason: "Unexpected end of bytes.")
+            throw JSONMapParserError(reason: "Unexpected end of bytes.")
         }
 
         return result
@@ -123,7 +123,7 @@ public final class JSONMapParser : MapParser {
     public func finish() throws -> Map {
         let bytes: [Byte] = []
         guard let result = try bytes.withUnsafeBufferPointer({ try self.parse($0) }) else {
-            throw JSONParserError(reason: "Unexpected end of bytes.")
+            throw JSONMapParserError(reason: "Unexpected end of bytes.")
         }
         return result
     }
@@ -150,7 +150,7 @@ public final class JSONMapParser : MapParser {
 
     fileprivate func startMap() -> Int32 {
         stack.append(state)
-        state = JSONParserState(dictionary: true)
+        state = JSONMapParserState(dictionary: true)
         return 1
     }
 
@@ -171,7 +171,7 @@ public final class JSONMapParser : MapParser {
 
     fileprivate func startArray() -> Int32 {
         stack.append(state)
-        state = JSONParserState(dictionary: false)
+        state = JSONMapParserState(dictionary: false)
         return 1
     }
 
@@ -187,7 +187,7 @@ public final class JSONMapParser : MapParser {
 
 }
 
-fileprivate struct JSONParserState {
+fileprivate struct JSONMapParserState {
     let isDictionary: Bool
     var dictionaryKey: String = ""
 
