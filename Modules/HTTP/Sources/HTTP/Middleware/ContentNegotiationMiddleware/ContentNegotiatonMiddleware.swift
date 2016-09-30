@@ -43,8 +43,7 @@ func parse(stream: InputStream, deadline: Double, mediaType: MediaType, `in` typ
     let (mediaType, parserType) = try firstParserType(for: mediaType, in: types)
 
     do {
-        let parser = parserType.init(stream: stream)
-        let content = try parser.parse(deadline: deadline)
+        let content = try parserType.parse(stream, deadline: deadline)
         return (mediaType, content)
     } catch {
         throw ContentNegotiationMiddlewareError.noSuitableParser
@@ -56,9 +55,7 @@ func parse(buffer: Buffer, deadline: Double, mediaType: MediaType, `in` types: [
 
     for (mediaType, parserType) in parserTypes(for: mediaType, in: types) {
         do {
-            let stream = BufferStream(buffer: buffer)
-            let parser = parserType.init(stream: stream)
-            let content = try parser.parse(deadline: deadline)
+            let content = try parserType.parse(buffer)
             return (mediaType, content)
         } catch {
             lastError = error
@@ -77,8 +74,7 @@ func serializeToStream(from content: Map, deadline: Double, mediaTypes: [MediaTy
     for acceptedType in mediaTypes {
         for (mediaType, serializerType) in serializerTypes(for: acceptedType, in: types) {
             return (mediaType, { stream in
-                let serializer = serializerType.init(stream: stream)
-                try serializer.serialize(content, deadline: deadline)
+                try serializerType.serialize(content, stream: stream, deadline: deadline)
             })
         }
     }
@@ -92,10 +88,7 @@ func serializeToBuffer(from content: Map, deadline: Double, mediaTypes: [MediaTy
     for acceptedType in mediaTypes {
         for (mediaType, serializerType) in serializerTypes(for: acceptedType, in: types) {
             do {
-                let stream = BufferStream()
-                let serializer = serializerType.init(stream: stream)
-                try serializer.serialize(content, deadline: deadline)
-                let buffer = stream.buffer
+                let buffer = try serializerType.serialize(content)
                 return (mediaType, buffer)
             } catch {
                 lastError = error

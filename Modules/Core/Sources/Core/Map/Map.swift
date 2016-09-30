@@ -44,14 +44,115 @@ public enum MapError : Error {
 
 // MARK: Parser/Serializer Protocols
 
+public enum MapParserError : Error {
+    case invalidInput
+}
+
 public protocol MapParser {
-    init(stream: InputStream)
-    func parse(deadline: Double) throws -> Map
+    init()
+
+    /// Use `parse` for incremental parsing. `parse` should be called
+    /// many times with partial chunks of the source data. Send an empty buffer
+    /// to signal you don't have any more chunks to send.
+    ///
+    /// The following example shows how you can implement incremental parsing:
+    ///
+    ///     let parser = JSONParser()
+    ///
+    ///     while true {
+    ///         let buffer = try stream.read(upTo: bufferSize)
+    ///         if let json = try parser.parse(buffer) {
+    ///             return json
+    ///         }
+    ///     }
+    ///
+    /// - Parameter pointer: `UnsafeBufferPointer` that points to the chunk
+    ///   used to update the state of the parser.
+    /// - Returns: Returns `nil` if the parser is was not able to produce a result yet.
+    ///   Otherwise returns the parsed value.
+    @discardableResult func parse(_ buffer: UnsafeBufferPointer<Byte>) throws -> Map?
+    @discardableResult func parse(_ buffer: BufferRepresentable) throws -> Map?
+    func finish() throws -> Map
+    static func parse(_ buffer: UnsafeBufferPointer<Byte>) throws -> Map
+    static func parse(_ buffer: BufferRepresentable) throws -> Map
+    static func parse(_ stream: InputStream, bufferSize: Int, deadline: Double) throws -> Map
+}
+
+extension MapParser {
+    public func finish() throws -> Map {
+        guard let map = try self.parse(UnsafeBufferPointer()) else {
+            throw MapParserError.invalidInput
+        }
+        return map
+    }
+
+    public func parse(_ buffer: BufferRepresentable) throws -> Map? {
+        return try buffer.buffer.withUnsafeBufferPointer({ try parse($0) })
+    }
+
+    public static func parse(_ buffer: UnsafeBufferPointer<Byte>) throws -> Map {
+        let parser = self.init()
+
+        if let map = try parser.parse(buffer) {
+            return map
+        }
+
+        return try parser.finish()
+    }
+
+    public static func parse(_ buffer: BufferRepresentable) throws -> Map {
+        return try buffer.buffer.withUnsafeBufferPointer({ try parse($0) })
+    }
+
+    public static func parse(_ stream: InputStream, bufferSize: Int = 4096, deadline: Double) throws -> Map {
+        let parser = self.init()
+        let buffer = UnsafeMutableBufferPointer<Byte>(capacity: bufferSize)
+        defer { buffer.deallocate(capacity: bufferSize) }
+
+        while true {
+            let readBuffer = try stream.read(into: buffer, deadline: deadline)
+            if let result = try parser.parse(readBuffer) {
+                return result
+            }
+        }
+    }
+}
+
+public enum MapSerializerError : Error {
+    case invalidInput
 }
 
 public protocol MapSerializer {
-    init(stream: OutputStream)
-    func serialize(_ map: Map, deadline: Double) throws
+    init()
+    func serialize(_ map: Map, bufferSize: Int, body: (UnsafeBufferPointer<Byte>) throws -> Void) throws
+    static func serialize(_ map: Map, bufferSize: Int) throws -> Buffer
+    static func serialize(_ map: Map, stream: OutputStream, bufferSize: Int, deadline: Double) throws
+}
+
+extension MapSerializer {
+    public static func serialize(_ map: Map, bufferSize: Int = 4096) throws -> Buffer {
+        let serializer = self.init()
+        var buffer = Buffer()
+
+        try serializer.serialize(map, bufferSize: bufferSize) { writeBuffer in
+            buffer.append(writeBuffer)
+        }
+
+        guard !buffer.isEmpty else {
+            throw MapSerializerError.invalidInput
+        }
+
+        return buffer
+    }
+
+    public static func serialize(_ map: Map, stream: OutputStream, bufferSize: Int = 4096, deadline: Double) throws {
+        let serializer = self.init()
+
+        try serializer.serialize(map, bufferSize: bufferSize) { buffer in
+            try stream.write(buffer, deadline: deadline)
+        }
+        try stream.flush(deadline: deadline)
+    }
 }
 
 // MARK: Initializers

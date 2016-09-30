@@ -20,31 +20,35 @@ public struct Buffer : RandomAccessCollection {
     public init(_ bytes: [Byte] = []) {
         self.bytes = bytes
     }
+
+    public init(_ bytes: ArraySlice<Byte>) {
+        self.bytes = [Byte](bytes)
+    }
     
     public init(_ bytes: UnsafeBufferPointer<Byte>) {
         self.bytes = [Byte](bytes)
     }
     
     public mutating func append(_ other: Buffer) {
-        bytes += other.bytes
+        bytes.append(contentsOf: other.bytes)
     }
     
     public mutating func append(_ other: [Byte]) {
-        bytes += other
+        bytes.append(contentsOf: other)
     }
     
     public mutating func append(_ other: UnsafeBufferPointer<Byte>) {
         guard other.count > 0 else {
             return
         }
-        bytes += [Byte](other)
+        bytes.append(contentsOf: [Byte](other))
     }
     
     public mutating func append(_ other: UnsafePointer<Byte>, count: Int) {
         guard count > 0 else {
             return
         }
-        bytes += [UInt8](UnsafeBufferPointer(start: other, count: count))
+        bytes.append(contentsOf: [Byte](UnsafeBufferPointer(start: other, count: count)))
     }
     
     public subscript(index: Index) -> Byte {
@@ -52,11 +56,11 @@ public struct Buffer : RandomAccessCollection {
     }
     
     public subscript(bounds: Range<Int>) -> Buffer {
-        return Buffer([Byte](bytes[bounds]))
+        return Buffer(bytes[bounds])
     }
     
     public subscript(bounds: CountableRange<Int>) -> Buffer {
-        return Buffer([Byte](bytes[bounds]))
+        return Buffer(bytes[bounds])
     }
     
     public var startIndex: Int {
@@ -104,6 +108,40 @@ public struct Buffer : RandomAccessCollection {
         }
         
     }
+
+    public func withUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Byte>) throws -> R) rethrows -> R {
+        return try bytes.withUnsafeBufferPointer(body)
+    }
+
+    public mutating func withUnsafeMutableBufferPointer<R>(_ body: (inout UnsafeMutableBufferPointer<Byte>) throws -> R) rethrows -> R {
+        return try bytes.withUnsafeMutableBufferPointer(body)
+    }
+}
+
+extension UnsafeBufferPointer {
+    public init() {
+        self.init(start: nil, count: 0)
+    }
+
+    public init(capacity: Int) {
+        let pointer = UnsafeMutablePointer<Element>.allocate(capacity: capacity)
+        self.init(start: pointer, count: capacity)
+    }
+}
+
+extension UnsafeMutableBufferPointer {
+    public init() {
+        self.init(start: nil, count: 0)
+    }
+
+    public init(capacity: Int) {
+        let pointer = UnsafeMutablePointer<Element>.allocate(capacity: capacity)
+        self.init(start: pointer, count: capacity)
+    }
+
+    public func deallocate(capacity: Int) {
+        baseAddress?.deallocate(capacity: capacity)
+    }
 }
 
 public protocol BufferInitializable {
@@ -124,7 +162,6 @@ public protocol BufferConvertible : BufferInitializable, BufferRepresentable {}
 
 extension Buffer {
     public init(_ string: String) {
-
         self = Buffer([Byte](string.utf8))
     }
     

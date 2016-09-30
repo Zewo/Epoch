@@ -23,11 +23,11 @@ public struct TCPTLSStream : Stream {
         return sslStream.closed
     }
 
-    public func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int {
-        return try sslStream.read(into: into, deadline: deadline)
+    public func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte> {
+        return try sslStream.read(into: readBuffer, deadline: deadline)
     }
     
-    public func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double) throws {
+    public func write(_ buffer: UnsafeBufferPointer<Byte>, deadline: Double) throws {
         try sslStream.write(buffer, deadline: deadline)
     }
 

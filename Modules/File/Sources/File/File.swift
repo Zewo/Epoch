@@ -127,20 +127,21 @@ extension File {
         }
     }
 
-    public func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int {
-        guard !into.isEmpty else {
-            return 0
+    public func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte> {
+        guard let readPointer = readBuffer.baseAddress else {
+            return UnsafeBufferPointer()
         }
         
         try ensureFileIsOpen()
         
-        let bytesRead = filereadlh(file, into.baseAddress!, 1, into.count, deadline.int64milliseconds)
+        let bytesRead = filereadlh(file, readPointer, 1, readBuffer.count, deadline.int64milliseconds)
         
-        if bytesRead == 0 {
+        guard bytesRead > 0 else {
             try ensureLastOperationSucceeded()
+            return UnsafeBufferPointer()
         }
         
-        return bytesRead
+        return UnsafeBufferPointer(start: readPointer, count: bytesRead)
     }
 
     public func readAll(bufferSize: Int = 2048, deadline: Double) throws -> Buffer {

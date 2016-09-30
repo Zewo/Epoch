@@ -44,26 +44,26 @@ public final class TCPStream : Stream {
         }
     }
     
-    public func read(into buffer: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int {
+    public func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte> {
         let socket = try getSocket()
         try ensureStreamIsOpen()
 
-        guard !buffer.isEmpty else {
-            return 0
+        guard let readPointer = readBuffer.baseAddress else {
+            return UnsafeBufferPointer()
         }
         
-        let bytesRead = tcprecvlh(socket, buffer.baseAddress!, 1, buffer.count, deadline.int64milliseconds)
+        let bytesRead = tcprecvlh(socket, readPointer, 1, readBuffer.count, deadline.int64milliseconds)
         
         if bytesRead == 0 {
             do {
                 try ensureLastOperationSucceeded()
             } catch SystemError.connectionResetByPeer {
                 closed = true
-                throw StreamError.closedStream
+                return UnsafeBufferPointer()
             }
         }
         
-        return bytesRead
+        return UnsafeBufferPointer(start: readPointer, count: bytesRead)
     }
 
     public func flush(deadline: Double) throws {

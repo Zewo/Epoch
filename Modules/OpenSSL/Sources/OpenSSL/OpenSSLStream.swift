@@ -38,42 +38,50 @@ public final class SSLStream : Stream {
 	}
     
     private func handshake(deadline: Double) throws {
-        var rawBuffer = [UInt8](repeating: 0, count: 2048)
-        try rawBuffer.withUnsafeMutableBufferPointer { buffer in
-            func flushAndReceive() throws {
-                try self.flush(deadline: deadline)
-                let bytesRead = try self.rawStream.read(into: buffer, deadline: deadline)
-                _ = try self.readIO.write(UnsafeBufferPointer<UInt8>(start: buffer.baseAddress!, count: bytesRead))
-            }
-            while !session.initializationFinished {
-                do {
-                    try session.handshake()
-                } catch SSLSessionError.wantRead {
-                    if context.mode == .client {
-                        try flushAndReceive()
-                    }
-                }
-                if context.mode == .server {
+        let buffer = UnsafeMutableBufferPointer<Byte>(capacity: 4096)
+        defer { buffer.deallocate(capacity: 4096) }
+
+        func flushAndReceive() throws {
+            try self.flush(deadline: deadline)
+            let bytesRead = try self.rawStream.read(into: buffer, deadline: deadline)
+            _ = try self.readIO.write(bytesRead)
+        }
+
+        while !session.initializationFinished {
+            do {
+                try session.handshake()
+            } catch SSLSessionError.wantRead {
+                if context.mode == .client {
                     try flushAndReceive()
                 }
+            }
+            
+            if context.mode == .server {
+                try flushAndReceive()
             }
         }
 	}
 
-    public func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int {
-        var rawBuffer = [UInt8](repeating: 0, count: 2048)
+    public func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte> {
+        guard !closed, let readPointer = readBuffer.baseAddress else {
+            return UnsafeBufferPointer()
+        }
+
+        let buffer = UnsafeMutableBufferPointer<Byte>(capacity: readBuffer.count)
+        defer { buffer.deallocate(capacity: readBuffer.count) }
+
         while true {
             do {
-                let bytesRead = try session.read(into: into)
+                let bytesRead = try session.read(into: readBuffer)
+
                 guard bytesRead > 0 else {
                     continue
                 }
-                return bytesRead
+
+                return UnsafeBufferPointer(start: readPointer, count: bytesRead)
             } catch SSLSessionError.wantRead {
-                try rawBuffer.withUnsafeMutableBufferPointer { buffer in
-                    let bytesRead = try self.rawStream.read(into: buffer, deadline: deadline)
-                    _ = try self.readIO.write(UnsafeBufferPointer<UInt8>(start: buffer.baseAddress!, count: bytesRead))
-                }
+                let bytesRead = try rawStream.read(into: buffer, deadline: deadline)
+                _ = try self.readIO.write(bytesRead)
             } catch SSLSessionError.zeroReturn {
                 throw StreamError.closedStream
             }

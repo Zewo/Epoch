@@ -32,27 +32,24 @@ final class ServerStream : Core.Stream {
         closed = true
     }
 
-    func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int {
+    func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte> {
         guard !closed && !inputBuffer.isEmpty else {
             throw StreamError.closedStream
         }
         
-        guard !inputBuffer.isEmpty && into.count > 0 else {
-            return 0
+        guard !inputBuffer.isEmpty, let readPointer = readBuffer.baseAddress else {
+            return UnsafeBufferPointer()
         }
         
-        let read = min(into.count, inputBuffer.count)
-        inputBuffer.copyBytes(to: into.baseAddress!, count: read)
-        
-        guard read < inputBuffer.count else {
-            inputBuffer = Buffer()
-            close()
-            return read
-        }
-        
+        let read = min(readBuffer.count, inputBuffer.count)
+        inputBuffer.copyBytes(to: readPointer, count: read)
         inputBuffer = inputBuffer.suffix(from: read)
+
+        if inputBuffer.isEmpty {
+            close()
+        }
         
-        return read
+        return UnsafeBufferPointer(start: readPointer, count: read)
     }
     
     func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double) throws {

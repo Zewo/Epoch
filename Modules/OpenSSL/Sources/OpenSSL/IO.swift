@@ -50,7 +50,8 @@ public class IO {
 	public var shouldRetry: Bool {
 		return (bio!.pointee.flags & BIO_FLAGS_SHOULD_RETRY) != 0
 	}
-    
+
+    // Make this all or nothing
     public func write(_ buffer: UnsafeBufferPointer<UInt8>) throws -> Int {
         guard !buffer.isEmpty else {
             return 0

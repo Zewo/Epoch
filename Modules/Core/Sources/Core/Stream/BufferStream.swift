@@ -18,29 +18,20 @@ public final class BufferStream : Stream {
         closed = true
     }
     
-    public func read(into targetBuffer: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int {
-        guard !closed else {
-            throw StreamError.closedStream
+    public func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte> {
+        guard !closed, let readPointer = readBuffer.baseAddress else {
+            return UnsafeBufferPointer()
         }
         
-        guard let targetBaseAddress = targetBuffer.baseAddress else {
-            return 0
-        }
+        let bytesRead = min(buffer.count, readBuffer.count)
+        buffer.copyBytes(to: readPointer, count: bytesRead)
+        buffer = buffer.suffix(from: bytesRead)
         
-        let read = min(buffer.count, targetBuffer.count)
-        buffer.copyBytes(to: targetBaseAddress, count: read)
-        
-        if read < buffer.count {
-            buffer = buffer.suffix(from: read)
-        } else {
-            buffer = Buffer()
-        }
-        
-        return read
+        return UnsafeBufferPointer(start: readPointer, count: bytesRead)
     }
     
-    public func write(_ sourceBuffer: UnsafeBufferPointer<UInt8>, deadline: Double) {
-        buffer.append(Buffer(sourceBuffer))
+    public func write(_ writeBuffer: UnsafeBufferPointer<UInt8>, deadline: Double) {
+        buffer.append(writeBuffer)
     }
 
     public func flush(deadline: Double) throws {}

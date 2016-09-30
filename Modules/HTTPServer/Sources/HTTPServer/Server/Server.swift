@@ -157,20 +157,18 @@ extension Server {
     }
 
     public func process(stream: Stream) throws {
-        let chunkBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
-        defer { chunkBytes.deallocate(capacity: bufferSize) }
-        let chunk = UnsafeMutableBufferPointer(start: chunkBytes, count: bufferSize)
-        
+        let buffer = UnsafeMutableBufferPointer<Byte>(capacity: bufferSize)
+        defer { buffer.deallocate(capacity: bufferSize) }
+
         let parser = MessageParser(mode: .request)
         let serializer = ResponseSerializer(stream: stream, bufferSize: bufferSize)
 
         while !stream.closed {
             do {
                 // TODO: Add timeout parameter
-                let bytesRead = try stream.read(into: chunk, deadline: 30.seconds.fromNow())
-                let chunkRead = UnsafeBufferPointer(start: chunkBytes, count: bytesRead)
+                let bytesRead = try stream.read(into: buffer, deadline: 30.seconds.fromNow())
                 
-                try parser.parse(chunkRead) { message in
+                try parser.parse(bytesRead) { message in
                     let request = message as! Request
                     let response = try middleware.chain(to: responder).respond(to: request)
                     // TODO: Add timeout parameter

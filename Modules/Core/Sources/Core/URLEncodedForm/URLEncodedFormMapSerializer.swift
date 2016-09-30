@@ -4,45 +4,46 @@ enum URLEncodedFormMapSerializerError : Error {
 
 public final class URLEncodedFormMapSerializer : MapSerializer {
     private var buffer: String = ""
-    private var deadline: Double = .never
-    private let stream: OutputStream
+    private var bufferSize: Int = 0
+    private var body: (UnsafeBufferPointer<Byte>) throws -> Void = { _ in }
 
-    public init(stream: OutputStream) {
-        self.stream = stream
-    }
+    public init() {}
 
-    public func serialize(_ map: Map, deadline: Double) throws {
-        self.deadline = deadline
+    public func serialize(_ map: Map, bufferSize: Int, body: (UnsafeBufferPointer<Byte>) throws -> Void) throws {
+        self.bufferSize = bufferSize
 
         switch map {
         case .dictionary(let dictionary):
             for (offset: index, element: (key: key, value: map)) in dictionary.enumerated() {
                 if index != 0 {
-                   try appendChunk("&")
+                   try append(string: "&")
                 }
 
-                try appendChunk(String(key) + "=")
+                try append(string: key + "=")
                 let value = try map.asString(converting: true)
-                try appendChunk(value.percentEncoded(allowing: .uriQueryAllowed))
+                try append(string: value.percentEncoded(allowing: .uriQueryAllowed))
             }
         default:
             throw URLEncodedFormMapSerializerError.invalidMap
         }
         
-        try writeBuffer()
+        try write()
     }
 
-    private func appendChunk(_ chunk: String) throws {
-        buffer += chunk
+    private func append(string: String) throws {
+        buffer += string
 
-        if buffer.characters.count >= 1024 {
-            try writeBuffer()
+        if buffer.characters.count >= bufferSize {
+            try write()
         }
     }
 
-    private func writeBuffer() throws {
-        try stream.write(buffer, deadline: deadline)
-        try stream.flush(deadline: deadline)
+    private func write() throws {
+        try buffer.withCString {
+            try $0.withMemoryRebound(to: Byte.self, capacity: buffer.utf8.count) {
+                try body(UnsafeBufferPointer(start: $0, count: buffer.utf8.count))
+            }
+        }
         buffer = ""
     }
 }

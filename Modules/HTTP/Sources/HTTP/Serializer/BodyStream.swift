@@ -18,11 +18,11 @@ final class BodyStream : Stream {
         closed = true
     }
 
-    func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int {
+    func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte> {
         throw BodyStreamError.receiveUnsupported
     }
     
-    func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double) throws {
+    func write(_ buffer: UnsafeBufferPointer<Byte>, deadline: Double) throws {
         guard !buffer.isEmpty else {
             return
         }

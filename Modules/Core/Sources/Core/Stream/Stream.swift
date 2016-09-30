@@ -8,13 +8,19 @@ public protocol InputStream {
     func open(deadline: Double) throws
     func close()
     
-    func read(into: UnsafeMutableBufferPointer<UInt8>, deadline: Double) throws -> Int
-    func read(upTo: Int, deadline: Double) throws -> Buffer
+    func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte>
+    func read(upTo byteCount: Int, deadline: Double) throws -> Buffer
 }
 
 extension InputStream {
-    public func read(upTo count: Int, deadline: Double) throws -> Buffer {
-        return try Buffer(capacity: count) { try read(into: $0, deadline: deadline) }
+    public func read(upTo byteCount: Int, deadline: Double) throws -> Buffer {
+        var bytes = [Byte](repeating: 0, count: byteCount)
+
+        let readBuffer = try bytes.withUnsafeMutableBufferPointer {
+            try read(into: $0, deadline: deadline)
+        }
+
+        return Buffer(readBuffer)
     }
 
     /// Drains the `Stream` and returns the contents in a `Buffer`. At the end of this operation the stream will be closed.
