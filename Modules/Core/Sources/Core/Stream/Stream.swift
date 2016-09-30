@@ -17,11 +17,11 @@ extension InputStream {
     public func read(upTo byteCount: Int, deadline: Double) throws -> Buffer {
         var bytes = [Byte](repeating: 0, count: byteCount)
 
-        let readBuffer = try bytes.withUnsafeMutableBufferPointer {
-            try read(into: $0, deadline: deadline)
+        let bytesRead = try bytes.withUnsafeMutableBufferPointer {
+            try read(into: $0, deadline: deadline).count
         }
 
-        return Buffer(readBuffer)
+        return Buffer(bytes[0..<bytesRead])
     }
 
     /// Drains the `Stream` and returns the contents in a `Buffer`. At the end of this operation the stream will be closed.
