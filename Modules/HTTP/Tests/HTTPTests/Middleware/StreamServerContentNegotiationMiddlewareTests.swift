@@ -22,6 +22,7 @@ public class StreamServerContentNegotiationMiddlewareTests : XCTestCase {
         // Because there was no Accept header we serializer with the first media type in the
         // content negotiation middleware media type list. In this case JSON.
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
+        XCTAssertEqual(response.transferEncoding, "chunked")
         let stream = BufferStream()
         switch response.body {
         case .writer(let writer):
@@ -49,6 +50,7 @@ public class StreamServerContentNegotiationMiddlewareTests : XCTestCase {
         let response = try contentNegotiation.respond(to: request, chainingTo: responder)
 
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
+        XCTAssertEqual(response.transferEncoding, "chunked")
         let stream = BufferStream()
         switch response.body {
         case .writer(let writer):
@@ -76,6 +78,7 @@ public class StreamServerContentNegotiationMiddlewareTests : XCTestCase {
         let response = try contentNegotiation.respond(to: request, chainingTo: responder)
 
         XCTAssertEqual(response.headers["Content-Type"], "application/x-www-form-urlencoded; charset=utf-8")
+        XCTAssertEqual(response.transferEncoding, "chunked")
         let stream = BufferStream()
         switch response.body {
         case .writer(let writer):
@@ -104,6 +107,7 @@ public class StreamServerContentNegotiationMiddlewareTests : XCTestCase {
         // Because there was no Accept header we serializer with the first media type in the
         // content negotiation middleware media type list. In this case JSON.
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
+        XCTAssertEqual(response.transferEncoding, "chunked")
         let stream = BufferStream()
         switch response.body {
         case .writer(let writer):
@@ -131,6 +135,7 @@ public class StreamServerContentNegotiationMiddlewareTests : XCTestCase {
         let response = try contentNegotiation.respond(to: request, chainingTo: responder)
 
         XCTAssertEqual(response.headers["Content-Type"], "application/x-www-form-urlencoded; charset=utf-8")
+        XCTAssertEqual(response.transferEncoding, "chunked")
         let stream = BufferStream()
         switch response.body {
         case .writer(let writer):
@@ -158,6 +163,7 @@ public class StreamServerContentNegotiationMiddlewareTests : XCTestCase {
         let response = try contentNegotiation.respond(to: request, chainingTo: responder)
 
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
+        XCTAssertEqual(response.transferEncoding, "chunked")
         let stream = BufferStream()
         switch response.body {
         case .writer(let writer):
