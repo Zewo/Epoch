@@ -41,7 +41,7 @@ public protocol OutputStream {
     func open(deadline: Double) throws
     func close()
     
-    func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double) throws
+    func write(_ buffer: UnsafeBufferPointer<Byte>, deadline: Double) throws
     func write(_ buffer: Buffer, deadline: Double) throws
     func write(_ buffer: BufferRepresentable, deadline: Double) throws
     func flush(deadline: Double) throws
@@ -62,7 +62,7 @@ extension OutputStream {
         try write(converting.buffer, deadline: deadline)
     }
     
-    public func write(_ bytes: [UInt8], deadline: Double) throws {
+    public func write(_ bytes: [Byte], deadline: Double) throws {
         guard !bytes.isEmpty else {
             return
         }
