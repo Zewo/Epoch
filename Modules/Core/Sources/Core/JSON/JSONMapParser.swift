@@ -309,7 +309,7 @@ fileprivate func yajl_string(_ ptr: UnsafeMutableRawPointer?, buffer: UnsafePoin
     let str: String
     if bufferLength > 0 {
         if bufferLength < ctx.bufferCapacity {
-            memcpy(UnsafeMutableRawPointer(ctx.buffer), UnsafeRawPointer(buffer), bufferLength)
+            memcpy(UnsafeMutableRawPointer(ctx.buffer), UnsafeRawPointer(buffer!), bufferLength)
             ctx.buffer[bufferLength] = 0
             str = String(cString: UnsafePointer(ctx.buffer))
         } else {
@@ -336,7 +336,7 @@ fileprivate func yajl_map_key(_ ptr: UnsafeMutableRawPointer?, buffer: UnsafePoi
     let str: String
     if bufferLength > 0 {
         if bufferLength < ctx.bufferCapacity {
-            memcpy(UnsafeMutableRawPointer(ctx.buffer), UnsafeRawPointer(buffer), bufferLength)
+            memcpy(UnsafeMutableRawPointer(ctx.buffer), UnsafeRawPointer(buffer!), bufferLength)
             ctx.buffer[bufferLength] = 0
             str = String(cString: UnsafePointer(ctx.buffer))
         } else {
