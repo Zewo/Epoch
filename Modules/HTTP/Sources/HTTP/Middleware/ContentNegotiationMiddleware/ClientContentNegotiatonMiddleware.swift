@@ -31,8 +31,9 @@ public struct ClientContentNegotiationMiddleware : Middleware {
         if let content = request.content {
             let (mediaType, buffer) = try serializeToBuffer(from: content, deadline: .never, mediaTypes: mediaTypes, in: types)
             request.contentType = mediaType
-            request.body = .buffer(buffer)
+            // TODO: Maybe add `willSet` to `body` and configure the headers there
             request.contentLength = buffer.count
+            request.body = .buffer(buffer)
         }
 
         var response = try chain.respond(to: request)
@@ -55,6 +56,8 @@ public struct ClientContentNegotiationMiddleware : Middleware {
         if let content = request.content {
             let (mediaType, writer) = try serializeToStream(from: content, deadline: .never, mediaTypes: mediaTypes, in: types)
             request.contentType = mediaType
+            // TODO: Maybe add `willSet` to `body` and configure the headers there
+            request.transferEncoding = "chunked"
             request.body = .writer(writer)
         }
 

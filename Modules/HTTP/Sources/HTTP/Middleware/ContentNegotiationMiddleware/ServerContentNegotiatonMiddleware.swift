@@ -46,8 +46,9 @@ public struct ServerContentNegotiationMiddleware : Middleware {
             let (mediaType, buffer) = try serializeToBuffer(from: content, deadline: .never, mediaTypes: mediaTypes, in: types)
             response.content = nil
             response.contentType = mediaType
-            response.body = .buffer(buffer)
+            // TODO: Maybe add `willSet` to `body` and configure the headers there
             response.contentLength = buffer.count
+            response.body = .buffer(buffer)
         }
         
         return response
@@ -74,6 +75,8 @@ public struct ServerContentNegotiationMiddleware : Middleware {
             let (mediaType, writer) = try serializeToStream(from: content, deadline: .never, mediaTypes: mediaTypes, in: types)
             response.content = nil
             response.contentType = mediaType
+            // TODO: Maybe add `willSet` to `body` and configure the headers there
+            response.transferEncoding = "chunked"
             response.body = .writer(writer)
         }
 

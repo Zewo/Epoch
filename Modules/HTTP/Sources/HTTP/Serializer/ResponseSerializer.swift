@@ -56,8 +56,6 @@ public class ResponseSerializer {
         case .writer(let writer):
             let body = BodyStream(stream)
             try writer(body)
-
-
             try stream.write("0\r\n\r\n", deadline: deadline)
         }
 
