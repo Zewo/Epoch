@@ -56,44 +56,42 @@ public class RequestParserTests : XCTestCase {
     func testInvalidMethod() {
         let data = "INVALID / HTTP/1.1\r\n\r\n"
         let parser = MessageParser(mode: .request)
-        XCTAssertThrowsError(try parser.parse(data) { _ in })
+        XCTAssertThrowsError(try parser.parse(data))
     }
 
     func testInvalidURL() {
         let data = "GET huehue HTTP/1.1\r\n\r\n"
         let parser = MessageParser(mode: .request)
-        XCTAssertThrowsError(try parser.parse(data) { _ in })
+        XCTAssertThrowsError(try parser.parse(data))
     }
 
     func testNoURL() {
         let data = "GET HTTP/1.1\r\n\r\n"
         let parser = MessageParser(mode: .request)
-        XCTAssertThrowsError(try parser.parse(data) { _ in })
+        XCTAssertThrowsError(try parser.parse(data))
     }
 
     func testInvalidHTTPVersion() {
         let data = "GET / HUEHUE\r\n\r\n"
         let parser = MessageParser(mode: .request)
-        XCTAssertThrowsError(try parser.parse(data) { _ in })
+        XCTAssertThrowsError(try parser.parse(data))
     }
 
     func testInvalidDoubleConnectMethod() {
         let data = "CONNECT / HTTP/1.1\r\n\r\nCONNECT / HTTP/1.1\r\n\r\n"
         let parser = MessageParser(mode: .request)
-        XCTAssertThrowsError(try parser.parse(data) { _ in })
+        XCTAssertThrowsError(try parser.parse(data))
     }
 
     func testConnectMethod() throws {
         let data = "CONNECT / HTTP/1.1\r\n\r\n"
         let parser = MessageParser(mode: .request)
-        try parser.parse(data) { message in
-            let request = message as! Request
-            XCTAssert(request.method == .connect)
-            XCTAssert(request.url.path == "/")
-            XCTAssert(request.version.major == 1)
-            XCTAssert(request.version.minor == 1)
-            XCTAssertEqual(request.headers.count, 0)
-        }
+        let request = try parser.parse(data).first! as! Request
+        XCTAssert(request.method == .connect)
+        XCTAssert(request.url.path == "/")
+        XCTAssert(request.version.major == 1)
+        XCTAssert(request.version.minor == 1)
+        XCTAssertEqual(request.headers.count, 0)
     }
 
     func check(request: String, count: Int, bufferSize: Int, test: @escaping (Request) -> Void) throws {
@@ -104,7 +102,7 @@ public class RequestParserTests : XCTestCase {
         }
 
         let parser = MessageParser(mode: .request)
-        try parser.parse(data) { message in
+        for message in try parser.parse(data) {
             let request = message as! Request
             test(request)
         }

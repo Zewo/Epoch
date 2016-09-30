@@ -76,13 +76,14 @@ extension Client {
 
         do {
             // TODO: Add deadline to serializer
+            // TODO: Deal with multiple responses
 
             try serializer.serialize(request, deadline: requestDeadline)
             
             var response: Response!
             while !stream.closed {
                 let chunk = try stream.read(upTo: bufferSize, deadline: requestDeadline)
-                try parser.parse(chunk) { message in
+                for message in try parser.parse(chunk) {
                     response = message as! Response
                 }
             }

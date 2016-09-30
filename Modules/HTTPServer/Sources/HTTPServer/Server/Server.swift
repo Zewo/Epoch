@@ -168,7 +168,7 @@ extension Server {
                 // TODO: Add timeout parameter
                 let bytesRead = try stream.read(into: buffer, deadline: 30.seconds.fromNow())
                 
-                try parser.parse(bytesRead) { message in
+                for message in try parser.parse(bytesRead) {
                     let request = message as! Request
                     let response = try middleware.chain(to: responder).respond(to: request)
                     // TODO: Add timeout parameter
