@@ -87,7 +87,7 @@ public class TCPTests : XCTestCase {
     func testClientServer() throws {
         let port = 6666
         let deadline = 5.seconds.fromNow()
-        let done = Channel<Void>()
+        let done = FallibleChannel<Void>()
 
         co {
             do {
@@ -106,11 +106,11 @@ public class TCPTests : XCTestCase {
                 let buffer = try stream.read(upTo: 9, deadline: deadline)
                 XCTAssertEqual(buffer.count, 9)
                 XCTAssertEqual(buffer, Buffer("123456789"))
-            } catch {
-                XCTFail()
-            }
 
-            done.send()
+                done.send()
+            } catch {
+                done.send(error)
+            }
         }
 
         let stream = try TCPStream(host: "127.0.0.1", port: port, deadline: deadline)
@@ -123,7 +123,7 @@ public class TCPTests : XCTestCase {
         try stream.write("123456789", deadline: deadline)
         try stream.flush(deadline: deadline)
 
-        done.receive()
+        try done.receive()
     }
 }
 
