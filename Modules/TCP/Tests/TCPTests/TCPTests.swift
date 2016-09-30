@@ -86,38 +86,44 @@ public class TCPTests : XCTestCase {
 
     func testClientServer() throws {
         let port = 6666
+        let deadline = 5.seconds.fromNow()
+        let done = Channel<Void>()
 
         co {
             do {
                 let host = try TCPHost(host: "127.0.0.1", port: port)
-                let stream = try host.accept(deadline: 1.second.fromNow())
+                let stream = try host.accept(deadline: deadline)
 
-                let deadline = 30.milliseconds.fromNow()
-                XCTAssertThrowsError(try stream.read(upTo: 16, deadline: deadline))
+                let shortDeadline = 30.milliseconds.fromNow()
+                XCTAssertThrowsError(try stream.read(upTo: 16, deadline: shortDeadline))
 
-                let diff = now() - deadline
+                let diff = now() - shortDeadline
                 XCTAssert(diff > -300 && diff < 300)
 
-                try stream.write("ABC", deadline: 1.second.fromNow())
-                try stream.flush(deadline: 1.second.fromNow())
+                try stream.write("ABC", deadline: deadline)
+                try stream.flush(deadline: deadline)
 
-                let buffer = try stream.read(upTo: 9, deadline: 1.second.fromNow())
+                let buffer = try stream.read(upTo: 9, deadline: deadline)
                 XCTAssertEqual(buffer.count, 9)
                 XCTAssertEqual(buffer, Buffer("123456789"))
             } catch {
                 XCTFail()
             }
+
+            done.send()
         }
 
-        let stream = try TCPStream(host: "127.0.0.1", port: port, deadline: 1.second.fromNow())
-        try stream.open(deadline: 1.second.fromNow())
+        let stream = try TCPStream(host: "127.0.0.1", port: port, deadline: deadline)
+        try stream.open(deadline: deadline)
 
-        let buffer = try stream.read(upTo: 3, deadline: 1.second.fromNow())
+        let buffer = try stream.read(upTo: 3, deadline: deadline)
         XCTAssertEqual(buffer, Buffer("ABC"))
         XCTAssertEqual(buffer.count, 3)
 
-        try stream.write("123456789", deadline: 1.second.fromNow())
-        try stream.flush(deadline: 1.second.fromNow())
+        try stream.write("123456789", deadline: deadline)
+        try stream.flush(deadline: deadline)
+
+        done.receive()
     }
 }
 
