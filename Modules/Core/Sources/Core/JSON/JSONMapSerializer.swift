@@ -12,7 +12,7 @@ public final class JSONMapSerializer : MapSerializer {
         self.ordering = ordering
     }
 
-    public func serialize(_ map: Map, bufferSize: Int, body: Body) throws {
+    public func serialize(_ map: Map, bufferSize: Int = 4096, body: Body) throws {
         self.bufferSize = bufferSize
         try serialize(value: map, body: body)
         try write(body: body)

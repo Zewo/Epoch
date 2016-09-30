@@ -12,6 +12,7 @@ public protocol InputStream {
     func read(upTo byteCount: Int, deadline: Double) throws -> Buffer
 }
 
+
 extension InputStream {
     public func read(upTo byteCount: Int, deadline: Double) throws -> Buffer {
         var bytes = [Byte](repeating: 0, count: byteCount)
