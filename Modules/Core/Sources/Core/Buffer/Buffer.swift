@@ -122,11 +122,6 @@ extension UnsafeBufferPointer {
     public init() {
         self.init(start: nil, count: 0)
     }
-
-    public init(capacity: Int) {
-        let pointer = UnsafeMutablePointer<Element>.allocate(capacity: capacity)
-        self.init(start: pointer, count: capacity)
-    }
 }
 
 extension UnsafeMutableBufferPointer {
