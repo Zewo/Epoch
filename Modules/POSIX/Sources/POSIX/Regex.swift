@@ -49,6 +49,12 @@ public final class Regex {
 
     var preg = regex_t()
 
+    /// Constructs a Regex using the given string pattern and `RegexOptions`.
+    ///
+    /// - parameter pattern: string holding the Regex pattern.
+    /// - parameter options: Options such as `Regex.Options.basic` (BRE) or `Regex.Options.extended` (ERE).
+    ///
+    /// - throws: `RegexError` if the given pattern is not a valid Regex.
     public init(pattern: String, options: Options = .extended) throws {
         let result = regcomp(&preg, pattern, options.rawValue)
 
@@ -74,6 +80,12 @@ public final class Regex {
         return utf8view.index(utf8view.startIndex, offsetBy: Int(offset))
     }
 
+    /// Check if a given string matches the regex.
+    ///
+    /// - parameter string:  String to validate against the regex.
+    /// - parameter options: Matching options like `firstCharacterNotAtBeginningOfLine` (`REG_NOTBOL` in POSIX parlance).
+    ///
+    /// - returns: `true` if the string matches the regex, else `false`.
     public func matches(_ string: String, options: MatchOptions = []) -> Bool {
         var regexMatches = [regmatch_t](repeating: regmatch_t(), count: 1)
         let result = regexec(&preg, string, regexMatches.count, &regexMatches, options.rawValue)
@@ -84,7 +96,13 @@ public final class Regex {
         
         return true
     }
-
+    
+    /// Substrings of a given string that match the regex groups.
+    ///
+    /// - parameter in:  String in which to search for groups.
+    /// - parameter options: Matching options like `firstCharacterNotAtBeginningOfLine` (`REG_NOTBOL` in POSIX parlance).
+    ///
+    /// - returns: Matching substrings.
     public func groups(in string: String, options: MatchOptions = []) -> [String] {
         var string = string
         let maxMatches = 10
@@ -131,6 +149,13 @@ public final class Regex {
         return groups
     }
 
+    /// Given a string, replace substrings matching this regex with a template.
+    ///
+    /// - parameter template: String used to replace all substrings matching this Regex.
+    /// - parameter string:   String on which replacing takes place.
+    /// - parameter options:  Matching options like `firstCharacterNotAtBeginningOfLine` (`REG_NOTBOL` in POSIX parlance).
+    ///
+    /// - returns: New string in which all substrings matching the regex were replaced with the template.
     public func replace(with template: String, in string: String, options: MatchOptions = []) -> String {
         var string = string
         let maxMatches = 10
@@ -193,34 +218,81 @@ extension Regex : ExpressibleByStringLiteral {
 
 /// MARK: - Operators
 
-/// MARK: - matches -> Bool
 
+/// Check if a string matches a given Regex.
+///
+/// - parameter string: String to match.
+/// - parameter regex:  Regex to use for matching.
+///
+/// - returns: `true` if the given string matches the Regex, else `false`.
 public func ~ (string: String, regex: Regex) -> Bool {
     return regex.matches(string)
 }
 
+/// Check if a string matches a given regex pattern.
+///
+/// - parameter string:  String to match.
+/// - parameter pattern: String holding the regex pattern.
+///
+/// - throws: `RegexError` if the given regex pattern as not a valid Regex.
+///
+/// - returns: `true` if the given string matches the regex pattern, else `false`.
 public func ~ (string: String, pattern: String) throws -> Bool {
     let regex = try Regex(pattern: pattern)
     return string ~ regex
 }
 
+/// Check if a string matches a given regex pattern.
+///
+/// - note: returns `nil` instead of throwing if the given regex pattern as not a valid Regex.
+///
+/// - parameter string:  String to match.
+/// - parameter pattern: String holding the regex pattern.
+///
+/// - returns: `true` if the given string matches the regex pattern, else `false`.
 public func ~? (string: String, pattern: String) -> Bool? {
     return try? (string ~ pattern)
 }
 
 
-/// MARK: - group matching (string ~ pattern) -> [String]
+/// Matching groups in a string, given a regex pattern.
 ///
-/// throwing functions (pattern is given as a String)
-/// non-throwing functions (pattern is given as a Regex)
-
+/// This function throws if a valid regex cannot be built out of the given pattern.
+///
+/// - parameter string:  String in which to search for groups.
+/// - parameter pattern: String pattern to use as a regex.
+///
+/// - throws: `RegexError` indicating why the given pattern is not a valid Regex.
+///
+/// - returns: Matching groups as an array of strings
 public func ~* (string: String, pattern: String) throws -> [String] {
     let regex = try Regex(pattern: pattern)
     return string ~* regex
 }
 
+/// Matching groups in a string, given a Regex.
+///
+/// - parameter string: String in which to search for groups.
+/// - parameter regex:  String pattern to use as a regex.
+///
+/// - returns: Matching groups as an array of strings
 public func ~* (string: String, regex: Regex) -> [String] {
     return regex.groups(in: string)
+}
+
+/// Matching groups in a string, given a regex pattern.
+///
+/// - note: returns `nil` instead of throwing if the given regex pattern as not a valid Regex.
+///
+/// - parameter string:  String in which to search for groups.
+/// - parameter pattern: String pattern to use as a regex.
+///
+/// - returns: Matching groups as an array of strings, or `nil` if the given pattern is not a valid Regex.
+public func ~*? (string: String, pattern: String) -> [String]? {
+    guard let regex = try? Regex(pattern: pattern) else {
+        return nil
+    }
+    return string ~* regex
 }
 
 // FIXME: let's talk about this
@@ -240,15 +312,6 @@ public func ~* (string: String, regex: Regex) -> [String] {
 //    }
 //}
 
-
-//: optional functions
-
-public func ~*? (left: String, right: String) -> [String]? {
-    guard let regex = try? Regex(pattern: right) else {
-        return nil
-    }
-    return left ~* regex
-}
 
 infix operator ~
 infix operator ~?
