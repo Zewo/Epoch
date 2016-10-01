@@ -162,6 +162,9 @@ extension Buffer {
     
     public init(count: Int, fill: (UnsafeMutableBufferPointer<Byte>) throws -> Void) rethrows {
         self = try Buffer(capacity: count) {
+            guard count > 0 else {
+                return 0
+            }
             try fill($0)
             return count
         }
