@@ -10,13 +10,13 @@ public class RegexTests: XCTestCase {
 
     func testMatches() throws {
         let regex = try Regex(pattern: "hello")
-        let matches = regex.matches(in: "hello")
+        let matches = regex.matches("hello")
         XCTAssert(matches)
     }
 
     func testNotMatches() throws {
         let regex = try Regex(pattern: "hello")
-        let matches = regex.matches(in: "bye")
+        let matches = regex.matches("bye")
         XCTAssert(!matches)
     }
 
@@ -41,60 +41,67 @@ public class RegexTests: XCTestCase {
     /// Replace one occurence by a shorter template string
     func testReplaceOneOccurenceWithShorterTemplate() throws {
         let regex = try Regex(pattern: "hello")
-        let string = regex.replace(in: "hello world", with: "bye")
+        let string = regex.replace(with: "bye", in: "hello world")
         XCTAssert(string == "bye world")
     }
 
     /// Replace one occurence by a longer template string
     func testReplaceOneOccurenceWithLongerTemplate() throws {
         let regex = try Regex(pattern: "o")
-        let string = regex.replace(in: "hello", with: "ooo!")
+        let string = regex.replace(with: "ooo!", in: "hello")
         XCTAssertEqual(string, "hellooo!")
     }
 
     /// Replace multiple occurences each by a shorter template string
     func testReplaceManyOccurencesWithShorterTemplate() throws {
         let regex = try Regex(pattern: "mm")
-        let string = regex.replace(in: "mm-mm", with: "M")
+        let string = regex.replace(with: "M", in: "mm-mm")
         XCTAssertEqual(string, "M-M")
     }
 
     /// Replace multiple occurences each by a longer template string
     func testReplaceManyOccurencesWithLongerTemplate() throws {
         let regex = try Regex(pattern: "l")
-        let string = regex.replace(in: "lol", with: "LL")
+        let string = regex.replace(with: "LL", in: "lol")
         XCTAssertEqual(string, "LLoLL")
     }
 
     /// Replace each digit
     func testReplaceDigits() throws {
         let regex = try Regex(pattern: "[0-9]")
-        let string = regex.replace(in: "1234", with: ".")
+        let string = regex.replace(with: ".", in: "1234")
         XCTAssertEqual(string, "....")
     }
 
     /// Replace number
     func testReplaceNumber() throws {
         let regex = try Regex(pattern: "[0-9]+")
-        let string = regex.replace(in: "1234", with: ".")
+        let string = regex.replace(with: ".", in: "1234")
         XCTAssertEqual(string, ".")
     }
 
     func testNoReplace() throws {
         let regex = try Regex(pattern: "bye")
-        let string = regex.replace(in: "hello world", with: "bye")
+        let string = regex.replace(with: "bye", in: "hello world")
         XCTAssert(string == "hello world")
     }
     
     func testReplaceUTF8() throws {
         let r0 = try Regex(pattern: "coffee")
-        let actual0 = r0.replace(in: "Paulo loves coffee", with: "☕️")
-        XCTAssertEqual(actual0, "Paulo loves ☕️")
+        let actual0 = r0.replace(with: "☕️", in: "Paulo loves coffee")
+        let expected0 = "Paulo loves ☕️"
+        XCTAssertEqual(actual0, expected0)
+        
+        let r1 = try Regex(pattern: "☕️")
+        let actual1 = r1.replace(with: "🍻", in: actual0)
+        let expected1 = "Paulo loves 🍻"
+        XCTAssertEqual(actual1, expected1)
+        
     }
     
     func testMultipleReplacesUTF8() throws {
         let r1 = try Regex(pattern: "[[:digit:]]{4}")
-        let actual1 = r1.replace(in: "1234-2345-3456-4567", with: "💳")
+        let actual1 = r1.replace(with: "💳", in: "1234-2345-3456-4567")
         XCTAssertEqual(actual1, "💳-💳-💳-💳")
     }
 

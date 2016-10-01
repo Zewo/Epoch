@@ -10,11 +10,10 @@ import Foundation
 public struct RegexError : Error {
     let description: String
 
-    static func error(from result: Int32, preg: regex_t) -> RegexError {
-        var preg = preg
+    static func error(from result: Int32, preg: inout regex_t) -> RegexError {
         var buffer = [Int8](repeating: 0, count: Int(BUFSIZ))
         regerror(result, &preg, &buffer, buffer.count)
-        let description = String(validatingUTF8: buffer)!
+        let description = String(cString: buffer)
         return RegexError(description: description)
     }
 }
@@ -22,18 +21,18 @@ public struct RegexError : Error {
 
 public final class Regex {
 
-    public struct RegexOptions : OptionSet {
+    public struct Options : OptionSet {
         public let rawValue: Int32
 
         public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
-        public static let basic            = RegexOptions(rawValue: 0)
-        public static let extended         = RegexOptions(rawValue: 1)
-        public static let caseInsensitive  = RegexOptions(rawValue: 2)
-        public static let newLineSensitive = RegexOptions(rawValue: 4)
-        public static let resultOnly       = RegexOptions(rawValue: 8)
+        public static let basic            = Options(rawValue: 0)
+        public static let extended         = Options(rawValue: 1)
+        public static let caseInsensitive  = Options(rawValue: 2)
+        public static let newLineSensitive = Options(rawValue: 4)
+        public static let resultOnly       = Options(rawValue: 8)
     }
 
     public struct MatchOptions : OptionSet {
@@ -43,77 +42,18 @@ public final class Regex {
             self.rawValue = rawValue
         }
 
-        public static let FirstCharacterNotAtBeginningOfLine = MatchOptions(rawValue: REG_NOTBOL)
-        public static let LastCharacterNotAtEndOfLine        = MatchOptions(rawValue: REG_NOTEOL)
+        public static let firstCharacterNotAtBeginningOfLine = MatchOptions(rawValue: REG_NOTBOL)
+        public static let lastCharacterNotAtEndOfLine        = MatchOptions(rawValue: REG_NOTEOL)
     }
-
-//    final class GroupIterator : IteratorProtocol {
-//        typealias Element = String
-//
-//        var string: String
-//        var preg: regex_t
-//        var regexMatches: [regmatch_t]
-//        let maxMatches = 10
-//        let matchOptions: MatchOptions
-//        var groupIdx = 0
-//
-//        init(string: String, preg: regex_t, matchOptions: MatchOptions) {
-//            self.string = string
-//            self.preg = preg
-//            self.matchOptions = matchOptions
-//            self.regexMatches = [regmatch_t](repeating: regmatch_t(), count: maxMatches)
-//        }
-//
-//        func next() -> GroupIterator.Element? {
-//            if groupIdx == maxMatches {
-//                let result = regexec(&preg, string, regexMatches.count, &regexMatches, matchOptions.rawValue)
-//
-//                if result != 0 {
-//                    return nil
-//                }
-//
-//                groupIdx = 0
-//            }
-//
-//            groupIdx += 1
-//
-//            /// extract the group if exists
-//            let match: String?
-//            if regexMatches[groupIdx].rm_so != -1 {
-//                let group = (start: regexMatches[groupIdx].rm_so, end: regexMatches[groupIdx].rm_eo)
-//                let (startIndex, endIndex) = (index(from: group.start, in: string), index(from: group.end, in: string))
-//                match = string[startIndex ..< endIndex]
-//            } else {
-//                match = nil
-//            }
-//
-//            /// remove all matched part from the string before the next iteration
-//            if groupIdx == maxMatches {
-//                let indexOfEndOfMatch = index(from: regexMatches[0].rm_eo, in: string)
-//                let remainderString = string.substring(with: indexOfEndOfMatch ..< string.endIndex)
-//                if !remainderString.isEmpty {
-//                    string = remainderString
-//                } else {
-//
-//                }
-//            }
-//            return match
-//        }
-//
-//        func index(from offset: regoff_t, in string: String) -> String.Index {
-//            return string.index(string.startIndex, offsetBy: Int(offset))
-//        }
-//    }
-
 
 
     var preg = regex_t()
 
-    public init(pattern: String, options: RegexOptions = .extended) throws {
+    public init(pattern: String, options: Options = .extended) throws {
         let result = regcomp(&preg, pattern, options.rawValue)
 
-        if result != 0 {
-            throw RegexError.error(from: result, preg: preg)
+        guard result == 0 else {
+            throw RegexError.error(from: result, preg: &preg)
         }
     }
 
@@ -121,18 +61,27 @@ public final class Regex {
         regfree(&preg)
     }
 
+    /// In the context of a String UTF8View, returns the UTF8View.Index
+    /// of a given character (designated by `regoff`)
+    /// 
+    /// Helper that simplifies the code written at the call site.
+    ///
+    /// - parameter offset:   Offset to a char (returned by native `regexec()`).
+    /// - parameter utf8view: UTF8View of the string.
+    ///
+    /// - returns: UTF8View.Index of the character designated by `regoff`.
     func index(from offset: regoff_t, in utf8view: String.UTF8View) -> String.UTF8View.Index {
         return utf8view.index(utf8view.startIndex, offsetBy: Int(offset))
     }
 
-    public func matches(in string: String, options: MatchOptions = []) -> Bool {
+    public func matches(_ string: String, options: MatchOptions = []) -> Bool {
         var regexMatches = [regmatch_t](repeating: regmatch_t(), count: 1)
         let result = regexec(&preg, string, regexMatches.count, &regexMatches, options.rawValue)
 
-        if result != 0 {
+        guard result == 0 else {
             return false
         }
-
+        
         return true
     }
 
@@ -146,12 +95,12 @@ public final class Regex {
         while true {
             let result = regexec(&preg, string, regexMatches.count, &regexMatches, options.rawValue)
 
-            if result != 0 {
+            guard result == 0 else {
                 break // Unmatched regex
             }
 
-            if regexMatches[0].rm_eo == regexMatches[0].rm_so {
-                break // matches the empty string: infinite loop
+            guard regexMatches[0].rm_eo != regexMatches[0].rm_so else {
+                break // matches the empty string: avoid infinite loop
             }
 
             var groupIdx = 1
@@ -172,17 +121,17 @@ public final class Regex {
             let indexOfEndOfMatchUTF8 = index(from: regexMatches[0].rm_eo, in: string.utf8)
             let remainderString = String(string.utf8[indexOfEndOfMatchUTF8..<string.utf8.endIndex])!
 
-            if !remainderString.isEmpty {
-                string = remainderString
-            } else {
+            guard remainderString.isEmpty else {
                 break
             }
+            string = remainderString
+            
         }
 
         return groups
     }
 
-    public func replace(in string: String, with template: String, options: MatchOptions = []) -> String {
+    public func replace(with template: String, in string: String, options: MatchOptions = []) -> String {
         var string = string
         let maxMatches = 10
         var totalReplacedString: String = ""
@@ -192,23 +141,22 @@ public final class Regex {
             var regexMatches = [regmatch_t](repeating: regmatch_t(), count: maxMatches)
             let result = regexec(&preg, string, regexMatches.count, &regexMatches, options.rawValue)
 
-            if result != 0 {
+            guard result == 0 else {
                 break // Unmatched regex
             }
 
-            if regexMatches[0].rm_eo == regexMatches[0].rm_so {
-                break // matches the empty string: infinite loop
+            guard regexMatches[0].rm_eo != regexMatches[0].rm_so else {
+                break // matches the empty string: avoid infinite loop
             }
 
             let start = Int(regexMatches[0].rm_so)
             let end   = Int(regexMatches[0].rm_eo)
             var replacedStringArray = [UInt8](string.utf8)
             replacedStringArray.replaceSubrange(start..<end, with: templateArray)
-
-            guard let replacedString = String(data: Data(replacedStringArray), encoding: .utf8) else {
+            
+            guard let replacedString = String(bytes: replacedStringArray, encoding: .utf8) else {
                 break
             }
-//            let replacedString = String(describing: replacedStringArray)
 
             let templateDelta = template.utf8.count - (end - start)
             let offset = Int(end + templateDelta)
@@ -248,7 +196,7 @@ extension Regex : ExpressibleByStringLiteral {
 /// MARK: - matches -> Bool
 
 public func ~ (string: String, regex: Regex) -> Bool {
-    return regex.matches(in: string)
+    return regex.matches(string)
 }
 
 public func ~ (string: String, pattern: String) throws -> Bool {
