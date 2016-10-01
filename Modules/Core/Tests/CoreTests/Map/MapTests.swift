@@ -793,12 +793,12 @@ public class MapTests : XCTestCase {
         XCTAssertThrowsError(try fuuOptional.asMap())
         XCTAssertEqual(try [1969].asMap(), [1969])
         let fuuArray: [Baz] = []
-        XCTAssertThrowsError(try fuuArray.asMap())
+        XCTAssertEqual(try fuuArray.asMap(), [])
         XCTAssertEqual(try ["foo": 1969].asMap(), ["foo": 1969])
         let fuuDictionaryA: [Int: Foo] = [:]
         XCTAssertThrowsError(try fuuDictionaryA.asMap())
         let fuuDictionaryB: [String: Baz] = [:]
-        XCTAssertThrowsError(try fuuDictionaryB.asMap())
+        XCTAssertEqual(try fuuDictionaryB.asMap(), [:])
     }
 }
 
