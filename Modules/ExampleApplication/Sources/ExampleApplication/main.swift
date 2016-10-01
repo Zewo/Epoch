@@ -23,9 +23,9 @@ func generateJSON() -> [String: Int] {
 
 let router = BasicRouter { route in
     route.get("json") { request in
-        let map = generateJSON().map
-        return Response(content: map)
+        return Response(content: generateJSON(), contentType: .json)
     }
 }
 
-try Server(host: "0.0.0.0", port: 8282, responder: router).start()
+let contentNegotiation = ContentNegotiationMiddleware(mediaTypes: [.json])
+try Server(host: "0.0.0.0", port: 8282, middleware: [contentNegotiation], responder: router).start()

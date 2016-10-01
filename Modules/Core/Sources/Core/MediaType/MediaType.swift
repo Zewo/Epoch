@@ -1,7 +1,13 @@
-public protocol MediaTypeConverter {
-    static var mediaType: MediaType { get }
-    static var parser: MapParser.Type { get }
-    static var serializer: MapSerializer.Type { get }
+public struct MediaTypeConverter {
+    public let mediaType: MediaType
+    public let parser: MapParser.Type
+    public let serializer: MapSerializer.Type
+
+    public init(mediaType: MediaType, parser: MapParser.Type, serializer: MapSerializer.Type) {
+        self.mediaType = mediaType
+        self.parser = parser
+        self.serializer = serializer
+    }
 }
 
 enum MediaTypeError : Error {

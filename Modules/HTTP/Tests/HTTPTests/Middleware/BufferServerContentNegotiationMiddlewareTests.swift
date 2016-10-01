@@ -2,7 +2,7 @@ import XCTest
 @testable import HTTP
 
 public class BufferServerContentNegotiationMiddlewareTests : XCTestCase {
-    let contentNegotiation = ServerContentNegotiationMiddleware(mediaTypes: [JSON.self, URLEncodedForm.self], mode: .buffer)
+    let contentNegotiation = ContentNegotiationMiddleware(mediaTypes: [.json, .urlEncodedForm], serializationMode: .buffer)
 
     func testJSONRequestDefaultResponse() throws {
         let request = Request(
@@ -23,6 +23,7 @@ public class BufferServerContentNegotiationMiddlewareTests : XCTestCase {
         // content negotiation middleware media type list. In this case JSON.
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
         XCTAssertEqual(response.body, .buffer(Buffer("{\"fuu\":\"baz\"}")))
+        XCTAssertNil(response.transferEncoding)
     }
 
     func testJSONRequestResponse() throws {
@@ -43,6 +44,7 @@ public class BufferServerContentNegotiationMiddlewareTests : XCTestCase {
 
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
         XCTAssertEqual(response.body, .buffer(Buffer("{\"fuu\":\"baz\"}")))
+        XCTAssertNil(response.transferEncoding)
     }
 
     func testJSONRequestURLEncodedFormResponse() throws {
@@ -63,6 +65,7 @@ public class BufferServerContentNegotiationMiddlewareTests : XCTestCase {
 
         XCTAssertEqual(response.headers["Content-Type"], "application/x-www-form-urlencoded; charset=utf-8")
         XCTAssertEqual(response.body, .buffer(Buffer("fuu=baz")))
+        XCTAssertNil(response.transferEncoding)
     }
 
     func testURLEncodedFormRequestDefaultResponse() throws {
@@ -84,6 +87,7 @@ public class BufferServerContentNegotiationMiddlewareTests : XCTestCase {
         // content negotiation middleware media type list. In this case JSON.
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
         XCTAssertEqual(response.body, .buffer(Buffer("{\"fuu\":\"baz\"}")))
+        XCTAssertNil(response.transferEncoding)
     }
 
     func testURLEncodedFormRequestResponse() throws {
@@ -104,6 +108,7 @@ public class BufferServerContentNegotiationMiddlewareTests : XCTestCase {
 
         XCTAssertEqual(response.headers["Content-Type"], "application/x-www-form-urlencoded; charset=utf-8")
         XCTAssertEqual(response.body, .buffer(Buffer("fuu=baz")))
+        XCTAssertNil(response.transferEncoding)
     }
 
     func testURLEncodedFormRequestJSONResponse() throws {
@@ -124,6 +129,7 @@ public class BufferServerContentNegotiationMiddlewareTests : XCTestCase {
 
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
         XCTAssertEqual(response.body, .buffer(Buffer("{\"fuu\":\"baz\"}")))
+        XCTAssertNil(response.transferEncoding)
     }
 }
 

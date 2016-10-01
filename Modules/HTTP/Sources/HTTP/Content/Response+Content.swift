@@ -13,7 +13,7 @@ extension Response {
 }
 
 extension Response {
-    public init<T : MapRepresentable>(status: Status = .ok, headers: Headers = [:], content: T) {
+    public init<T : MapRepresentable>(status: Status = .ok, headers: Headers = [:], content: T, contentType: MediaType? = nil) {
         self.init(
             status: status,
             headers: headers,
@@ -21,9 +21,13 @@ extension Response {
         )
 
         self.content = content.map
+
+        if let contentType = contentType {
+            self.contentType = contentType
+        }
     }
 
-    public init<T : MapRepresentable>(status: Status = .ok, headers: Headers = [:], content: T?) {
+    public init<T : MapRepresentable>(status: Status = .ok, headers: Headers = [:], content: T?, contentType: MediaType? = nil) {
         self.init(
             status: status,
             headers: headers,
@@ -31,9 +35,13 @@ extension Response {
         )
 
         self.content = content.map
+
+        if let contentType = contentType {
+            self.contentType = contentType
+        }
     }
 
-    public init<T : MapRepresentable>(status: Status = .ok, headers: Headers = [:], content: [T]) {
+    public init<T : MapRepresentable>(status: Status = .ok, headers: Headers = [:], content: [T], contentType: MediaType? = nil) {
         self.init(
             status: status,
             headers: headers,
@@ -41,9 +49,13 @@ extension Response {
         )
 
         self.content = content.map
+
+        if let contentType = contentType {
+            self.contentType = contentType
+        }
     }
 
-    public init<T : MapRepresentable>(status: Status = .ok, headers: Headers = [:], content: [String: T]) {
+    public init<T : MapRepresentable>(status: Status = .ok, headers: Headers = [:], content: [String: T], contentType: MediaType? = nil) {
         self.init(
             status: status,
             headers: headers,
@@ -51,9 +63,13 @@ extension Response {
         )
 
         self.content = content.map
+
+        if let contentType = contentType {
+            self.contentType = contentType
+        }
     }
 
-    public init<T : MapFallibleRepresentable>(status: Status = .ok, headers: Headers = [:], content: T) throws {
+    public init<T : MapFallibleRepresentable>(status: Status = .ok, headers: Headers = [:], content: T, contentType: MediaType? = nil) throws {
         self.init(
             status: status,
             headers: headers,
@@ -61,5 +77,9 @@ extension Response {
         )
 
         self.content = try content.asMap()
+
+        if let contentType = contentType {
+            self.contentType = contentType
+        }
     }
 }
