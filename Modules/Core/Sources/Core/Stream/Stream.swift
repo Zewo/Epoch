@@ -10,11 +10,16 @@ public protocol InputStream {
     
     func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte>
     func read(upTo byteCount: Int, deadline: Double) throws -> Buffer
+    func read(exactly byteCount: Int, deadline: Double) throws -> Buffer
 }
 
 
 extension InputStream {
     public func read(upTo byteCount: Int, deadline: Double) throws -> Buffer {
+        guard byteCount > 0 else {
+            return Buffer()
+        }
+        
         var bytes = [Byte](repeating: 0, count: byteCount)
 
         let bytesRead = try bytes.withUnsafeMutableBufferPointer {
@@ -22,6 +27,29 @@ extension InputStream {
         }
 
         return Buffer(bytes[0..<bytesRead])
+    }
+    
+    public func read(exactly byteCount: Int, deadline: Double) throws -> Buffer {
+        guard byteCount > 0 else {
+            return Buffer()
+        }
+        
+        var bytes = [Byte](repeating: 0, count: byteCount)
+        
+        try bytes.withUnsafeMutableBufferPointer { pointer in
+            var address = pointer.baseAddress!
+            var remaining = byteCount
+            while remaining > 0 {
+                let chunk = try read(into: UnsafeMutableBufferPointer(start: address, count: remaining), deadline: deadline)
+                guard chunk.count > 0 else {
+                    throw StreamError.closedStream
+                }
+                address = address.advanced(by: chunk.count)
+                remaining -= chunk.count
+            }
+        }
+        
+        return Buffer(bytes)
     }
 
     /// Drains the `Stream` and returns the contents in a `Buffer`. At the end of this operation the stream will be closed.
