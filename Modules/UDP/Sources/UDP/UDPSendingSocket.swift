@@ -28,23 +28,7 @@ public final class UDPSendingSocket {
     /// Constructs a `UDPSendingSocket` using a configuration `Map`.
     ///
     /// - note: The preferred way to build a `UDPSendingSocket` is to call `sending(to:)` on a `UDPSocket` instance.
-    ///
-    /// - parameter configuration: Map with fields `localHost`, `localPort`, and for the remote: `host`, and `port`.
-    ///
-    ///       ["localHost": "127.0.0.1",
-    ///        "localPort": 5000,
-    ///        "host": "192.168.1.1",
-    ///        "port": 1194]
-    ///
-    /// - throws: `fatalError` when either `host` or `port` are missing
-    public convenience init(configuration: Map) throws {
-        let localHost = configuration["localHost"].string ?? "0.0.0.0"
-        let localPort = configuration["localPort"].int ?? 5000
-        guard let host = configuration["host"].string,
-            let port = configuration["port"].int else {
-                fatalError("Invalid configuration")
-        }
-        
+    public convenience init(localHost: String = "0.0.0.0", localPort: Int = 5000, host: String, port: Int) throws {
         let udpSocket = try UDPSocket(localHost: localHost, localPort: localPort)
         try self.init(to: IP(remoteAddress: host, port: port, deadline: 15.seconds.fromNow()), with: udpSocket)
     }

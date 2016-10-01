@@ -10,21 +10,21 @@ public final class Client : Responder {
     public let host: String
     public let port: Int
 
-    public let verifyBundle: String?
-    public let certificate: String?
-    public let privateKey: String?
-    public let certificateChain: String?
-
     public let keepAlive: Bool
     public let connectionTimeout: Double
     public let requestTimeout: Double
     public let bufferSize: Int
 
+    public let certificatePath: String?
+    public let privateKeyPath: String?
+    public let verifyBundlePath: String?
+    public let certificateChainPath: String?
+
     var stream: Stream?
     var serializer: RequestSerializer?
     var parser: MessageParser?
 
-    public init(url: URL, configuration: Map = nil) throws {
+    public init(url: URL, bufferSize: Int = 4096, connectionTimeout: Double = 3.minutes, requestTimeout: Double = 30.seconds, certificatePath: String? = nil, privateKeyPath: String? = nil, certificateChainPath: String? = nil, verifyBundlePath: String? = nil, keepAlive: Bool = true) throws {
         self.secure = try isSecure(url: url)
 
         let (host, port) = try getHostPort(url: url)
@@ -32,24 +32,33 @@ public final class Client : Responder {
         self.host = host
         self.port = port
 
-        self.verifyBundle = configuration["tls", "backlog"].string
-        self.certificate = configuration["tls", "reusePort"].string
-        self.privateKey = configuration["tls", "reusePort"].string
-        self.certificateChain = configuration["tls", "reusePort"].string
+        self.bufferSize = bufferSize
+        self.connectionTimeout = connectionTimeout
+        self.requestTimeout = requestTimeout
 
-        self.keepAlive = configuration["keepAlive"].bool ?? true
-        self.connectionTimeout = configuration["connectionTimeout"].double ?? 3.minutes
-        self.requestTimeout = configuration["requestTimeout"].double ?? 30.seconds
+        self.certificatePath = certificatePath
+        self.privateKeyPath = privateKeyPath
+        self.certificateChainPath = certificateChainPath
+        self.verifyBundlePath = verifyBundlePath
 
-        self.bufferSize = configuration["bufferSize"].int ?? 2048
+        self.keepAlive = keepAlive
     }
 
-    public convenience init(url: String, configuration: Map = nil) throws {
+    public convenience init(url: String, bufferSize: Int = 4096, connectionTimeout: Double = 3.minutes, requestTimeout: Double = 30.seconds, certificatePath: String? = nil, privateKeyPath: String? = nil, verifyBundlePath: String? = nil, keepAlive: Bool = true) throws {
         guard let url = URL(string: url) else {
             throw URLError.invalidURL
         }
 
-        try self.init(url: url, configuration: configuration)
+        try self.init(
+            url: url,
+            bufferSize: bufferSize,
+            connectionTimeout: connectionTimeout,
+            requestTimeout: requestTimeout,
+            certificatePath: certificatePath,
+            privateKeyPath: privateKeyPath,
+            verifyBundlePath: verifyBundlePath,
+            keepAlive: keepAlive
+        )
     }
 }
 
@@ -123,10 +132,10 @@ extension Client {
             stream = try TCPTLSStream(
                 host: host,
                 port: port,
-                verifyBundle: verifyBundle,
-                certificate: certificate,
-                privateKey: privateKey,
-                certificateChain: certificateChain,
+                certificatePath: certificatePath,
+                privateKeyPath: privateKeyPath,
+                certificateChainPath: certificateChainPath,
+                verifyBundle: verifyBundlePath,
                 sniHostname: host,
                 deadline: now() + connectionTimeout
             )

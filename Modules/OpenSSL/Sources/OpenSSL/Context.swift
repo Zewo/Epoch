@@ -31,22 +31,22 @@ public class Context {
 		}
 	}
 
-	public convenience init(method: SSLMethod = .sslv23, mode: SSLMethod.Mode = .client, verifyBundle: String? = nil, certificate: String? = nil, privateKey: String? = nil, certificateChain: String? = nil, sniHostname: String? = nil) throws {
+	public convenience init(method: SSLMethod = .sslv23, mode: SSLMethod.Mode = .client, certificatePath: String? = nil, privateKeyPath: String? = nil, certificateChainPath: String? = nil, verifyBundle: String? = nil, sniHostname: String? = nil) throws {
 		try self.init(method: method, mode: mode)
 
 		if let verifyBundle = verifyBundle {
 			try useVerifyBundle(verifyBundle: verifyBundle)
 		}
 
-		if let certificateChain = certificateChain {
+		if let certificateChain = certificateChainPath {
 			try useCertificateChainFile(certificateChainFile: certificateChain)
 		}
 
-		if let certificate = certificate {
+		if let certificate = certificatePath {
 			try useCertificateFile(certificateFile: certificate)
 		}
 
-		if let privateKey = privateKey {
+		if let privateKey = privateKeyPath {
 			try usePrivateKeyFile(privateKeyFile: privateKey)
 		}
 
