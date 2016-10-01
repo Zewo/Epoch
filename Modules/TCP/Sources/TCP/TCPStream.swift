@@ -37,9 +37,9 @@ public final class TCPStream : Stream {
         }
         
         let bytesWritten = tcpsend(socket, buffer.baseAddress!, buffer.count, deadline.int64milliseconds)
-        try ensureLastOperationSucceeded()
         
         guard bytesWritten == buffer.count else {
+            try ensureLastOperationSucceeded()
             throw SystemError.other(errorNumber: -1)
         }
     }
