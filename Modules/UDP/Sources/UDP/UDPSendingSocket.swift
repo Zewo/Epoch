@@ -25,7 +25,7 @@ public final class UDPSendingSocket {
         self.udpSocket = udpSocket
     }
     
-    /// Constructs a `UDPSendingSocket` using a configuration `Map`.
+    /// Constructs a `UDPSendingSocket`.
     ///
     /// - note: The preferred way to build a `UDPSendingSocket` is to call `sending(to:)` on a `UDPSocket` instance.
     public convenience init(localHost: String = "0.0.0.0", localPort: Int = 5000, host: String, port: Int) throws {

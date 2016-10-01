@@ -12,6 +12,7 @@ public class BufferClientContentNegotiationMiddlewareTests : XCTestCase {
             XCTAssertEqual(request.headers["Accept"], "application/json, application/x-www-form-urlencoded")
             XCTAssertEqual(request.body, .buffer(Buffer("{\"foo\":\"bar\"}")))
             XCTAssertNil(request.transferEncoding)
+
             return Response(
                 headers: [
                     "Content-Type": "application/json; charset=utf-8",
@@ -36,6 +37,7 @@ public class BufferClientContentNegotiationMiddlewareTests : XCTestCase {
             XCTAssertEqual(request.headers["Accept"], "application/json, application/x-www-form-urlencoded")
             XCTAssertEqual(request.body, .buffer(Buffer("{\"foo\":\"bar\"}")))
             XCTAssertNil(request.transferEncoding)
+
             return Response(
                 headers: [
                     "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",

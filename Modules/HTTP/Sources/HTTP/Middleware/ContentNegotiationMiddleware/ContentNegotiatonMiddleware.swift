@@ -52,7 +52,6 @@ public struct ContentNegotiationMiddleware : Middleware {
                     // TODO: Deal with writer bodies
                     throw ContentNegotiationMiddlewareError.writerBodyNotSupported
                 }
-
                 request.content = content
             } catch ContentNegotiationMiddlewareError.noSuitableParser {
                 throw HTTPError.unsupportedMediaType

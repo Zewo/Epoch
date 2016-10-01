@@ -12,6 +12,7 @@ public class StreamClientContentNegotiationMiddlewareTests : XCTestCase {
             XCTAssertEqual(request.headers["Accept"], "application/json, application/x-www-form-urlencoded")
             XCTAssertEqual(request.transferEncoding, "chunked")
             XCTAssertNil(request.contentLength)
+
             let stream = BufferStream()
             switch request.body {
             case .writer(let writer):
@@ -44,6 +45,7 @@ public class StreamClientContentNegotiationMiddlewareTests : XCTestCase {
             XCTAssertEqual(request.headers["Accept"], "application/json, application/x-www-form-urlencoded")
             XCTAssertEqual(request.transferEncoding, "chunked")
             XCTAssertNil(request.contentLength)
+
             let stream = BufferStream()
             switch request.body {
             case .writer(let writer):

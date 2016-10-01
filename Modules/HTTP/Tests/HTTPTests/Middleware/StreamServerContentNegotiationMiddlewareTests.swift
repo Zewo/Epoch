@@ -24,6 +24,7 @@ public class StreamServerContentNegotiationMiddlewareTests : XCTestCase {
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
         XCTAssertEqual(response.transferEncoding, "chunked")
         XCTAssertNil(response.contentLength)
+
         let stream = BufferStream()
         switch response.body {
         case .writer(let writer):
@@ -53,6 +54,7 @@ public class StreamServerContentNegotiationMiddlewareTests : XCTestCase {
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
         XCTAssertEqual(response.transferEncoding, "chunked")
         XCTAssertNil(response.contentLength)
+
         let stream = BufferStream()
         switch response.body {
         case .writer(let writer):
@@ -82,6 +84,7 @@ public class StreamServerContentNegotiationMiddlewareTests : XCTestCase {
         XCTAssertEqual(response.headers["Content-Type"], "application/x-www-form-urlencoded; charset=utf-8")
         XCTAssertEqual(response.transferEncoding, "chunked")
         XCTAssertNil(response.contentLength)
+
         let stream = BufferStream()
         switch response.body {
         case .writer(let writer):
@@ -112,6 +115,7 @@ public class StreamServerContentNegotiationMiddlewareTests : XCTestCase {
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
         XCTAssertEqual(response.transferEncoding, "chunked")
         XCTAssertNil(response.contentLength)
+
         let stream = BufferStream()
         switch response.body {
         case .writer(let writer):
@@ -141,6 +145,7 @@ public class StreamServerContentNegotiationMiddlewareTests : XCTestCase {
         XCTAssertEqual(response.headers["Content-Type"], "application/x-www-form-urlencoded; charset=utf-8")
         XCTAssertEqual(response.transferEncoding, "chunked")
         XCTAssertNil(response.contentLength)
+
         let stream = BufferStream()
         switch response.body {
         case .writer(let writer):
@@ -170,6 +175,7 @@ public class StreamServerContentNegotiationMiddlewareTests : XCTestCase {
         XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
         XCTAssertEqual(response.transferEncoding, "chunked")
         XCTAssertNil(response.contentLength)
+
         let stream = BufferStream()
         switch response.body {
         case .writer(let writer):

@@ -33,7 +33,6 @@ public struct Server {
             privateKeyPath: privateKeyPath,
             certificateChainPath: certificateChainPath
         )
-
         self.host = host
         self.port = port
         self.bufferSize = bufferSize
