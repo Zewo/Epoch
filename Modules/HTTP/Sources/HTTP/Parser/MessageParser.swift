@@ -12,7 +12,7 @@ public final class MessageParser {
     }
     
     private enum State: Int {
-        case none = 1
+        case ready = 1
         case messageBegin = 2
         case url = 3
         case status = 4
@@ -29,12 +29,13 @@ public final class MessageParser {
         var version: Version? = nil
         var url: URL? = nil
         var headers: [CaseInsensitiveString: String] = [:]
-        var body: Buffer = Buffer()
+        var body = Buffer()
         
         var currentHeaderField: CaseInsensitiveString? = nil
         
         func addValueForCurrentHeaderField(_ value: String) {
             let key = currentHeaderField!
+
             if let existing = headers[key] {
                 headers[key] = existing + ", " + value
             } else {
@@ -47,7 +48,7 @@ public final class MessageParser {
     public var parserSettings: http_parser_settings
     public let mode: Mode
     
-    private var state: State = .none
+    private var state: State = .ready
     private var context = Context()
     private var buffer: [UInt8] = []
     
@@ -84,6 +85,7 @@ public final class MessageParser {
     
     public func parse(_ from: BufferRepresentable) throws -> [Message] {
         let buffer = from.buffer
+
         return try buffer.withUnsafeBytes {
             try self.parse(UnsafeBufferPointer(start: $0, count: buffer.count))
         }
@@ -94,6 +96,7 @@ public final class MessageParser {
             let processedCount = from.baseAddress!.withMemoryRebound(to: Int8.self, capacity: from.count) {
                 return http_parser_execute(&self.parser, &self.parserSettings, $0, from.count)
             }
+
             guard processedCount == from.count else {
                 throw MessageParserError(parser.http_errno)
             }
@@ -105,90 +108,83 @@ public final class MessageParser {
     }
     
     fileprivate func processOnMessageBegin() -> Int32 {
-        process(state: .messageBegin)
-        return 0
+        return process(state: .messageBegin)
     }
     
     fileprivate func processOnURL(data: UnsafePointer<Int8>, length: Int) -> Int32 {
-        process(state: .url, data: UnsafeBufferPointer<Int8>(start: data, count: length))
-        return 0
+        return process(state: .url, data: UnsafeBufferPointer<Int8>(start: data, count: length))
     }
     
     fileprivate func processOnStatus(data: UnsafePointer<Int8>, length: Int) -> Int32 {
-        process(state: .status, data: UnsafeBufferPointer<Int8>(start: data, count: length))
-        return 0
+        return process(state: .status, data: UnsafeBufferPointer<Int8>(start: data, count: length))
     }
     
     fileprivate func processOnHeaderField(data: UnsafePointer<Int8>, length: Int) -> Int32 {
-        process(state: .headerField, data: UnsafeBufferPointer<Int8>(start: data, count: length))
-        return 0
+        return process(state: .headerField, data: UnsafeBufferPointer<Int8>(start: data, count: length))
     }
     
     fileprivate func processOnHeaderValue(data: UnsafePointer<Int8>, length: Int) -> Int32 {
-        process(state: .headerValue, data: UnsafeBufferPointer<Int8>(start: data, count: length))
-        return 0
+        return process(state: .headerValue, data: UnsafeBufferPointer<Int8>(start: data, count: length))
     }
     
     fileprivate func processOnHeadersComplete() -> Int32 {
-        process(state: .headersComplete)
-        return 0
+        return process(state: .headersComplete)
     }
     
     fileprivate func processOnBody(data: UnsafePointer<Int8>, length: Int) -> Int32 {
-        process(state: .body, data: UnsafeBufferPointer<Int8>(start: data, count: length))
-        return 0
+        return process(state: .body, data: UnsafeBufferPointer<Int8>(start: data, count: length))
     }
     
     fileprivate func processOnMessageComplete() -> Int32 {
-        process(state: .messageComplete)
-        return 0
+        return process(state: .messageComplete)
     }
     
-    fileprivate func process(state newState: State, data: UnsafeBufferPointer<Int8>? = nil) {
+    fileprivate func process(state newState: State, data: UnsafeBufferPointer<Int8>? = nil) -> Int32 {
         if state != newState {
-            
             switch state {
-            case .none, .messageBegin, .messageComplete:
+            case .ready, .messageBegin, .messageComplete:
                 break
-                
             case .url:
                 buffer.append(0)
+
                 let string = buffer.withUnsafeBufferPointer { (ptr: UnsafeBufferPointer<UInt8>) -> String in
                     return String(cString: ptr.baseAddress!)
                 }
+
                 context.url = URL(string: string)!
-                
             case .status:
                 buffer.append(0)
+
                 let string = buffer.withUnsafeBufferPointer { (ptr: UnsafeBufferPointer<UInt8>) -> String in
                     return String(cString: ptr.baseAddress!)
                 }
-                context.status = Response.Status(statusCode: Int(parser.status_code),
-                                                 reasonPhrase: string)
-                
+
+                context.status = Response.Status(
+                    statusCode: Int(parser.status_code),
+                    reasonPhrase: string
+                )
             case .headerField:
                 buffer.append(0)
+
                 let string = buffer.withUnsafeBufferPointer { (ptr: UnsafeBufferPointer<UInt8>) -> String in
                     return String(cString: ptr.baseAddress!)
                 }
+
                 context.currentHeaderField = CaseInsensitiveString(string)
-                
-                
             case .headerValue:
                 buffer.append(0)
+
                 let string = buffer.withUnsafeBufferPointer { (ptr: UnsafeBufferPointer<UInt8>) -> String in
                     return String(cString: ptr.baseAddress!)
                 }
+
                 context.addValueForCurrentHeaderField(string)
-                
             case .headersComplete:
                 context.currentHeaderField = nil
                 context.method = Request.Method(code: http_method(rawValue: parser.method))
                 context.version = Version(major: Int(parser.http_major), minor: Int(parser.http_minor))
-                
             case .body:
                 context.body = Buffer(buffer)
-                
             }
             
             buffer = []
@@ -198,12 +194,14 @@ public final class MessageParser {
                 let message: Message
                 switch mode {
                 case .request:
-                    var request = Request(method: context.method!,
-                                          url: context.url!,
-                                          headers: Headers(),
-                                          body: .buffer(context.body))
+                    var request = Request(
+                        method: context.method!,
+                        url: context.url!,
+                        headers: Headers(),
+                        body: .buffer(context.body)
+                    )
+
                     request.headers = Headers(context.headers)
-                    
                     message = request
                 case .response:
                     let cookieHeaders =
@@ -214,11 +212,13 @@ public final class MessageParser {
                                 return initial.union(Set(value.components(separatedBy: ", ")))
                             }
                     
-                    let response = Response(version: context.version!,
-                                            status: context.status!,
-                                            headers: Headers(context.headers),
-                                            cookieHeaders: cookieHeaders,
-                                            body: .buffer(context.body))
+                    let response = Response(
+                        version: context.version!,
+                        status: context.status!,
+                        headers: Headers(context.headers),
+                        cookieHeaders: cookieHeaders,
+                        body: .buffer(context.body)
+                    )
                     
                     message = response
                 }
@@ -227,11 +227,9 @@ public final class MessageParser {
                 context = Context()
             }
         }
-        
-        
-        
+
         guard let data = data, data.count > 0 else {
-            return
+            return 0
         }
         
         data.baseAddress!.withMemoryRebound(to: UInt8.self, capacity: data.count) { ptr in
@@ -239,20 +237,18 @@ public final class MessageParser {
                 self.buffer.append(ptr[i])
             }
         }
+
+        return 0
     }
-    
 }
 
 extension MessageParserError : Error, CustomStringConvertible {
-    
     public var description: String {
         return String(cString: http_errno_description(self))
     }
-    
 }
 
 extension Request.Method {
-    
     internal init(code: http_method) {
         switch code {
         case HTTP_DELETE: self = .delete
@@ -297,30 +293,37 @@ private func http_parser_on_message_begin(ctx: UnsafeMutablePointer<http_parser>
     let ref = Unmanaged<MessageParser>.fromOpaque(ctx!.pointee.data).takeUnretainedValue()
     return ref.processOnMessageBegin()
 }
+
 private func http_parser_on_url(ctx: UnsafeMutablePointer<http_parser>?, data: UnsafePointer<Int8>?, length: Int) -> Int32 {
     let ref = Unmanaged<MessageParser>.fromOpaque(ctx!.pointee.data).takeUnretainedValue()
     return ref.processOnURL(data: data!, length: length)
 }
+
 private func http_parser_on_status(ctx: UnsafeMutablePointer<http_parser>?, data: UnsafePointer<Int8>?, length: Int) -> Int32 {
     let ref = Unmanaged<MessageParser>.fromOpaque(ctx!.pointee.data).takeUnretainedValue()
     return ref.processOnStatus(data: data!, length: length)
 }
+
 private func http_parser_on_header_field(ctx: UnsafeMutablePointer<http_parser>?, data: UnsafePointer<Int8>?, length: Int) -> Int32 {
     let ref = Unmanaged<MessageParser>.fromOpaque(ctx!.pointee.data).takeUnretainedValue()
     return ref.processOnHeaderField(data: data!, length: length)
 }
+
 private func http_parser_on_header_value(ctx: UnsafeMutablePointer<http_parser>?, data: UnsafePointer<Int8>?, length: Int) -> Int32 {
     let ref = Unmanaged<MessageParser>.fromOpaque(ctx!.pointee.data).takeUnretainedValue()
     return ref.processOnHeaderValue(data: data!, length: length)
 }
+
 private func http_parser_on_headers_complete(ctx: UnsafeMutablePointer<http_parser>?) -> Int32 {
     let ref = Unmanaged<MessageParser>.fromOpaque(ctx!.pointee.data).takeUnretainedValue()
     return ref.processOnHeadersComplete()
 }
+
 private func http_parser_on_body(ctx: UnsafeMutablePointer<http_parser>?, data: UnsafePointer<Int8>?, length: Int) -> Int32 {
     let ref = Unmanaged<MessageParser>.fromOpaque(ctx!.pointee.data).takeUnretainedValue()
     return ref.processOnBody(data: data!, length: length)
 }
+
 private func http_parser_on_message_complete(ctx: UnsafeMutablePointer<http_parser>?) -> Int32 {
     let ref = Unmanaged<MessageParser>.fromOpaque(ctx!.pointee.data).takeUnretainedValue()
     return ref.processOnMessageComplete()

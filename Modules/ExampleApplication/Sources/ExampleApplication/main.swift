@@ -1,7 +1,7 @@
 import HTTPServer
 
 #if os(Linux)
-    import SwiftGlibc
+    import Glibc
 
     public func arc4random_uniform(_ max: UInt32) -> Int32 {
         return (SwiftGlibc.rand() % Int32(max-1)) + 1
@@ -10,22 +10,19 @@ import HTTPServer
     import Darwin
 #endif
 
-func generateJSON() -> [String: Int] {
-    var json: [String: Int] = [:]
-
-    for i in 1...10 {
-        let randomNumber = Int(arc4random_uniform(UInt32(1000)))
-        json["Test Number \(i)"] = randomNumber
-    }
-
-    return json
-}
+let contentNegotiation = ContentNegotiationMiddleware(mediaTypes: [.json])
 
 let router = BasicRouter { route in
     route.get("json") { request in
-        return Response(content: generateJSON(), contentType: .json)
+        var json: [String: Int] = [:]
+
+        for i in 1...10 {
+            let randomNumber = Int(arc4random_uniform(UInt32(1000)))
+            json["Test Number \(i)"] = randomNumber
+        }
+
+        return Response(content: json, contentType: .json)
     }
 }
 
-let contentNegotiation = ContentNegotiationMiddleware(mediaTypes: [.json])
-try Server(host: "0.0.0.0", port: 8282, middleware: [contentNegotiation], responder: router).start()
+try Server(port: 8282, middleware: [contentNegotiation], responder: router).start()

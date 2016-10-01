@@ -36,7 +36,7 @@ public struct ContentNegotiationMiddleware : Middleware {
         }
     }
 
-    public func serverRespond(to request: Request, chainingTo chain: Responder) throws -> Response {
+    private func serverRespond(to request: Request, chainingTo chain: Responder) throws -> Response {
         var request = request
 
         if let contentType = request.contentType {
@@ -92,7 +92,7 @@ public struct ContentNegotiationMiddleware : Middleware {
         return response
     }
 
-    public func clientRespond(to request: Request, chainingTo chain: Responder) throws -> Response {
+    private func clientRespond(to request: Request, chainingTo chain: Responder) throws -> Response {
         var request = request
 
         request.accept = mediaTypes
