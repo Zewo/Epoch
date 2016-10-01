@@ -31,11 +31,10 @@ final class BodyStream : Stream {
             throw StreamError.closedStream
         }
         
-        let newLine: [Byte] = [13, 10]
         try transport.write(String(buffer.count, radix: 16), deadline: deadline)
-        try transport.write(newLine, deadline: deadline)
+        try transport.write("\r\n", deadline: deadline)
         try transport.write(buffer, deadline: deadline)
-        try transport.write(newLine, deadline: deadline)
+        try transport.write("\r\n", deadline: deadline)
     }
 
     func flush(deadline: Double) throws {
