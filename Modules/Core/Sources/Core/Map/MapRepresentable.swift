@@ -109,15 +109,26 @@ extension Optional : MapFallibleRepresentable {
 
 extension Array : MapFallibleRepresentable {
     public func asMap() throws -> Map {
-        guard Element.self is MapFallibleRepresentable.Type else {
-            throw MapError.notMapRepresentable(Element.self)
-        }
         var array: [Map] = []
         array.reserveCapacity(count)
-        for element in self {
-            let element = element as! MapFallibleRepresentable
-            array.append(try element.asMap())
+
+        if Element.self is MapFallibleRepresentable.Type {
+            for value in self {
+                let value = value as! MapFallibleRepresentable
+                array.append(try value.asMap())
+            }
+        } else {
+            for value in self {
+                if let value = value as? MapRepresentable {
+                    array.append(value.map)
+                } else if let value = value as? MapFallibleRepresentable {
+                    array.append(try value.asMap())
+                } else {
+                    throw MapError.notMapRepresentable(type(of: value))
+                }
+            }
         }
+
         return .array(array)
     }
 }
@@ -127,15 +138,28 @@ extension Dictionary : MapFallibleRepresentable {
         guard Key.self is MapDictionaryKeyRepresentable.Type else {
             throw MapError.notMapDictionaryKeyRepresentable(Value.self)
         }
-        guard Value.self is MapFallibleRepresentable.Type else {
-            throw MapError.notMapRepresentable(Value.self)
-        }
+
         var dictionary = [String: Map](minimumCapacity: count)
-        for (key, value) in self {
-            let value = value as! MapFallibleRepresentable
-            let key = key as! MapDictionaryKeyRepresentable
-            dictionary[key.mapDictionaryKey] = try value.asMap()
+
+        if Value.self is MapFallibleRepresentable.Type {
+            for (key, value) in self {
+                let value = value as! MapFallibleRepresentable
+                let key = key as! MapDictionaryKeyRepresentable
+                dictionary[key.mapDictionaryKey] = try value.asMap()
+            }
+        } else {
+            for (key, value) in self {
+                let key = key as! MapDictionaryKeyRepresentable
+                if let value = value as? MapRepresentable {
+                    dictionary[key.mapDictionaryKey] = value.map
+                } else if let value = value as? MapFallibleRepresentable {
+                    dictionary[key.mapDictionaryKey] = try value.asMap()
+                } else {
+                    throw MapError.notMapRepresentable(type(of: value))
+                }
+            }
         }
+
         return .dictionary(dictionary)
     }
 }
