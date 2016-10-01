@@ -24,9 +24,8 @@ let package = Package(
 
 ```swift
 import WebSocketClient
-import Foundation
 
-let client = try WebSocketClient(url: URL(string: "ws://localhost:8080/ws")!) { ws in
+let client = try WebSocketClient(url: "ws://localhost:8080") { ws in
     print("Connected!")
     ws.onClose { code, reason in
         print("\(code): \(reason)")

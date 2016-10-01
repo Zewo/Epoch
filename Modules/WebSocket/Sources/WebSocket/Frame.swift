@@ -89,7 +89,7 @@ struct Frame {
             offset += 4
 
             // TODO: remove copy
-            var unmaskedPayloadData = Array(data.subdata(in: offset..<data.count))
+            var unmaskedPayloadData = Array(data.suffix(from: offset))
 
             var maskOffset = 0
             let maskKey = self.maskKey

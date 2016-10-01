@@ -3,7 +3,7 @@ import Foundation
 import HTTP
 import HTTPClient
 
-public enum ClientError: Error {
+public enum ClientError : Error {
     case unsupportedScheme
     case hostRequired
     case responseNotWebsocket
@@ -15,19 +15,26 @@ public struct WebSocketClient {
     private let didConnect: (WebSocket) throws -> Void
 
     public init(url: URL, didConnect: @escaping (WebSocket) throws -> Void) throws {
-        guard let scheme = url.scheme , scheme == "ws" || scheme == "wss" else {
+        guard let scheme = url.scheme, scheme == "ws" || scheme == "wss" else {
             throw ClientError.unsupportedScheme
         }
-
-        guard let _ = url.host else {
+        guard url.host != nil else {
             throw ClientError.hostRequired
         }
+
         let urlStr = url.absoluteString
         let urlhttp = URL(string: urlStr.replacingCharacters(in: urlStr.range(of:"ws")!, with: "http"))!
         self.client = try HTTPClient.Client(url: urlhttp)
 
         self.didConnect = didConnect
         self.url = url
+    }
+
+    public init(url: String, didConnect: @escaping (WebSocket) throws -> Void) throws {
+        guard let url = URL(string: url) else {
+            throw URLError.invalidURL
+        }
+        try self.init(url: url, didConnect: didConnect)
     }
 
     public func connect() throws {

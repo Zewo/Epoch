@@ -1,4 +1,4 @@
-public enum CloseCode: Equatable {
+public enum CloseCode : Equatable {
     case normal
     case goingAway
     case protocolError

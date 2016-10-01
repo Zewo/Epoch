@@ -1,7 +1,7 @@
 import Core
-import Foundation
+import struct Foundation.Data
 
-public enum WebSocketError: Error {
+public enum WebSocketError : Error {
     case noFrame
     case invalidOpCode
     case maskedFrameFromServer
@@ -18,6 +18,7 @@ public enum WebSocketError: Error {
 
 public final class WebSocket {
     fileprivate static let GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+    public let bufferSize = 4096
 
     public enum Mode {
         case server
@@ -138,7 +139,7 @@ public final class WebSocket {
     public func start() throws {
         while !stream.closed {
             do {
-                let data = try stream.read(upTo: 4096)
+                let data = try stream.read(upTo: self.bufferSize)
                 try processData(data)
             } catch StreamError.closedStream {
                 break

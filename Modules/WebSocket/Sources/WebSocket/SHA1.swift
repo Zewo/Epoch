@@ -53,12 +53,12 @@ func arrayOfBytes<T>(_ value: T, length: Int? = nil) -> [UInt8] {
 func toUInt32Array(_ slice: ArraySlice<UInt8>) -> Array<UInt32> {
     var result = Array<UInt32>()
     result.reserveCapacity(16)
-    for idx in stride(from: slice.startIndex, to: slice.endIndex, by: MemoryLayout<UInt32>.size) {
-        let val1:UInt32 = (UInt32(slice[idx.advanced(by: 3)]) << 24)
-        let val2:UInt32 = (UInt32(slice[idx.advanced(by: 2)]) << 16)
-        let val3:UInt32 = (UInt32(slice[idx.advanced(by: 1)]) << 8)
-        let val4:UInt32 = UInt32(slice[idx])
-        let val:UInt32 = val1 | val2 | val3 | val4
+    for index in stride(from: slice.startIndex, to: slice.endIndex, by: MemoryLayout<UInt32>.size) {
+        let val1 = (UInt32(slice[index + 3]) << 24)
+        let val2 = (UInt32(slice[index + 2]) << 16)
+        let val3 = (UInt32(slice[index + 1]) << 8)
+        let val4 = UInt32(slice[index])
+        let val = val1 | val2 | val3 | val4
         result.append(val)
     }
 
@@ -70,14 +70,13 @@ let h: [UInt32] = [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0]
 
 func sha1(_ data: [UInt8]) -> [UInt8] {
     let len = 64
-    let originalMessage = data
-    var tmpMessage = originalMessage
+    var message = data
 
     // Step 1. Append Padding Bits
-    tmpMessage.append(0x80) // append one bit (UInt8 with one bit) to message
+    message.append(0x80) // append one bit (UInt8 with one bit) to message
 
     // append "0" bit until message length in bits ≡ 448 (mod 512)
-    var msgLength = tmpMessage.count
+    var msgLength = message.count
     var counter = 0
 
     while msgLength % len != (len - 8) {
@@ -86,18 +85,18 @@ func sha1(_ data: [UInt8]) -> [UInt8] {
     }
 
     for _ in 0..<counter {
-        tmpMessage.append(0)
+        message.append(0)
     }
 
     // hash values
     var hh = h
 
     // append message length, in a 64-bit big-endian integer. So now the message length is a multiple of 512 bits.
-    tmpMessage.append(contentsOf: arrayOfBytes(originalMessage.count * 8, length: 64 / 8))
+    message.append(contentsOf: arrayOfBytes(data.count * 8, length: 64 / 8))
 
     // Process the message in successive 512-bit chunks:
     let chunkSizeBytes = 512 / 8 // 64
-    for chunk in BytesSequence(chunkSize: chunkSizeBytes, data: tmpMessage) {
+    for chunk in BytesSequence(chunkSize: chunkSizeBytes, data: message) {
         // break chunk into sixteen 32-bit words M[j], 0 ≤ j ≤ 15, big-endian
         // Extend the sixteen 32-bit words into eighty 32-bit words:
         var M:[UInt32] = [UInt32](repeating: 0, count: 80)

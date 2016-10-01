@@ -1,16 +1,12 @@
 import XCTest
 @testable import WebSocketServer
 
-public class WebSocketServerTests: XCTestCase {
-    func testReality() {
-        XCTAssert(2 + 2 == 4, "Something is severely wrong here.")
-    }
+public class WebSocketServerTests : XCTestCase {
 }
 
 extension WebSocketServerTests {
     public static var allTests: [(String, (WebSocketServerTests) -> () throws -> Void)] {
         return [
-           ("testReality", testReality),
         ]
     }
 }
