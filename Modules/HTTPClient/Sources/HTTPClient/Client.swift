@@ -20,11 +20,13 @@ public final class Client : Responder {
     public let verifyBundlePath: String?
     public let certificateChainPath: String?
 
+    let addUserAgent: Bool
+
     var stream: Stream?
     var serializer: RequestSerializer?
     var parser: MessageParser?
 
-    public init(url: URL, bufferSize: Int = 4096, connectionTimeout: Double = 3.minutes, requestTimeout: Double = 30.seconds, certificatePath: String? = nil, privateKeyPath: String? = nil, certificateChainPath: String? = nil, verifyBundlePath: String? = nil, keepAlive: Bool = true) throws {
+    public init(url: URL, bufferSize: Int = 4096, connectionTimeout: Double = 3.minutes, requestTimeout: Double = 30.seconds, certificatePath: String? = nil, privateKeyPath: String? = nil, certificateChainPath: String? = nil, verifyBundlePath: String? = nil, keepAlive: Bool = true, addUserAgent: Bool = true) throws {
         self.secure = try isSecure(url: url)
 
         let (host, port) = try getHostPort(url: url)
@@ -41,10 +43,12 @@ public final class Client : Responder {
         self.certificateChainPath = certificateChainPath
         self.verifyBundlePath = verifyBundlePath
 
+        self.addUserAgent = addUserAgent
+
         self.keepAlive = keepAlive
     }
 
-    public convenience init(url: String, bufferSize: Int = 4096, connectionTimeout: Double = 3.minutes, requestTimeout: Double = 30.seconds, certificatePath: String? = nil, privateKeyPath: String? = nil, verifyBundlePath: String? = nil, keepAlive: Bool = true) throws {
+    public convenience init(url: String, bufferSize: Int = 4096, connectionTimeout: Double = 3.minutes, requestTimeout: Double = 30.seconds, certificatePath: String? = nil, privateKeyPath: String? = nil, verifyBundlePath: String? = nil, keepAlive: Bool = true, addUserAgent: Bool = true) throws {
         guard let url = URL(string: url) else {
             throw URLError.invalidURL
         }
@@ -57,7 +61,8 @@ public final class Client : Responder {
             certificatePath: certificatePath,
             privateKeyPath: privateKeyPath,
             verifyBundlePath: verifyBundlePath,
-            keepAlive: keepAlive
+            keepAlive: keepAlive,
+            addUserAgent: addUserAgent
         )
     }
 }
@@ -113,11 +118,14 @@ extension Client {
     }
 
     private func addHeaders(to request: inout Request) {
-        request.host = "\(host):\(port)"
-        request.userAgent = "Zewo"
+        request.host = request.host ?? "\(host):\(port)"
 
-        if !keepAlive && request.connection == nil {
-            request.connection = "close"
+        if addUserAgent {
+            request.userAgent = request.userAgent ?? "Zewo"
+        }
+
+        if !keepAlive {
+            request.connection = request.connection ?? "close"
         }
     }
 
