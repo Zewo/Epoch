@@ -91,7 +91,6 @@ extension Client {
             try serializer.serialize(request, deadline: requestDeadline)
 
             while !stream.closed {
-                // read a chunk from the stream and try to parse it
                 let chunk = try stream.read(upTo: bufferSize, deadline: requestDeadline)
 
                 guard let message = try parser.parse(chunk).first else {
@@ -99,12 +98,12 @@ extension Client {
                     continue
                 }
 
-                // we made the parser in using the .response mode, so this is "safe"
+                // we made the parser in response mode, so this is "safe"
                 let response = message as! Response
 
                 if let upgrade = request.upgradeConnection {
                     // hand off the stream to something else, for
-                    // example this could be turned into websocket
+                    // example this turn into a websocket connection
                     try upgrade(response, stream)
                 }
 
@@ -112,7 +111,7 @@ extension Client {
                 //   the transaction is finished
                 // if the response is an error,
                 //   the transaction is finished (even if keepalive)
-                // if the stream _is_ keepalive,
+                // if the stream is keepalive,
                 //   it can be reused for more messages
                 if response.isError || !keepAlive {
                     self.stream = nil
