@@ -5,6 +5,19 @@ public enum Body {
 }
 
 extension Body {
+    public static var empty: Body {
+        return .buffer(.empty)
+    }
+
+    public var isEmpty: Bool {
+        switch self {
+        case .buffer(let buffer): return buffer.isEmpty
+        default: return false
+        }
+    }
+}
+
+extension Body {
     public var isBuffer: Bool {
         switch self {
         case .buffer: return true

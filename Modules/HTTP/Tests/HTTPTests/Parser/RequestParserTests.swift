@@ -225,6 +225,18 @@ public class RequestParserTests : XCTestCase {
             }
         }
     }
+
+    func testChunkedTransferEncodingBody() throws {
+        let data = "POST / HTTP/1.1\r\nTransfer-Encoding: chunked\r\n\r\n5\r\nHello\r\n0\r\n\r\n"
+        let parser = MessageParser(mode: .request)
+        let request = try parser.parse(data).first! as! Request
+        XCTAssert(request.method == .post)
+        XCTAssert(request.url.path == "/")
+        XCTAssert(request.version.major == 1)
+        XCTAssert(request.version.minor == 1)
+        XCTAssertEqual(request.headers.count, 1)
+        XCTAssertEqual(request.transferEncoding, "chunked")
+    }
 }
 
 extension RequestParserTests {

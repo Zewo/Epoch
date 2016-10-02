@@ -8,7 +8,7 @@ public class RequestTests : XCTestCase {
         XCTAssertEqual(request.url, URL(string: "/"))
         XCTAssertEqual(request.version, Version(major: 1, minor: 1))
         XCTAssertEqual(request.headers, ["Content-Length": "0"])
-        XCTAssertEqual(request.body, .buffer(Buffer()))
+        XCTAssertEqual(request.body, .empty)
 
         request = Request(body: BufferStream(buffer: "foo"))
         XCTAssertEqual(request.method, .get)
@@ -33,14 +33,14 @@ public class RequestTests : XCTestCase {
         XCTAssertEqual(request.url, URL(string: "/"))
         XCTAssertEqual(request.version, Version(major: 1, minor: 1))
         XCTAssertEqual(request.headers, ["Content-Length": "0"])
-        XCTAssertEqual(request.body, .buffer(Buffer()))
+        XCTAssertEqual(request.body, .empty)
 
         request = Request(url: "/")!
         XCTAssertEqual(request.method, .get)
         XCTAssertEqual(request.url, URL(string: "/"))
         XCTAssertEqual(request.version, Version(major: 1, minor: 1))
         XCTAssertEqual(request.headers, ["Content-Length": "0"])
-        XCTAssertEqual(request.body, .buffer(Buffer()))
+        XCTAssertEqual(request.body, .empty)
 
         request = Request(url: "/", body: BufferStream(buffer: "foo"))!
         XCTAssertEqual(request.method, .get)

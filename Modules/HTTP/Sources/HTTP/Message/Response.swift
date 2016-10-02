@@ -149,6 +149,18 @@ extension Response {
         return status.statusCode
     }
 
+    public var isInformational: Bool {
+        return status.isInformational
+    }
+
+    public var isSuccessfull: Bool {
+        return status.isSuccessful
+    }
+
+    public var isRedirection: Bool {
+        return status.isRedirection
+    }
+
     public var isError: Bool {
         return status.isError
     }

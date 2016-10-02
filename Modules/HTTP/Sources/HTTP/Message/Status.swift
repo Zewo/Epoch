@@ -66,7 +66,7 @@ extension Response.Status {
             case Response.Status.notExtended.statusCode:                   self = .notExtended
             case Response.Status.networkAuthenticationRequired.statusCode: self = .networkAuthenticationRequired
 
-            default: self = .other(statusCode: statusCode, reasonPhrase: "S4")
+            default: self = .other(statusCode: statusCode, reasonPhrase: "CUSTOM")
             }
         }
     }
@@ -192,7 +192,7 @@ extension Response.Status {
         case .unprocessableEntity:           return "Unprocessable Entity"
         case .locked:                        return "Locked"
         case .failedDependency:              return "Failed Dependency"
-        case .preconditionRequired:          return "PreconditionR equired"
+        case .preconditionRequired:          return "Precondition Required"
         case .tooManyRequests:               return "Too Many Requests"
         case .requestHeaderFieldsTooLarge:   return "Request Header Fields Too Large"
 
@@ -214,6 +214,18 @@ extension Response.Status {
 }
 
 extension Response.Status {
+    public var isInformational: Bool {
+        return 100 ..< 200 ~= statusCode
+    }
+
+    public var isSuccessful: Bool {
+        return 200 ..< 300 ~= statusCode
+    }
+
+    public var isRedirection: Bool {
+        return 300 ..< 400 ~= statusCode
+    }
+
     public var isError: Bool {
         return 400 ..< 600 ~= statusCode
     }
