@@ -134,15 +134,15 @@ extension RequestTests {
     public static var allTests: [(String, (RequestTests) -> () throws -> Void)] {
         return [
             ("testCreation", testCreation),
-            ("testCreation", testURLAccessors),
-            ("testCreation", testAcceptHeader),
-            ("testCreation", testCookieHeader),
-            ("testCreation", testHostHeader),
-            ("testCreation", testUserAgentHeader),
-            ("testCreation", testAuthorizationHeader),
-            ("testCreation", testUpgradeConnection),
-            ("testCreation", testPathParameters),
-            ("testCreation", testDescription),
+            ("testURLAccessors", testURLAccessors),
+            ("testAcceptHeader", testAcceptHeader),
+            ("testCookieHeader", testCookieHeader),
+            ("testHostHeader", testHostHeader),
+            ("testUserAgentHeader", testUserAgentHeader),
+            ("testAuthorizationHeader", testAuthorizationHeader),
+            ("testUpgradeConnection", testUpgradeConnection),
+            ("testPathParameters", testPathParameters),
+            ("testDescription", testDescription),
         ]
     }
 }
