@@ -8,6 +8,7 @@
     <a href="http://slack.zewo.io"><img src="https://zewo-slackin.herokuapp.com/badge.svg" alt="Slack" /></a>
     <a href="https://travis-ci.org/Zewo/Zewo"><img src="https://travis-ci.org/Zewo/Zewo.svg" alt="Travis" /></a>
     <a href="https://codecov.io/gh/Zewo/Zewo"><img src="https://codecov.io/gh/Zewo/Zewo/branch/master/graph/badge.svg" alt="Codecov" /></a>
+    <a href="https://codebeat.co/projects/github-com-zewo-zewo"><img src="https://codebeat.co/badges/d580cc1f-5bdb-494b-8391-d147c7a287a1" alt="Codebeat" /></a>
     <a href="#backers"><img src="https://opencollective.com/zewo/backers/badge.svg"></a>
     <a href="#sponsors"><img src="https://opencollective.com/zewo/sponsors/badge.svg"></a>
 </p>
