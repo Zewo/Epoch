@@ -6,6 +6,6 @@
 [subrepo]
 	remote = https://github.com/Zewo/POSIX
 	branch = master
-	commit = 543e7257649a6a538da34594e5ee47e6cbbd33ae
-	parent = 54f2ea7ca6436e2e4ae6bb027933e4ea149f8dc1
+	commit = 6293d1a521e1e25c65f719cc7165a51af99090aa
+	parent = 1f37e488272193d8407cf3a77de3b7e8c8f58706
 	cmdver = 0.3.0
