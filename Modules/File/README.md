@@ -30,6 +30,7 @@ If you need any help you can join our [Slack](http://slack.zewo.io) and go to th
 The entire Zewo code base is licensed under MIT. By contributing to Zewo you are contributing to an open and engaged community of brilliant Swift programmers. Join us on [Slack](http://slack.zewo.io) to get to know us!
 
 ## License
+
 This project is released under the MIT license. See [LICENSE](LICENSE) for details.
 
 [swift-badge]: https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat
