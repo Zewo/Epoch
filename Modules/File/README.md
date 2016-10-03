@@ -42,3 +42,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 [slack-url]: http://slack.zewo.io
 [travis-badge]: https://travis-ci.org/Zewo/File.svg?branch=master
 [travis-url]: https://travis-ci.org/Zewo/File
+[codecov-badge]: https://codecov.io/gh/Zewo/File/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/Zewo/File
+[codebeat-badge]: https://codebeat.co/badges/9b2fed4e-b3e7-4177-86c0-35829730dfa7
+[codebeat-url]: https://codebeat.co/projects/github-com-zewo-file

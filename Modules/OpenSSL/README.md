@@ -45,5 +45,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 [slack-url]: http://slack.zewo.io
 [travis-badge]: https://travis-ci.org/Zewo/OpenSSL.svg?branch=master
 [travis-url]: https://travis-ci.org/Zewo/OpenSSL
+[codecov-badge]: https://codecov.io/gh/Zewo/OpenSSL/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/Zewo/OpenSSL
 [codebeat-badge]: https://codebeat.co/badges/60ea15e0-1814-45cc-ba3e-a16578e5fab5
 [codebeat-url]: https://codebeat.co/projects/github-com-zewo-openssl

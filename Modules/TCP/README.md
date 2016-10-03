@@ -77,3 +77,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 [slack-url]: http://slack.zewo.io
 [travis-badge]: https://travis-ci.org/Zewo/TCP.svg?branch=master
 [travis-url]: https://travis-ci.org/Zewo/TCP
+[codecov-badge]: https://codecov.io/gh/Zewo/TCP/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/Zewo/TCP
+[codebeat-badge]: https://codebeat.co/badges/ee0a363b-234e-4513-a735-288b24c6bbdd
+[codebeat-url]: https://codebeat.co/projects/github-com-zewo-tcp

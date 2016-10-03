@@ -42,3 +42,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 [slack-url]: http://slack.zewo.io
 [travis-badge]: https://travis-ci.org/Zewo/HTTPClient.svg?branch=master
 [travis-url]: https://travis-ci.org/Zewo/HTTPClient
+[codecov-badge]: https://codecov.io/gh/Zewo/HTTPClient/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/Zewo/HTTPClient
+[codebeat-badge]: https://codebeat.co/badges/bc032b4e-3a28-413e-a71c-c7467ce24499
+[codebeat-url]: https://codebeat.co/projects/github-com-zewo-httpclient
