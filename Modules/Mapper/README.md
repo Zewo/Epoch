@@ -24,22 +24,24 @@ And while reducing boilerplate, **Mapper** is also amazingly fast. It doesn't us
 
 ```swift
 struct City : InMappable, OutMappable {
+    
     let name: String
-    let population: UInt
+    let population: Int
+    
+    enum Keys : String, IndexPathElement {
+        case name, population
+    }
     
     init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
         self.name = try mapper.map(from: .name)
         self.population = try mapper.map(from: .population)
     }
     
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, City.Keys>) throws {
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Keys>) throws {
         try mapper.map(self.name, to: .name)
         try mapper.map(self.population, to: .population)
     }
     
-    enum Keys : String, IndexPathElement {
-        case name, population
-    }
 }
 
 enum Gender : String {
@@ -49,6 +51,7 @@ enum Gender : String {
 
 // Mappable = InMappable & OutMappable
 struct Person : Mappable {
+    
     let name: String
     let gender: Gender
     let city: City
@@ -56,13 +59,17 @@ struct Person : Mappable {
     let isRegistered: Bool
     let biographyPoints: [String]
     
+    enum Keys : String, IndexPathElement {
+        case name, gender, city, identifier, registered, biographyPoints
+    }
+    
     init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
         self.name = try mapper.map(from: .name)
         self.gender = try mapper.map(from: .gender)
         self.city = try mapper.map(from: .city)
         self.identifier = try mapper.map(from: .identifier)
         self.isRegistered = try mapper.map(from: .registered)
-        self.biographyPoints = try mapper.mapArray(from: .biographyPoints)
+        self.biographyPoints = try mapper.map(from: .biographyPoints)
     }
     
     func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Person.Keys>) throws {
@@ -71,12 +78,9 @@ struct Person : Mappable {
         try mapper.map(self.city, to: .city)
         try mapper.map(self.identifier, to: .identifier)
         try mapper.map(self.isRegistered, to: .registered)
-        try mapper.mapArray(self.biographyPoints, to: .biographyPoints)
+        try mapper.map(self.biographyPoints, to: .biographyPoints)
     }
     
-    enum Keys : String, IndexPathElement {
-        case name, gender, city, identifier, registered, biographyPoints
-    }
 }
 
 let jessy = Person(from: json)
@@ -142,28 +146,27 @@ As you see, the code is pretty similar, easy to reason about, and very expressiv
 
 As you see, both mappers have two generic arguments: `Source`/`Destination`, which is the structured data format, and `Keys`, which is specific `Keys` defined for your model. 
 
-Actually, if you don't want to write that `Keys`, we made `StringInMappable`/`StringOutMappable` just for you.
+Actually, if you don't want to write that `Keys`, we made `BasicInMappable`/`BasicOutMappable` just for you.
 
 ```swift
-struct Planet : StringInMappable, StringOutMappable {
+struct Planet : BasicInMappable, BasicOutMappable {
     
     let radius: Int
     
-    init<Source : InMap>(mapper: StringInMapper<Source>) throws {
+    init<Source : InMap>(mapper: BasicInMapper<Source>) throws {
         self.radius = try mapper.map(from: "radius")
     }
     
-    func outMap<Destination : OutMap>(mapper: inout StringOutMapper<Destination>) throws {
-        try mapper.map(self.radius, to: "radius")
+    func outMap<Destination : OutMap>(mapper: inout BasicOutMapper<Destination>) throws {
+        try mapper.map(radius, to: "radius")
     }
     
 }
-
 ```
 
 #### Mapping arrays
 
-To map array, you need to use `mapArray` functions instead of `map`. Please, be careful here -- you will get `wrongType` error if you forget to use `mapArray`.
+You can map array just like anything else -- simply by using `.map`.
 
 ```swift
 struct Album : Mappable {
@@ -175,11 +178,11 @@ struct Album : Mappable {
     }
     
     init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
-        self.songs = try mapper.mapArray(from: .songs)
+        self.songs = try mapper.map(from: .songs)
     }
     
     func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Album.Keys>) throws {
-        try mapper.mapArray(self.songs, to: .songs)
+        try mapper.map(self.songs, to: .songs)
     }
     
 }
@@ -282,7 +285,7 @@ Tutorial by example: making **Foundation**'s `Date` conform to `Mappable`.
 extension Date : Mappable {
     
     public init<Source : InMap>(mapper: PlainInMapper<Source>) throws {
-        let interval: Double = try mapper.map()
+        let interval: TimeInterval = try mapper.map()
         self.init(timeIntervalSince1970: interval)
     }
     
@@ -295,27 +298,57 @@ extension Date : Mappable {
 
 Mappers take variadic parameter as index path, so it's possible to pass no index path at all. We call it "plain mapping".
 
-#### Mapping of external classes
+#### "Unsafe" mapping
 
-If you have some classes that you don't have direct access to (for example, **Cocoa** classes), and you want to make them `Mappable` for some reason, you should use `ExternalInMappable`/`ExternalOutMappable` with this approach:
+**Mapper** can work only with four basic "primitive" types: `Int`, `Double`, `Bool`, `String` (these four are expected to work with any **Mapper**-conforming type). But, of course, you can map other, more specific primitive types that your format supports. In order to do that, you should use `.unsafe_map` and `.unsafe_mapArray` methods:
 
 ```swift
-extension ExternalInMappable where Self : NSDate {
-    public init<Source : InMap>(mapper: ExternalInMapper<Source>) throws {
+struct TeamStat : Mappable {
+
+    let rate: Int32
+    let goals: [Int32]
+    
+    enum Keys : String, IndexPathElement {
+        case rate, goals
+    }
+    
+    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+        self.rate = try mapper.unsafe_map(from: .rate)
+        self.goals = try mapper.unsafe_mapArray(from: .goals)
+    }
+    
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, TeamStat.Keys>) throws {
+        try mapper.unsafe_map(self.rate, to: .rate)
+        try mapper.unsafe_mapArray(self.goals, to: .goals)
+    }
+
+}
+
+// `BSON` supports `Int32` directly, so
+let stat = try TeamStat(from: mongoDocument)
+```
+
+#### Mapping of external classes
+
+If you have some classes that you don't have direct access to (for example, **Cocoa** classes), and you want to make them `Mappable` for some reason, you should use `BasicInMappable `/`BasicOutMappable ` with this approach:
+
+```swift
+extension BasicInMappable where Self : NSDate {
+    public init<Source : InMap>(mapper: BasicInMapper<Source>) throws {
         let interval: TimeInterval = try mapper.map()
         self.init(timeIntervalSince1970: interval)
     }
 }
 
-extension NSDate : ExternalInMappable { }
+extension NSDate : BasicInMappable { }
 
-extension ExternalOutMappable where Self : NSDate {
-    public func outMap<Destination : OutMap>(mapper: inout ExternalOutMapper<Destination>) throws {
+extension BasicOutMappable where Self : NSDate {
+    public func outMap<Destination : OutMap>(mapper: inout BasicOutMapper<Destination>) throws {
         try mapper.map(self.timeIntervalSince1970)
     }
 }
 
-extension NSDate : ExternalOutMappable { }
+extension NSDate : BasicOutMappable { }
 ```
 
 Now `NSDate` can be mapped as usual.
@@ -352,6 +385,10 @@ public protocol InMap {
     func get(at indexPath: [IndexPathElement]) -> Self?
     func asArray() -> [Self]?
     func get<T>() -> T?
+    var int: Int? { get }
+    var double: Double? { get }
+    var bool: Bool? { get }
+    var string: String? { get }
 }
 ```
 
@@ -404,6 +441,34 @@ extension MapperMap : InMap {
         }
     }
     
+    public var int: Int? {
+        if case .int(let value) = self {
+            return value
+        }
+        return nil
+    }
+    
+    public var double: Double? {
+        if case .double(let value) = self {
+            return value
+        }
+        return nil
+    }
+    
+    public var bool: Bool? {
+        if case .bool(let value) = self {
+            return value
+        }
+        return nil
+    }
+    
+    public var string: String? {
+        if case .string(let value) = self {
+            return value
+        }
+        return nil
+    }
+    
     public func asArray() -> [MapperMap]? {
         if case .array(let array) = self {
             return array
@@ -413,6 +478,8 @@ extension MapperMap : InMap {
     
 }
 ```
+
+So here what's going on: in `get<T>()` you just try to return in *any* of the type you directly support, that's it.
 
 That seems nice. But not always we have situation that ordinary. Let's pretend that now we have new format:
 
@@ -438,36 +505,47 @@ Here, it's important to mention one thing.
 - `String`
 - `Bool`
 
-If your format supports more -- that's nice, but these four should be supported out-of-the-box.
-
 As you see, our `MapperNeomap` doesn't support `Int` and `Double`. So we should do this:
 
 ```swift
-public func get<T>() -> T? {
-    switch self {
-    case .bool(let bool as T):
-        return bool
-    case .int32(let int32):
-        if T.self == Int.self {
-            return Int(int32) as? T
+extension MapperNeomap : InMap {
+    public func get<T>() -> T? {
+        switch self {
+        case .bool(let value as T):         return value
+        case .int32(let value as T):        return value
+        case .uint(let value as T):         return value
+        case .uint8(let value as T):        return value
+        case .string(let value as T):       return value
+        case .float(let value as T):        return value
+        case .array(let value as T):        return value
+        case .dictionary(let value as T):   return value
         }
-        return int32 as? T
-    case .uint(let uint):
-        if T.self == Int.self {
-            return Int(uint) as? T
+    }
+    
+    public var int: Int? {
+        switch self {
+        case .int32(let value):     return Int(value)
+        case .uint(let value):      return Int(value)
+        case .uint8(let value):     return Int(value)
         }
-        return uint as? T
-    case .string(let string as T):
-        return string
-    case .float(let float):
-        if T.self == Double.self {
-            return Double(float) as? T
+    }
+    
+    public var double: Double? {
+        if case .float(let value) = self {
+            return Double(value)
         }
-        return float as? T
-    case .array(let array as T):
-        return array
-    case .dictionary(let dict as T):
-        return dict
+    }
+    
+    public var bool: Bool? {
+        if case .bool(let value) = self {
+            return value
+        }
+    }
+    
+    public var string: String? {
+        if case .string(let value) = self {
+            return value
+        }
     }
 }
 ```
@@ -483,6 +561,10 @@ public protocol OutMap {
     mutating func set(_ map: Self, at indexPath: [IndexPathElement]) throws
     static func fromArray(_ array: [Self]) -> Self?
     static func from<T>(_ value: T) -> Self?
+    static func from(_ int: Int) -> Self?
+    static func from(_ double: Double) -> Self?
+    static func from(_ bool: Bool) -> Self?
+    static func from(_ string: String) -> Self?
 }
 ```
 
@@ -536,51 +618,82 @@ extension MapperMap : OutMap {
         return nil
     }
     
+    public static func from(_ int: Int) -> MapperMap? {
+        return MapperMap.int(int)
+    }
+    
+    public static func from(_ double: Double) -> MapperMap? {
+        return MapperMap.double(double)
+    }
+
+    public static func from(_ bool: Bool) -> MapperMap? {
+        return MapperMap.bool(bool)
+    }
+
+    public static func from(_ string: String) -> MapperMap? {
+        return MapperMap.string(string)
+    }
+
 }
 ```
 
 And our neomap counterpart:
 
 ```swift
-public static func from<T>(_ value: T) -> MapperNeomap? {
-    if let int = value as? Int {
-        let i32 = Int32(int)
-        return .int32(i32)
+extension MapperNeomap : OutMap {
+    
+    public static func from<T>(_ value: T) -> MapperNeomap? {
+        if let string = value as? String {
+            return .string(string)
+        }
+        if let bool = value as? Bool {
+            return .bool(bool)
+        }
+        if let i32 = value as? Int32 {
+            return .int32(i32)
+        }
+        if let uint = value as? UInt {
+            return .uint(uint)
+        }
+        if let uint8 = value as? UInt8 {
+            return .uint8(uint8)
+        }
+        if let float = value as? Float {
+            return .float(float)
+        }
+        if let array = value as? [MapperNeomap] {
+            return .array(array)
+        }
+        if let dict = value as? [String: MapperNeomap] {
+            return .dictionary(dict)
+        }
+        return nil
     }
-    if let double = value as? Double {
-        let float = Float(double)
-        return .float(float)
+    
+    public static func from(_ int: Int) -> MapperNeomap? {
+        return .int32(Int32(int))
     }
-    if let string = value as? String {
-        return .string(string)
+    
+    public static func from(_ double: Double) -> MapperNeomap? {
+        return .float(Float(double))
     }
-    if let bool = value as? Bool {
+    
+    public static func from(_ bool: Bool) -> MapperNeomap? {
         return .bool(bool)
     }
-    if let i32 = value as? Int32 {
-        return .int32(i32)
+    
+    public static func from(_ string: String) -> MapperNeomap? {
+        return .string(string)
     }
-    if let uint = value as? UInt {
-        return .uint(uint)
-    }
-    if let float = value as? Float {
-        return .float(float)
-    }
-    if let array = value as? [MapperNeomap] {
-        return .array(array)
-    }
-    if let dict = value as? [String: MapperNeomap] {
-        return .dictionary(dict)
-    }
-    return nil
-}
 
+}
 ```
 
 Well, that's it! Now one can easily map strongly-typed instances from and to your data type!
 
 ```swift
 let user = try User(from: mapperMap)
+let userMap: MapperMap = try user.map()
 ```
 
 ## Installation
