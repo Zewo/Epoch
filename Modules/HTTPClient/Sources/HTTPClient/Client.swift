@@ -92,25 +92,43 @@ extension Client {
             // TODO: Add deadline to serializer
             // TODO: Deal with multiple responses
 
+            // send the request down the stream
             try serializer.serialize(request, deadline: requestDeadline)
-            
-            var response: Response!
+
             while !stream.closed {
                 let chunk = try stream.read(upTo: bufferSize, deadline: requestDeadline)
-                for message in try parser.parse(chunk) {
-                    response = message as! Response
+
+                guard let message = try parser.parse(chunk).first else {
+                    // if theres no message, loop and read more
+                    continue
                 }
+
+                // we made the parser in response mode, so this is "safe"
+                let response = message as! Response
+
+                if let upgrade = request.upgradeConnection {
+                    // hand off the stream to something else, for
+                    // example this turn into a websocket connection
+                    try upgrade(response, stream)
+                }
+
+                // if the stream is not keepalive,
+                //   the transaction is finished
+                // if the response is an error,
+                //   the transaction is finished (even if keepalive)
+                // if the stream is keepalive,
+                //   it can be reused for more messages
+                if response.isError || !keepAlive {
+                    self.stream = nil
+                    stream.close()
+                }
+
+                return response
             }
 
-            if let upgrade = request.upgradeConnection {
-                try upgrade(response, stream)
-            }
+            // stream closed before we got a response out of it
+            throw StreamError.closedStream
 
-            if response.isError || !keepAlive {
-                self.stream = nil
-            }
-
-            return response
         } catch let error as StreamError {
             self.stream = nil
             throw error
