@@ -302,6 +302,8 @@ remote: Verifying deploy... done.
 
 That's it. Your app is now live! 😎 You can check mine on [https://hello-zewo-1969.herokuapp.com/hello](https://hello-zewo-1969.herokuapp.com/hello).
 
+⚠️ It may take a while for the page to load. Free heroku dynos sleep when there's no activity in a certain amount of time. After the dyno wakes up, subsequent access should be instantaneous.
+
 ### What's next?
 
 Check out our [organization](https://github.com/Zewo) for more. You can also take a look at our [documentation](http://docs.zewo.io). If you have any doubts you can reach us at our [slack](http://slack.zewo.io). We're very active and always ready to help.
