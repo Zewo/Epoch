@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/Zewo/Axis
+	branch = master
+	commit = a264bcefb7e634d0ffe8c9b0766f67feaa65f6aa
+	parent = 15f3f7b96760a9d9e745982c9e2ca5cf3ea02f26
+	cmdver = 0.3.0
