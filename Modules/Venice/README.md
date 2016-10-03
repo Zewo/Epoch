@@ -4,6 +4,8 @@
 [![License][mit-badge]][mit-url]
 [![Slack][slack-badge]][slack-url]
 [![Travis][travis-badge]][travis-url]
+[![Codecov][codecov-badge]][codecov-url]
+[![Codebeat][codebeat-badge]][codebeat-url]
 
 **Venice** provides [CSP](https://en.wikipedia.org/wiki/Communicating_sequential_processes) for **Swift 3.0**.
 
