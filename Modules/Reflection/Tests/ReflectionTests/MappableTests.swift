@@ -27,7 +27,7 @@ extension Mappable {
     }
 }
 
-class MappableTests : XCTestCase {
+public class MappableTests : XCTestCase {
     func testMappable() throws {
         struct Person : Mappable {
             var firstName: String
@@ -62,7 +62,7 @@ class MappableTests : XCTestCase {
 }
 
 extension MappableTests {
-    static var allTests: [(String, (MappableTests) -> () throws -> Void)] {
+    public static var allTests: [(String, (MappableTests) -> () throws -> Void)] {
         return [
             ("testMappable", testMappable)
         ]
