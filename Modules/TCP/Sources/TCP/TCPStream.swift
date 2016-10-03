@@ -21,7 +21,7 @@ public final class TCPStream : Stream {
 
     public func open(deadline: Double) throws {
         guard let socket = tcpconnect(ip.address, deadline.int64milliseconds) else {
-            throw TCPError.failedToCreateSocket
+            throw SystemError.lastOperationError!
         }
         try ensureLastOperationSucceeded()
         self.socket = socket
