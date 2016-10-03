@@ -118,6 +118,12 @@ public struct Buffer : RandomAccessCollection {
     }
 }
 
+extension Buffer {
+    public static var empty: Buffer {
+        return Buffer()
+    }
+}
+
 extension UnsafeBufferPointer {
     public init() {
         self.init(start: nil, count: 0)

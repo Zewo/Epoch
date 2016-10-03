@@ -6,6 +6,12 @@ public struct Headers {
     }
 }
 
+extension Headers {
+    public static var empty: Headers {
+        return Headers()
+    }
+}
+
 extension Headers : ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (CaseInsensitiveString, String)...) {
         var headers: [CaseInsensitiveString: String] = [:]

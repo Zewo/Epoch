@@ -7,7 +7,7 @@ public class ResponseTests : XCTestCase {
         XCTAssertEqual(response.status, .ok)
         XCTAssertEqual(response.version, Version(major: 1, minor: 1))
         XCTAssertEqual(response.headers, ["Content-Length": "0"])
-        XCTAssertEqual(response.body, .buffer(Buffer()))
+        XCTAssertEqual(response.body, .empty)
 
         response = Response(body: BufferStream(buffer: "foo"))
         XCTAssertEqual(response.status, .ok)
@@ -29,7 +29,7 @@ public class ResponseTests : XCTestCase {
         XCTAssertEqual(response.status, .ok)
         XCTAssertEqual(response.version, Version(major: 1, minor: 1))
         XCTAssertEqual(response.headers, ["Content-Length": "0"])
-        XCTAssertEqual(response.body, .buffer(Buffer()))
+        XCTAssertEqual(response.body, .empty)
     }
 
     func testStatusAccessors() throws {
