@@ -6,6 +6,6 @@
 [subrepo]
 	remote = https://github.com/Zewo/OpenSSL
 	branch = master
-	commit = d809c7ad7f303999cbad79285440ed0e8926a6ba
-	parent = 490f716cd54712ea636221a96f39ee20b67d2021
+	commit = ea5b7653d4968cd0802a3b73b8f38b9c49940ca1
+	parent = cd9ecfc1c5d499172b3e2c950b73d9eca7c1f442
 	cmdver = 0.3.0
