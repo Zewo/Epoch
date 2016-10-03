@@ -303,7 +303,7 @@ That's it. Your app is now live! 😎 You can check mine on [https://hello-zewo-
 
 ### What's next?
 
-Check out our [organization](https://github.com/Zewo) for more. You can also take a look at our [documentation](http://zewo.readme.io). If you have any doubts you can reach us at our [slack](http://slack.zewo.io). We're very active and always ready to help.
+Check out our [organization](https://github.com/Zewo) for more. You can also take a look at our [documentation](http://docs.zewo.io). If you have any doubts you can reach us at our [slack](http://slack.zewo.io). We're very active and always ready to help.
 
 ## Support
 
