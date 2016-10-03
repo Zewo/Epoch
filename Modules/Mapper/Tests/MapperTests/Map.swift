@@ -276,19 +276,31 @@ extension Map {
 
 extension Map {
     public var bool: Bool? {
-        return try? get()
+        if case .bool(let value) = self {
+            return value
+        }
+        return nil
     }
     
     public var double: Double? {
-        return try? get()
+        if case .double(let value) = self {
+            return value
+        }
+        return nil
     }
     
     public var int: Int? {
-        return try? get()
+        if case .int(let value) = self {
+            return value
+        }
+        return nil
     }
     
     public var string: String? {
-        return try? get()
+        if case .string(let value) = self {
+            return value
+        }
+        return nil
     }
     
     public var array: [Map]? {
