@@ -61,11 +61,13 @@ public class RequestTests : XCTestCase {
     }
 
     func testURLAccessors() throws {
-        guard let request = Request(url: "/foo?bar=baz") else {
-            return XCTFail()
-        }
-        XCTAssertEqual(request.path, "/foo")
-        XCTAssertEqual(request.queryItems, [URLQueryItem(name: "bar", value: "baz")])
+        #if os(macOS)
+            guard let request = Request(url: "/foo?bar=baz") else {
+                return XCTFail()
+            }
+            XCTAssertEqual(request.path, "/foo")
+            XCTAssertEqual(request.queryItems, [URLQueryItem(name: "bar", value: "baz")])
+        #endif
     }
 
     func testAcceptHeader() throws {
