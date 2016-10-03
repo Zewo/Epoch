@@ -1,4 +1,5 @@
 import XCTest
+import Foundation
 @testable import Mapper
 
 struct Test1: InMappable {
@@ -256,19 +257,19 @@ extension AdvancedEnum: InMappable {
     }
     
     extension NSDate : BasicInMappable { }
+    
+    struct Test15 : InMappable {
+        let date: NSDate
+        
+        enum Keys : String, IndexPathElement {
+            case date
+        }
+        
+        init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+            self.date = try mapper.map(from: .date)
+        }
+    }
 #endif
-    
-struct Test15 : InMappable {
-    let date: NSDate
-    
-    enum Keys : String, IndexPathElement {
-        case date
-    }
-    
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
-        self.date = try mapper.map(from: .date)
-    }
-}
 
 class InMapperTests: XCTestCase {
     
