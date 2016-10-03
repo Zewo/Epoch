@@ -247,15 +247,17 @@ extension AdvancedEnum: InMappable {
     }
 }
 
-extension BasicInMappable where Self : NSDate {
-    public init<Source : InMap>(mapper: BasicInMapper<Source>) throws {
-        let interval: TimeInterval = try mapper.map()
-        self.init(timeIntervalSince1970: interval)
+#if os(macOS)
+    extension BasicInMappable where Self : NSDate {
+        public init<Source : InMap>(mapper: BasicInMapper<Source>) throws {
+            let interval: TimeInterval = try mapper.map()
+            self.init(timeIntervalSince1970: interval)
+        }
     }
-}
-
-extension NSDate : BasicInMappable { }
-
+    
+    extension NSDate : BasicInMappable { }
+#endif
+    
 struct Test15 : InMappable {
     let date: NSDate
     
@@ -420,12 +422,14 @@ class InMapperTests: XCTestCase {
     }
     
     func testExternalMappable() throws {
-        let date = NSDate()
-        let map: Map = [
-            "date": Map(date.timeIntervalSince1970)
-        ]
-        let test = try Test15(from: map)
-        XCTAssertEqual(test.date.timeIntervalSince1970, date.timeIntervalSince1970)
+        #if os(macOS)
+            let date = NSDate()
+            let map: Map = [
+                "date": Map(date.timeIntervalSince1970)
+            ]
+            let test = try Test15(from: map)
+            XCTAssertEqual(test.date.timeIntervalSince1970, date.timeIntervalSince1970)
+        #endif
     }
     
 }

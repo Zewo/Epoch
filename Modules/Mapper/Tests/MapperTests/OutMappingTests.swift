@@ -107,14 +107,16 @@ struct OutDictTest: OutMappable {
     }
 }
 
-extension BasicOutMappable where Self : NSDate {
-    public func outMap<Destination : OutMap>(mapper: inout BasicOutMapper<Destination>) throws {
-        try mapper.map(self.timeIntervalSince1970)
+#if os(macOS)
+    extension BasicOutMappable where Self : NSDate {
+        public func outMap<Destination : OutMap>(mapper: inout BasicOutMapper<Destination>) throws {
+            try mapper.map(self.timeIntervalSince1970)
+        }
     }
-}
-
-extension NSDate : BasicOutMappable { }
-
+    
+    extension NSDate : BasicOutMappable { }
+#endif
+    
 extension Test15 : OutMappable {
     func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Test15.Keys>) throws {
         try mapper.map(self.date, to: .date)
@@ -204,14 +206,16 @@ class OutMapperTests: XCTestCase {
     }
     
     func testExternalMappable() throws {
-        let date = NSDate()
-        let dict: Map = [
-            "date": Map(date.timeIntervalSince1970)
-        ]
-        let test = try Test15(from: dict)
-        let back = try test.map() as Map
-        let backDate: TimeInterval = back["date"].double!
-        XCTAssertEqual(date.timeIntervalSince1970, backDate)
+        #if os(macOS)
+            let date = NSDate()
+            let dict: Map = [
+                "date": Map(date.timeIntervalSince1970)
+            ]
+            let test = try Test15(from: dict)
+            let back = try test.map() as Map
+            let backDate: TimeInterval = back["date"].double!
+            XCTAssertEqual(date.timeIntervalSince1970, backDate)
+        #endif
     }
     
 //    func testStringAnyExhaustive() throws {
