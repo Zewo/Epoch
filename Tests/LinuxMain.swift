@@ -1,5 +1,5 @@
 import XCTest
-import CoreTests
+import AxisTests
 import FileTests
 // import HTTPClientTests
 // import HTTPFileTests
@@ -20,7 +20,7 @@ var testCases = [
     testCase(ThreadTests.allTests),
     testCase(LockTests.allTests),
 
-    // Core
+    // Axis
     testCase(JSONTests.allTests),
     testCase(LoggerTests.allTests),
     testCase(InternalTests.allTests),

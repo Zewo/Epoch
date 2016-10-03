@@ -4,7 +4,7 @@
     import Darwin.C
 #endif
 
-@_exported import Core
+@_exported import Axis
 import CLibvenice
 
 public enum FileMode {

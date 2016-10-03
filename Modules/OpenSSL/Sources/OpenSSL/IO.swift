@@ -1,5 +1,5 @@
 import COpenSSL
-import Core
+import Axis
 
 public enum SSLIOError: Error {
     case io(description: String)

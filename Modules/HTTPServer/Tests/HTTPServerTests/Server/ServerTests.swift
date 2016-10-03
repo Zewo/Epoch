@@ -2,7 +2,7 @@ import XCTest
 @testable import HTTPServer
 
 extension Server {
-    init(host: Core.Host, responder: Responder) throws {
+    init(host: Axis.Host, responder: Responder) throws {
         self.tcpHost = host
         self.host = "127.0.0.1"
         self.port = 8080
@@ -13,7 +13,7 @@ extension Server {
     }
 }
 
-final class ServerStream : Core.Stream {
+final class ServerStream : Axis.Stream {
     var inputBuffer: Buffer
     var outputBuffer = Buffer()
     var closed = false
@@ -63,7 +63,7 @@ final class ServerStream : Core.Stream {
     }
 }
 
-class TestHost : Core.Host {
+class TestHost : Axis.Host {
     let buffer: Buffer
     let closeOnFlush: Bool
 
@@ -72,7 +72,7 @@ class TestHost : Core.Host {
         self.closeOnFlush = closeOnFlush
     }
 
-    func accept(deadline: Double) throws -> Core.Stream {
+    func accept(deadline: Double) throws -> Axis.Stream {
         return ServerStream(buffer, closeOnFlush: closeOnFlush)
     }
 }
@@ -104,7 +104,7 @@ public class ServerTests : XCTestCase {
 
     func testServerRecover() throws {
         var called = false
-        var stream: Core.Stream = ServerStream()
+        var stream: Axis.Stream = ServerStream()
 
         let responder = BasicResponder { request in
             called = true
@@ -125,7 +125,7 @@ public class ServerTests : XCTestCase {
 
     func testServerNoRecover() throws {
         var called = false
-        var stream: Core.Stream = ServerStream()
+        var stream: Axis.Stream = ServerStream()
 
         let responder = BasicResponder { request in
             called = true
@@ -146,7 +146,7 @@ public class ServerTests : XCTestCase {
 
     func testBrokenPipe() throws {
         var called = false
-        var stream: Core.Stream = ServerStream()
+        var stream: Axis.Stream = ServerStream()
 
         let responder = BasicResponder { request in
             called = true
@@ -168,7 +168,7 @@ public class ServerTests : XCTestCase {
 
     func testNotKeepAlive() throws {
         var called = false
-        var stream: Core.Stream = ServerStream()
+        var stream: Axis.Stream = ServerStream()
 
         let responder = BasicResponder { request in
             called = true
@@ -193,7 +193,7 @@ public class ServerTests : XCTestCase {
     func testUpgradeConnection() throws {
         var called = false
         var upgradeCalled = false
-        var stream: Core.Stream = ServerStream()
+        var stream: Axis.Stream = ServerStream()
 
         let responder = BasicResponder { request in
             called = true

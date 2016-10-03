@@ -1,5 +1,5 @@
 import CLibvenice
-import Core
+import Axis
 
 public final class TCPStream : Stream {
     public var ip: IP

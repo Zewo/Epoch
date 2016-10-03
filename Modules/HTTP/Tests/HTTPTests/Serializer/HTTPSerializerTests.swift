@@ -1,5 +1,5 @@
 import XCTest
-@testable import Core
+@testable import Axis
 @testable import HTTP
 
 public class HTTPSerializerTests : XCTestCase {

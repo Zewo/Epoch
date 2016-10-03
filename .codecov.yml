@@ -7,7 +7,7 @@ coverage:
   range: "70...100"
 
   ignore:
-    - "Modules/Core/Tests/*"
+    - "Modules/Axis/Tests/*"
     - "Modules/File/Tests/*"
     - "Modules/HTTP/Tests/*"
     - "Modules/HTTPFile/Tests/*"

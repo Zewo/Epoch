@@ -1,4 +1,4 @@
-# Core
+# Axis
 
 [![Swift][swift-badge]][swift-url]
 [![License][mit-badge]][mit-url]
@@ -13,7 +13,7 @@ import PackageDescription
 
 let package = Package(
     dependencies: [
-        .Package(url: "https://github.com/Zewo/Core.git", majorVersion: 0, minor: 13),
+        .Package(url: "https://github.com/Zewo/Axis.git", majorVersion: 0, minor: 13),
     ]
 )
 ```
@@ -39,7 +39,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 [slack-image]: http://s13.postimg.org/ybwy92ktf/Slack.png
 [slack-badge]: https://zewo-slackin.herokuapp.com/badge.svg
 [slack-url]: http://slack.zewo.io
-[travis-badge]: https://travis-ci.org/Zewo/Core.svg?branch=master
-[travis-url]: https://travis-ci.org/Zewo/Core
+[travis-badge]: https://travis-ci.org/Zewo/Axis.svg?branch=master
+[travis-url]: https://travis-ci.org/Zewo/Axis
 [codebeat-badge]: https://codebeat.co/badges/45712aa0-d540-4b15-b82c-ed594f1fc5a6
-[codebeat-url]: https://codebeat.co/projects/github-com-zewo-core
+[codebeat-url]: https://codebeat.co/projects/github-com-zewo-axis

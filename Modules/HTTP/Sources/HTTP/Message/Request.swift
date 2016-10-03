@@ -1,4 +1,4 @@
-import Core
+import Axis
 
 public struct Request : Message {
     public enum Method {
@@ -78,7 +78,7 @@ extension Request {
         )
     }
 
-    public init(method: Method = .get, url: URL = URL(string: "/")!, headers: Headers = [:], body: Core.InputStream) {
+    public init(method: Method = .get, url: URL = URL(string: "/")!, headers: Headers = [:], body: InputStream) {
         self.init(
             method: method,
             url: url,
@@ -87,7 +87,7 @@ extension Request {
         )
     }
 
-    public init(method: Method = .get, url: URL = URL(string: "/")!, headers: Headers = [:], body: @escaping (Core.OutputStream) throws -> Void) {
+    public init(method: Method = .get, url: URL = URL(string: "/")!, headers: Headers = [:], body: @escaping (OutputStream) throws -> Void) {
         self.init(
             method: method,
             url: url,
@@ -111,7 +111,7 @@ extension Request {
         )
     }
 
-    public init?(method: Method = .get, url: String, headers: Headers = [:], body: Core.InputStream) {
+    public init?(method: Method = .get, url: String, headers: Headers = [:], body: InputStream) {
         guard let url = URL(string: url) else {
             return nil
         }
@@ -124,7 +124,7 @@ extension Request {
         )
     }
 
-    public init?(method: Method = .get, url: String, headers: Headers = [:], body: @escaping (Core.OutputStream) throws -> Void) {
+    public init?(method: Method = .get, url: String, headers: Headers = [:], body: @escaping (OutputStream) throws -> Void) {
         guard let url = URL(string: url) else {
             return nil
         }

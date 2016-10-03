@@ -1,5 +1,5 @@
 import XCTest
-@testable import Core
+@testable import Axis
 
 public class ConfigurationTests : XCTestCase {
     func testConfigurationErrorDescription() throws {

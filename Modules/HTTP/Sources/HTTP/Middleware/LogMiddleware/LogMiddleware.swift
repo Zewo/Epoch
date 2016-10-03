@@ -1,4 +1,4 @@
-import Core
+import Axis
 
 public struct LogMiddleware : Middleware {
     private let debug: Bool

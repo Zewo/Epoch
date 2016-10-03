@@ -1,5 +1,5 @@
 import COpenSSL
-import Core
+import Axis
 
 public enum SSLSessionError: Error {
     case session(description: String)

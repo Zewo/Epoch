@@ -1,5 +1,5 @@
 import CHTTPParser
-import Core
+import Axis
 
 public typealias MessageParserError = http_errno
 

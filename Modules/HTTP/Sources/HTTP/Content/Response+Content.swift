@@ -1,4 +1,4 @@
-import Core
+import Axis
 
 extension Response {
     public var content: Map? {

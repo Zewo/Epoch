@@ -4,7 +4,7 @@
 ; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
 ;
 [subrepo]
-	remote = https://github.com/Zewo/Core
+	remote = https://github.com/Zewo/Axis
 	branch = master
 	commit = a264bcefb7e634d0ffe8c9b0766f67feaa65f6aa
 	parent = abb2ab1793267dfc7e2c5faa9b93f7ca551dea7d

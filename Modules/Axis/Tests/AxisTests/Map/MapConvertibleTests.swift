@@ -1,5 +1,5 @@
 import XCTest
-@testable import Core
+@testable import Axis
 
 struct Human : MapConvertible {
     var firstName: String

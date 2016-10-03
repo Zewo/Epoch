@@ -1,5 +1,5 @@
 import XCTest
-@testable import CoreTests
+@testable import AxisTests
 
 XCTMain([
     testCase(JSONTests.allTests),

@@ -1,6 +1,5 @@
 import COpenSSL
-import Core
-
+import Axis
 
 internal extension Hash.Function {
 	var digestLength: Int {
