@@ -116,13 +116,13 @@ struct OutDictTest: OutMappable {
     }
     
     extension NSDate : BasicOutMappable { }
-#endif
     
-extension Test15 : OutMappable {
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Test15.Keys>) throws {
-        try mapper.map(self.date, to: .date)
+    extension Test15 : OutMappable {
+        func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Test15.Keys>) throws {
+            try mapper.map(self.date, to: .date)
+        }
     }
-}
+#endif
 
 class OutMapperTests: XCTestCase {
     
