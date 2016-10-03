@@ -19,7 +19,7 @@ extension Nest2: OutMappable {
 extension Test2: OutMappable {
     func outMap<Map : OutMap>(mapper: inout OutMapper<Map, Keys>) throws {
         try mapper.map(self.string, to: .string)
-        try mapper.mapArray(self.ints, to: .ints)
+        try mapper.map(self.ints, to: .ints)
         try mapper.map(self.nest, to: .nest)
     }
 }
@@ -34,7 +34,7 @@ struct Test14: OutMappable {
 
 extension Test5: OutMappable {
     func outMap<Map : OutMap>(mapper: inout OutMapper<Map, Keys>) throws {
-        try mapper.mapArray(self.nests, to: .nests)
+        try mapper.map(self.nests, to: .nests)
     }
 }
 
@@ -47,8 +47,8 @@ extension Test6: OutMappable {
 
 extension Test7: OutMappable {
     func outMap<Map : OutMap>(mapper: inout OutMapper<Map, Keys>) throws {
-        try mapper.mapArray(self.strings, to: .strings)
-        try mapper.mapArray(self.ints, to: .ints)
+        try mapper.map(self.strings, to: .strings)
+        try mapper.map(self.ints, to: .ints)
     }
 }
 
@@ -74,14 +74,14 @@ extension Test9: OutMappableWithContext {
 
 extension Test10: OutMappableWithContext {
     func outMap<Map : OutMap>(mapper: inout ContextualOutMapper<Map, String, TestContext>) throws {
-        try mapper.mapArray(self.nests, to: "nests")
+        try mapper.map(self.nests, to: "nests")
     }
 }
 
 extension Test11: OutMappable {
     func outMap<Map : OutMap>(mapper: inout OutMapper<Map, String>) throws {
         try mapper.map(self.nest, to: "nest", usingContext: .peach)
-        try mapper.mapArray(self.nests, to: "nests", usingContext: .orange)
+        try mapper.map(self.nests, to: "nests", usingContext: .orange)
     }
 }
 
@@ -102,18 +102,18 @@ struct OutDictTest: OutMappable {
         try mapper.map(int, to: "int")
         try mapper.map(string, to: "string")
         try mapper.map(nest, to: "nest")
-        try mapper.mapArray(strings, to: "strings")
-        try mapper.mapArray(nests, to: "nests")
+        try mapper.map(strings, to: "strings")
+        try mapper.map(nests, to: "nests")
     }
 }
 
-extension ExternalOutMappable where Self : NSDate {
-    public func outMap<Destination : OutMap>(mapper: inout ExternalOutMapper<Destination>) throws {
+extension BasicOutMappable where Self : NSDate {
+    public func outMap<Destination : OutMap>(mapper: inout BasicOutMapper<Destination>) throws {
         try mapper.map(self.timeIntervalSince1970)
     }
 }
 
-extension NSDate : ExternalOutMappable { }
+extension NSDate : BasicOutMappable { }
 
 extension Test15 : OutMappable {
     func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Test15.Keys>) throws {
@@ -137,15 +137,15 @@ class OutMapperTests: XCTestCase {
         XCTAssertEqual(dict, back)
     }
     
-    func testFailWrongType() {
-        let test = Test14(array: [1, 2, 3, 4, 5])
-        XCTAssertThrowsError(try test.map() as Map) { error in
-            guard let error = error as? OutMapperError, case .wrongType = error else {
-                XCTFail("Wrong error thrown; must be .wrongType")
-                return
-            }
-        }
-    }
+//    func testFailWrongType() {
+//        let test = Test14(array: [1, 2, 3, 4, 5])
+//        XCTAssertThrowsError(try test.map() as Map) { error in
+//            guard let error = error as? OutMapperError, case .wrongType = error else {
+//                XCTFail("Wrong error thrown; must be .wrongType")
+//                return
+//            }
+//        }
+//    }
     
     func testArrayOfMappables() throws {
         let nests: [Map] = [3, 1, 4, 6, 19].map({ .dictionary(["int": .int($0)]) })

@@ -12,6 +12,12 @@ public protocol OutMappable {
     
 }
 
+public protocol BasicOutMappable {
+    
+    func outMap<Destination : OutMap>(mapper: inout BasicOutMapper<Destination>) throws
+    
+}
+
 /// Entity which can be mapped to any structured data type in multiple ways using user-determined context instance.
 public protocol OutMappableWithContext : OutMappable {
     
@@ -27,12 +33,6 @@ public protocol OutMappableWithContext : OutMappable {
     ///
     /// - throws: `OutMapperError`
     func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, Keys, Context>) throws
-    
-}
-
-public protocol ExternalOutMappable {
-    
-    func outMap<Destination : OutMap>(mapper: inout ExternalOutMapper<Destination>) throws
     
 }
 
@@ -63,7 +63,7 @@ extension OutMappable {
     
 }
 
-extension ExternalOutMappable {
+extension BasicOutMappable {
     
     /// Maps `self` to `Destination` structured data instance.
     ///
@@ -73,7 +73,7 @@ extension ExternalOutMappable {
     ///
     /// - returns: structured data instance created from `self`.
     public func map<Destination : OutMap>(to destination: Destination = .blank) throws -> Destination {
-        var mapper = ExternalOutMapper<Destination>(of: destination)
+        var mapper = BasicOutMapper<Destination>(of: destination)
         try outMap(mapper: &mapper)
         return mapper.destination
     }

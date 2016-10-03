@@ -24,6 +24,18 @@ public protocol InMap {
     
     /// Returns representation of `self` as desired `T`, if possible.
     func get<T>() -> T?
+    
+    /// Returns representation of `self` as `Int`, if possible.
+    var int: Int? { get }
+    
+    /// Returns representation of `self` as `Double`, if possible.
+    var double: Double? { get }
+    
+    /// Returns representation of `self` as `Bool`, if possible.
+    var bool: Bool? { get }
+    
+    /// Returns representation of `self` as `String`, if possible.
+    var string: String? { get }
 
 }
 

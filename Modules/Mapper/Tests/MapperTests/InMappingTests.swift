@@ -36,7 +36,7 @@ struct Test2: InMappable {
     let nest: Nest2
     init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
         self.string = try mapper.map(from: .string)
-        self.ints = try mapper.mapArray(from: .ints)
+        self.ints = try mapper.map(from: .ints)
         self.nest = try mapper.map(from: .nest)
     }
     enum Keys: String, IndexPathElement {
@@ -59,7 +59,7 @@ struct Test3: InMappable {
 struct Test4: InMappable {
     let ints: [Int]
     init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
-        self.ints = try mapper.mapArray(from: .ints)
+        self.ints = try mapper.map(from: .ints)
     }
     enum Keys: String, IndexPathElement {
         case ints
@@ -69,7 +69,7 @@ struct Test4: InMappable {
 struct Test5: InMappable {
     let nests: [Nest2]
     init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
-        self.nests = try mapper.mapArray(from: .nests)
+        self.nests = try mapper.map(from: .nests)
     }
     enum Keys: String, IndexPathElement {
         case nests
@@ -104,8 +104,8 @@ struct Test7: InMappable {
     let strings: [StringEnum]
     let ints: [IntEnum]
     init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
-        self.strings = try mapper.mapArray(from: .strings)
-        self.ints = try mapper.mapArray(from: .ints)
+        self.strings = try mapper.map(from: .strings)
+        self.ints = try mapper.map(from: .ints)
     }
     enum Keys: String, IndexPathElement {
         case strings = "zewo-projects"
@@ -155,7 +155,7 @@ struct Test9: InMappableWithContext {
 struct Test10: InMappableWithContext {
     let nests: [Nest3]
     init<Source : InMap>(mapper: ContextualInMapper<Source, String, TestContext>) throws {
-        self.nests = try mapper.mapArray(from: "nests")
+        self.nests = try mapper.map(from: "nests")
     }
 }
 
@@ -164,7 +164,7 @@ struct Test11: InMappable {
     let nests: [Nest3]
     init<Source : InMap>(mapper: InMapper<Source, String>) throws {
         self.nest = try mapper.map(from: "nest", usingContext: .peach)
-        self.nests = try mapper.mapArray(from: "nests", usingContext: .orange)
+        self.nests = try mapper.map(from: "nests", usingContext: .orange)
     }
 }
 
@@ -178,7 +178,7 @@ struct Test12: InMappable {
 struct Test13: InMappable {
     let nests: [Nest2]
     init<Source : InMap>(mapper: InMapper<Source, String>) throws {
-        self.nests = try mapper.mapArray()
+        self.nests = try mapper.map()
     }
 }
 
@@ -202,8 +202,8 @@ struct DictTest: InMappable {
         self.string = try mapper.map(from: "here", "string")
         self.double = try mapper.map(from: "double")
         self.nest = try mapper.map(from: "nest")
-        self.strings = try mapper.mapArray(from: "strings")
-        self.nests = try mapper.mapArray(from: "nests")
+        self.strings = try mapper.map(from: "strings")
+        self.nests = try mapper.map(from: "nests")
         self.null = nil
     }
 }
@@ -247,14 +247,14 @@ extension AdvancedEnum: InMappable {
     }
 }
 
-extension ExternalInMappable where Self : NSDate {
-    public init<Source : InMap>(mapper: ExternalInMapper<Source>) throws {
+extension BasicInMappable where Self : NSDate {
+    public init<Source : InMap>(mapper: BasicInMapper<Source>) throws {
         let interval: TimeInterval = try mapper.map()
         self.init(timeIntervalSince1970: interval)
     }
 }
 
-extension NSDate : ExternalInMappable { }
+extension NSDate : BasicInMappable { }
 
 struct Test15 : InMappable {
     let date: NSDate

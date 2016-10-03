@@ -31,5 +31,34 @@ public protocol OutMap {
     ///
     /// - returns: instance from the given value. `nil` if conversion cannot be done.
     static func from<T>(_ value: T) -> Self?
+    
+    
+    /// Creates instance of `Self` from `Int`.
+    ///
+    /// - parameter int: input value.
+    ///
+    /// - returns: instance from the given `Int`. `nil` if conversion cannot be done.
+    static func from(_ int: Int) -> Self?
+    
+    /// Creates instance of `Self` from `Double`.
+    ///
+    /// - parameter int: input value.
+    ///
+    /// - returns: instance from the given `Double`. `nil` if conversion cannot be done.
+    static func from(_ double: Double) -> Self?
+    
+    /// Creates instance of `Self` from `Bool`.
+    ///
+    /// - parameter int: input value.
+    ///
+    /// - returns: instance from the given `Bool`. `nil` if conversion cannot be done.
+    static func from(_ bool: Bool) -> Self?
+    
+    /// Creates instance of `Self` from `String`.
+    ///
+    /// - parameter int: input value.
+    ///
+    /// - returns: instance from the given `String`. `nil` if conversion cannot be done.
+    static func from(_ string: String) -> Self?
 
 }

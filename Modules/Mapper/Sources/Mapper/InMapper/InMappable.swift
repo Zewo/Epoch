@@ -9,10 +9,11 @@ public protocol InMappable {
     
 }
 
-public protocol ExternalInMappable {
-    init<Source : InMap>(mapper: ExternalInMapper<Source>) throws
+public protocol BasicInMappable {
+    
+    init<Source : InMap>(mapper: BasicInMapper<Source>) throws
+    
 }
-
 
 /// Entity which can be mapped (initialized) from any structured data type in multiple ways using user-determined context instance.
 public protocol InMappableWithContext : InMappable {
@@ -39,6 +40,16 @@ extension InMappable {
     /// Creates instance from `source`.
     public init<Source : InMap>(from source: Source) throws {
         let mapper = InMapper<Source, Keys>(of: source)
+        try self.init(mapper: mapper)
+    }
+    
+}
+
+extension BasicInMappable {
+    
+    /// Creates instance from `source`.
+    public init<Source : InMap>(from source: Source) throws {
+        let mapper = BasicInMapper<Source>(of: source)
         try self.init(mapper: mapper)
     }
     

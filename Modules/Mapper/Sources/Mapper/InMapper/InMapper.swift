@@ -7,7 +7,7 @@ public protocol InMapperProtocol {
     
     /// Source of mapping (input).
     var source: Source { get }
-
+    
 }
 
 public enum InMapperError : Error {
@@ -33,6 +33,14 @@ fileprivate extension InMapperProtocol {
     
     func get<T>(from source: Source) throws -> T {
         if let value: T = source.get() {
+            return value
+        } else {
+            throw InMapperError.wrongType(T.self)
+        }
+    }
+    
+    func unwrap<T>(_ optional: T?) throws -> T {
+        if let value = optional {
             return value
         } else {
             throw InMapperError.wrongType(T.self)
@@ -67,14 +75,57 @@ extension InMapperProtocol {
     /// - throws: `InMapperError`.
     ///
     /// - returns: value at `indexPath` represented as `T`.
-    public func map<T>(from indexPath: IndexPath...) throws -> T {
-        #if MAPPER_ARRAY_WARN
-            if T is Sequence {
-                print("`map` used instead of `mapArray` when mapping \(indexPath)")
-            }
-        #endif
+    public func unsafe_map<T>(from indexPath: IndexPath...) throws -> T {
         let leveled = try dive(to: indexPath)
         return try get(from: leveled)
+    }
+    
+    /// Returns value at `indexPath` represented as `Int`.
+    ///
+    /// - parameter indexPath: path to desired value.
+    ///
+    /// - throws: `InMapperError`.
+    ///
+    /// - returns: value at `indexPath` represented as `Int`.
+    public func map(from indexPath: IndexPath...) throws -> Int {
+        let leveled = try dive(to: indexPath)
+        return try unwrap(leveled.int)
+    }
+    
+    /// Returns value at `indexPath` represented as `Double`.
+    ///
+    /// - parameter indexPath: path to desired value.
+    ///
+    /// - throws: `InMapperError`.
+    ///
+    /// - returns: value at `indexPath` represented as `Double`.
+    public func map(from indexPath: IndexPath...) throws -> Double {
+        let leveled = try dive(to: indexPath)
+        return try unwrap(leveled.double)
+    }
+    
+    /// Returns value at `indexPath` represented as `Bool`.
+    ///
+    /// - parameter indexPath: path to desired value.
+    ///
+    /// - throws: `InMapperError`.
+    ///
+    /// - returns: value at `indexPath` represented as `Bool`.
+    public func map(from indexPath: IndexPath...) throws -> Bool {
+        let leveled = try dive(to: indexPath)
+        return try unwrap(leveled.bool)
+    }
+    
+    /// Returns value at `indexPath` represented as `String`.
+    ///
+    /// - parameter indexPath: path to desired value.
+    ///
+    /// - throws: `InMapperError`.
+    ///
+    /// - returns: value at `indexPath` represented as `String`.
+    public func map(from indexPath: IndexPath...) throws -> String {
+        let leveled = try dive(to: indexPath)
+        return try unwrap(leveled.string)
     }
     
     /// Returns value at `indexPath` represented as `T`, when `T` itself is `InMappable`.
@@ -85,11 +136,6 @@ extension InMapperProtocol {
     ///
     /// - returns: value at `indexPath` represented as `T`.
     public func map<T : InMappable>(from indexPath: IndexPath...) throws -> T {
-        #if MAPPER_ARRAY_WARN
-            if T is Sequence {
-                print("`map` used instead of `mapArray` when mapping \(indexPath)")
-            }
-        #endif
         let leveled = try dive(to: indexPath)
         return try T(mapper: InMapper(of: leveled))
     }
@@ -103,25 +149,20 @@ extension InMapperProtocol {
     ///
     /// - returns: value at `indexPath` represented as `T`.
     public func map<T : InMappableWithContext>(from indexPath: IndexPath..., usingContext context: T.Context) throws -> T {
-        #if MAPPER_ARRAY_WARN
-            if T is Sequence {
-                print("`map` used instead of `mapArray` when mapping \(indexPath)")
-            }
-        #endif
         let leveled = try dive(to: indexPath)
         return try T(mapper: ContextualInMapper(of: leveled, context: context))
     }
     
-    /// Returns value at `indexPath` represented as `T`, when `T` itself is `ExternalInMappable`.
+    /// Returns value at `indexPath` represented as `T`, when `T` itself is `BasicInMappable`.
     ///
     /// - parameter indexPath: path to desired value.
     ///
     /// - throws: `InMapperError`.
     ///
     /// - returns: value at `indexPath` represented as `T`.
-    public func map<T : ExternalInMappable>(from indexPath: IndexPath...) throws -> T {
+    public func map<T : BasicInMappable>(from indexPath: IndexPath...) throws -> T {
         let leveled = try dive(to: indexPath)
-        return try T(mapper: ExternalInMapper(of: leveled))
+        return try T(mapper: BasicInMapper(of: leveled))
     }
     
     /// Returns value at `indexPath` represented as `T`, when `T` is `RawRepresentable` (in most cases - `enum` with raw type).
@@ -132,15 +173,9 @@ extension InMapperProtocol {
     ///
     /// - returns: value at `indexPath` represented as `T`.
     public func map<T : RawRepresentable>(from indexPath: IndexPath...) throws -> T {
-        #if MAPPER_ARRAY_WARN
-            if T is Sequence {
-                print("`map` used instead of `mapArray` when mapping \(indexPath)")
-            }
-        #endif
         let leveled = try dive(to: indexPath)
         return try rawRepresent(leveled)
     }
-    
     
     /// Returns array of values at `indexPath` represented as `T`.
     ///
@@ -149,10 +184,62 @@ extension InMapperProtocol {
     /// - throws: `InMapperError`.
     ///
     /// - returns: array of values at `indexPath` represented as `T`.
-    public func mapArray<T>(from indexPath: IndexPath...) throws -> [T] {
+    public func unsafe_mapArray<T>(from indexPath: IndexPath...) throws -> [T] {
         let leveled = try dive(to: indexPath)
         let array = try self.array(from: leveled)
         return try array.map({ try get(from: $0) })
+    }
+    
+    /// Returns array of values at `indexPath` represented as `Int`.
+    ///
+    /// - parameter indexPath: path to desired value.
+    ///
+    /// - throws: `InMapperError`.
+    ///
+    /// - returns: array of values at `indexPath` represented as `Int`.
+    public func map(from indexPath: IndexPath...) throws -> [Int] {
+        let leveled = try dive(to: indexPath)
+        let array = try self.array(from: leveled)
+        return try array.map({ try unwrap($0.int) })
+    }
+    
+    /// Returns array of values at `indexPath` represented as `Double`.
+    ///
+    /// - parameter indexPath: path to desired value.
+    ///
+    /// - throws: `InMapperError`.
+    ///
+    /// - returns: array of values at `indexPath` represented as `Double`.
+    public func map(from indexPath: IndexPath...) throws -> [Double] {
+        let leveled = try dive(to: indexPath)
+        let array = try self.array(from: leveled)
+        return try array.map({ try unwrap($0.double) })
+    }
+    
+    /// Returns array of values at `indexPath` represented as `Bool`.
+    ///
+    /// - parameter indexPath: path to desired value.
+    ///
+    /// - throws: `InMapperError`.
+    ///
+    /// - returns: array of values at `indexPath` represented as `Bool`.
+    public func map(from indexPath: IndexPath...) throws -> [Bool] {
+        let leveled = try dive(to: indexPath)
+        let array = try self.array(from: leveled)
+        return try array.map({ try unwrap($0.bool) })
+    }
+    
+    /// Returns array of values at `indexPath` represented as `String`.
+    ///
+    /// - parameter indexPath: path to desired value.
+    ///
+    /// - throws: `InMapperError`.
+    ///
+    /// - returns: array of values at `indexPath` represented as `String`.
+    public func map(from indexPath: IndexPath...) throws -> [String] {
+        let leveled = try dive(to: indexPath)
+        let array = try self.array(from: leveled)
+        return try array.map({ try unwrap($0.string) })
     }
     
     /// Returns array of values at `indexPath` represented as `T`, when `T` itself is `InMappable`.
@@ -162,7 +249,7 @@ extension InMapperProtocol {
     /// - throws: `InMapperError`.
     ///
     /// - returns: array of values at `indexPath` represented as `T`.
-    public func mapArray<T : InMappable>(from indexPath: IndexPath...) throws -> [T] {
+    public func map<T : InMappable>(from indexPath: IndexPath...) throws -> [T] {
         let leveled = try dive(to: indexPath)
         let array = try self.array(from: leveled)
         return try array.map({ try T(mapper: InMapper(of: $0)) })
@@ -176,23 +263,23 @@ extension InMapperProtocol {
     /// - throws: `InMapperError`.
     ///
     /// - returns: array of values at `indexPath` represented as `T`.
-    public func mapArray<T : InMappableWithContext>(from indexPath: IndexPath..., usingContext context: T.Context) throws -> [T] {
+    public func map<T : InMappableWithContext>(from indexPath: IndexPath..., usingContext context: T.Context) throws -> [T] {
         let leveled = try dive(to: indexPath)
         let array = try self.array(from: leveled)
         return try array.map({ try T(mapper: ContextualInMapper(of: $0, context: context)) })
     }
     
-    /// Returns array of values at `indexPath` represented as `T`, when `T` itself is `ExternalInMappable`.
+    /// Returns array of values at `indexPath` represented as `T`, when `T` itself is `BasicInMappable`.
     ///
     /// - parameter indexPath: path to desired value.
     ///
     /// - throws: `InMapperError`.
     ///
     /// - returns: array of values at `indexPath` represented as `T`.
-    public func mapArray<T : ExternalInMappable>(from indexPath: IndexPath...) throws -> [T] {
+    public func map<T : BasicInMappable>(from indexPath: IndexPath...) throws -> [T] {
         let leveled = try dive(to: indexPath)
         let array = try self.array(from: leveled)
-        return try array.map({ try T(mapper: ExternalInMapper(of: $0)) })
+        return try array.map({ try T(mapper: BasicInMapper(of: $0)) })
     }
     
     /// Returns array of values at `indexPath` represented as `T`, when `T` is `RawRepresentable` (in most cases - `enum` with raw type).
@@ -202,7 +289,7 @@ extension InMapperProtocol {
     /// - throws: `InMapperError`.
     ///
     /// - returns: array of values at `indexPath` represented as `T`.
-    public func mapArray<T : RawRepresentable>(from indexPath: IndexPath...) throws -> [T] {
+    public func map<T : RawRepresentable>(from indexPath: IndexPath...) throws -> [T] {
         let leveled = try dive(to: indexPath)
         let array = try self.array(from: leveled)
         return try array.map({ try self.rawRepresent($0) })
@@ -225,15 +312,11 @@ public struct InMapper<Source : InMap, Keys : IndexPathElement> : InMapperProtoc
     
 }
 
-/// Mapper that is used to map external classes (in most cases - Cocoa classes).
-public struct ExternalInMapper<Source : InMap> : InMapperProtocol {
+public struct BasicInMapper<Source : InMap> : InMapperProtocol {
     
-    public typealias IndexPath = IndexPathValue
     public let source: Source
+    public typealias IndexPath = IndexPathValue
     
-    /// Creates mapper for given `source`.
-    ///
-    /// - parameter source: source of mapping.
     public init(of source: Source) {
         self.source = source
     }
@@ -267,13 +350,8 @@ public struct ContextualInMapper<Source : InMap, Keys : IndexPathElement, Contex
     ///
     /// - returns: value at `indexPath` represented as `T`.
     public func map<T : InMappableWithContext>(from indexPath: IndexPath...) throws -> T where T.Context == Context {
-        #if MAPPER_ARRAY_WARN
-            if T is Sequence {
-                print("`map` used instead of `mapArray` when mapping \(indexPath)")
-            }
-        #endif
-            let leveled = try dive(to: indexPath)
-            return try T(mapper: ContextualInMapper<Source, T.Keys, T.Context>(of: leveled, context: self.context))
+        let leveled = try dive(to: indexPath)
+        return try T(mapper: ContextualInMapper<Source, T.Keys, T.Context>(of: leveled, context: self.context))
     }
     
     /// Returns array of values at `indexPath` represented as `T` which has the same associated `Context`, automatically passing the context.
@@ -283,18 +361,13 @@ public struct ContextualInMapper<Source : InMap, Keys : IndexPathElement, Contex
     /// - throws: `InMapperError`.
     ///
     /// - returns: array of values at `indexPath` represented as `T`.
-    public func mapArray<T : InMappableWithContext>(from indexPath: IndexPath...) throws -> [T] where T.Context == Context {
-            let leveled = try dive(to: indexPath)
-            let array = try self.array(from: leveled)
-            return try array.map({ try T(mapper: ContextualInMapper<Source, T.Keys, T.Context>(of: $0, context: self.context)) })
+    public func map<T : InMappableWithContext>(from indexPath: IndexPath...) throws -> [T] where T.Context == Context {
+        let leveled = try dive(to: indexPath)
+        let array = try self.array(from: leveled)
+        return try array.map({ try T(mapper: ContextualInMapper<Source, T.Keys, T.Context>(of: $0, context: self.context)) })
     }
     
 }
-
-/// Mapper which use string as keys.
-public typealias StringInMapper<Source : InMap> = InMapper<Source, String>
-/// Mapper which use string as keys.
-public typealias StringContextualInMapper<Source : InMap, Context> = ContextualInMapper<Source, String, Context>
 
 /// Mapper for mapping without keys.
 public typealias PlainInMapper<Source : InMap> = InMapper<Source, NoKeys>

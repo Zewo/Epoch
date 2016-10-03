@@ -1,12 +1,23 @@
-import Foundation
-
 public typealias MapProtocol = InMap & OutMap
 public typealias Mappable = InMappable & OutMappable
 
-public protocol StringInMappable : InMappable {
-    init<Source : InMap>(mapper: StringInMapper<Source>) throws
+struct Batman : InMappable {
+    let title: String
+    let points: [Int]
+    enum Keys : String, IndexPathElement {
+        case title, points
+    }
+    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+        self.title = try mapper.map(from: .title)
+        self.points = try mapper.map(from: .points)
+    }
 }
 
-public protocol StringOutMappable : OutMappable {
-    func outMap<Destination : OutMap>(mapper: inout StringOutMapper<Destination>) throws
+struct Bat : BasicInMappable {
+    let title: String
+    let points: [Int]
+    init<Source : InMap>(mapper: BasicInMapper<Source>) throws {
+        self.title = try mapper.map(from: "title")
+        self.points = try mapper.map(from: "points")
+    }
 }
