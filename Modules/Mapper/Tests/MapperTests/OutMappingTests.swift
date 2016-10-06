@@ -25,10 +25,9 @@ extension Test2: OutMappable {
     }
 }
 
-struct Test14: OutMappable {
+struct Test14: BasicOutMappable {
     let array: [Int]
-    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, String>) throws {
-        // must be `map(array: self.array, to: "array")`!
+    func outMap<Map : OutMap>(mapper: inout BasicOutMapper<Map>) throws {
         try mapper.map(self.array, to: "array")
     }
 }
@@ -79,27 +78,27 @@ extension Test10: OutMappableWithContext {
     }
 }
 
-extension Test11: OutMappable {
-    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, String>) throws {
+extension Test11: BasicOutMappable {
+    func outMap<Map : OutMap>(mapper: inout BasicOutMapper<Map>) throws {
         try mapper.map(self.nest, to: "nest", usingContext: .peach)
         try mapper.map(self.nests, to: "nests", usingContext: .orange)
     }
 }
 
-struct OutDictNest: OutMappable {
+struct OutDictNest: BasicOutMappable {
     let int: Int
-    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, String>) throws {
+    func outMap<Map : OutMap>(mapper: inout BasicOutMapper<Map>) throws {
         try mapper.map(self.int, to: "int")
     }
 }
 
-struct OutDictTest: OutMappable {
+struct OutDictTest: BasicOutMappable {
     let int: Int
     let string: String
     let nest: OutDictNest
     let strings: [String]
     let nests: [OutDictNest]
-    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, String>) throws {
+    func outMap<Map : OutMap>(mapper: inout BasicOutMapper<Map>) throws {
         try mapper.map(int, to: "int")
         try mapper.map(string, to: "string")
         try mapper.map(nest, to: "nest")

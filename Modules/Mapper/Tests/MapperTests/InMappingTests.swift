@@ -160,32 +160,32 @@ struct Test10: InMappableWithContext {
     }
 }
 
-struct Test11: InMappable {
+struct Test11: BasicInMappable {
     let nest: Nest3
     let nests: [Nest3]
-    init<Source : InMap>(mapper: InMapper<Source, String>) throws {
+    init<Source : InMap>(mapper: BasicInMapper<Source>) throws {
         self.nest = try mapper.map(from: "nest", usingContext: .peach)
         self.nests = try mapper.map(from: "nests", usingContext: .orange)
     }
 }
 
-struct Test12: InMappable {
+struct Test12: BasicInMappable {
     let hiddenFar: String
-    init<Source : InMap>(mapper: InMapper<Source, String>) throws {
+    init<Source : InMap>(mapper: BasicInMapper<Source>) throws {
         self.hiddenFar = try mapper.map(from: "deeper", "stillDeeper", "close", "gotcha")
     }
 }
 
 struct Test13: InMappable {
     let nests: [Nest2]
-    init<Source : InMap>(mapper: InMapper<Source, String>) throws {
+    init<Source : InMap>(mapper: PlainInMapper<Source>) throws {
         self.nests = try mapper.map()
     }
 }
 
-struct DictNest: InMappable {
+struct DictNest: BasicInMappable {
     let int: Int
-    init<Source : InMap>(mapper: InMapper<Source, String>) throws {
+    init<Source : InMap>(mapper: BasicInMapper<Source>) throws {
         self.int = try mapper.map(from: "int")
     }
 }
