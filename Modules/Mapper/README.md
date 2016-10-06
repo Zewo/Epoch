@@ -83,9 +83,15 @@ struct Person : Mappable {
     
 }
 
+// in-mapping
 let jessy = Person(from: json)
 let messi = Person(from: messagePack)
 let michael = Person(from: mongoBSON)
+
+// out-mapping
+let json: JSON = try jessy.map()
+let messi: MessagePack = try messi.map()
+
 // and so on...
 ```
 
@@ -726,7 +732,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 
 [swift-badge]: https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat
 [swift-url]: https://swift.org
-[zewo-badge]: https://img.shields.io/badge/Zewo-edge-FF7565.svg?style=flat
+[zewo-badge]: https://img.shields.io/badge/Zewo-0.15-FF7565.svg?style=flat
 [zewo-url]: http://zewo.io
 [platform-badge]: https://img.shields.io/badge/Platforms-OS%20X%20--%20Linux-lightgray.svg?style=flat
 [platform-url]: https://swift.org
