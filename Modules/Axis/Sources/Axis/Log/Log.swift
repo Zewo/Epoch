@@ -47,14 +47,14 @@ public final class Logger {
         self.appenders.append(contentsOf: appenders)
         self.name = name
     }
-}
 
-fileprivate let logTimeFormatter:DateFormatter = {
-   let formatter = DateFormatter()
-   let format = DateFormatter.dateFormat(fromTemplate: "HH:mm:ss.SSS", options: 0, locale: .current)
-   formatter.dateFormat = format
-   return formatter
-}()
+    fileprivate static let logTimeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        let format = DateFormatter.dateFormat(fromTemplate: "HH:mm:ss.SSS", options: 0, locale: .current)
+        formatter.dateFormat = format
+        return formatter
+    }()
+}
 
 extension Logger.LocationInfo : CustomStringConvertible {
     public var description: String {
@@ -156,6 +156,6 @@ extension Logger {
     }
 
     private var currentTime: String {
-        return logTimeFormatter.string(from: Date())
+        return Logger.logTimeFormatter.string(from: Date())
     }
 }
