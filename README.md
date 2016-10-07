@@ -6,7 +6,7 @@
     <a href="https://swift.org"><img src="https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat" alt="Swift" /></a>
     <a href="https://tldrlegal.com/license/mit-license"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat" alt="License" /></a>
     <a href="http://slack.zewo.io"><img src="https://zewo-slackin.herokuapp.com/badge.svg" alt="Slack" /></a>
-    <a href="https://travis-ci.org/Zewo/Zewo"><img src="https://travis-ci.org/Zewo/Zewo.svg" alt="Travis" /></a>
+    <a href="https://travis-ci.org/Zewo/Zewo"><img src="https://api.travis-ci.org/Zewo/Zewo.svg?branch=master" alt="Travis" /></a>
     <a href="https://codecov.io/gh/Zewo/Zewo"><img src="https://codecov.io/gh/Zewo/Zewo/branch/master/graph/badge.svg" alt="Codecov" /></a>
     <a href="https://codebeat.co/projects/github-com-zewo-zewo"><img src="https://codebeat.co/badges/d580cc1f-5bdb-494b-8391-d147c7a287a1" alt="Codebeat" /></a>
     <a href="#backers"><img src="https://opencollective.com/zewo/backers/badge.svg"></a>
