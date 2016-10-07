@@ -4,105 +4,113 @@ import XCTest
 public class RegexTests: XCTestCase {
 
     func testInvalidRegex() {
-        XCTAssertThrowsError(try Regex(pattern: "("))
-        XCTAssertThrowsError(try Regex(pattern: "*"))
+        XCTAssertThrowsError(try Regex("("))
+        XCTAssertThrowsError(try Regex("*"))
     }
 
     func testMatches() throws {
-        let regex = try Regex(pattern: "hello")
-        let matches = regex.matches("hello")
+        let regex = try Regex("hello")
+        let matches = "hello".matches(regex)
         XCTAssert(matches)
     }
 
     func testNotMatches() throws {
-        let regex = try Regex(pattern: "hello")
-        let matches = regex.matches("bye")
+        let regex = try Regex("hello")
+        let matches = "bye".matches(regex)
         XCTAssert(!matches)
     }
 
     func testGroup() throws {
-        let regex = try Regex(pattern: "(hello)")
-        let groups = regex.groups(in: "hello")
+        let regex = try Regex("(hello)")
+        let groups = "hello".groupsMatching(regex)
         XCTAssert(groups == ["hello"])
     }
 
     func testGroups() throws {
-        let regex = try Regex(pattern: "(hello) (world)")
-        let groups = regex.groups(in: "hello world")
+        let regex = try Regex("(hello) (world)")
+        let groups = "hello world".groupsMatching(regex)
         XCTAssert(groups == ["hello", "world"])
     }
 
     func testNoGroups() throws {
-        let regex = try Regex(pattern: "(hello)")
-        let groups = regex.groups(in: "bye")
+        let regex = try Regex("(hello)")
+        let groups = "bye".groupsMatching(regex)
         XCTAssert(groups == [])
     }
 
     /// Replace one occurence by a shorter template string
     func testReplaceOneOccurenceWithShorterTemplate() throws {
-        let regex = try Regex(pattern: "hello")
-        let string = regex.replace(with: "bye", in: "hello world")
+        let regex = try Regex("hello")
+        let string = "hello world".replace(regex, with: "bye")
         XCTAssert(string == "bye world")
     }
 
     /// Replace one occurence by a longer template string
     func testReplaceOneOccurenceWithLongerTemplate() throws {
-        let regex = try Regex(pattern: "o")
-        let string = regex.replace(with: "ooo!", in: "hello")
+        let regex = try Regex("o")
+        let string = "hello".replace(regex, with: "ooo!")
         XCTAssertEqual(string, "hellooo!")
     }
 
     /// Replace multiple occurences each by a shorter template string
     func testReplaceManyOccurencesWithShorterTemplate() throws {
-        let regex = try Regex(pattern: "mm")
-        let string = regex.replace(with: "M", in: "mm-mm")
+        let regex = try Regex("mm")
+        let string = "mm-mm".replace(regex, with: "M")
         XCTAssertEqual(string, "M-M")
     }
 
     /// Replace multiple occurences each by a longer template string
     func testReplaceManyOccurencesWithLongerTemplate() throws {
-        let regex = try Regex(pattern: "l")
-        let string = regex.replace(with: "LL", in: "lol")
+        let regex = try Regex("l")
+        let string = "lol".replace(regex, with: "LL")
         XCTAssertEqual(string, "LLoLL")
     }
 
     /// Replace each digit
     func testReplaceDigits() throws {
-        let regex = try Regex(pattern: "[0-9]")
-        let string = regex.replace(with: ".", in: "1234")
+        let regex = try Regex("[0-9]")
+        let string = "1234".replace(regex, with: ".")
         XCTAssertEqual(string, "....")
     }
 
     /// Replace number
     func testReplaceNumber() throws {
-        let regex = try Regex(pattern: "[0-9]+")
-        let string = regex.replace(with: ".", in: "1234")
+        let regex = try Regex("[0-9]+")
+        let string = "1234".replace(regex, with: ".")
         XCTAssertEqual(string, ".")
     }
 
     func testNoReplace() throws {
-        let regex = try Regex(pattern: "bye")
-        let string = regex.replace(with: "bye", in: "hello world")
+        let regex = try Regex("bye")
+        let string = "hello world".replace(regex, with: "bye")
         XCTAssert(string == "hello world")
     }
     
     func testReplaceUTF8() throws {
-        let r0 = try Regex(pattern: "coffee")
-        let actual0 = r0.replace(with: "☕️", in: "Paulo loves coffee")
+        let r0 = try Regex("coffee")
+        let actual0 = "Paulo loves coffee".replace(r0, with: "☕️")
         let expected0 = "Paulo loves ☕️"
         XCTAssertEqual(actual0, expected0)
         
-        let r1 = try Regex(pattern: "☕️")
-        let actual1 = r1.replace(with: "🍻", in: actual0)
+        let r1 = try Regex("☕️")
+        let actual1 = actual0.replace(r1, with: "🍻")
         let expected1 = "Paulo loves 🍻"
         XCTAssertEqual(actual1, expected1)
         
     }
     
     func testMultipleReplacesUTF8() throws {
-        let r1 = try Regex(pattern: "[[:digit:]]{4}")
-        let actual1 = r1.replace(with: "💳", in: "1234-2345-3456-4567")
-        XCTAssertEqual(actual1, "💳-💳-💳-💳")
+        let regex = try Regex("[[:digit:]]{4}")
+        let actual = "1234-2345-3456-4567".replace(regex, with: "💳")
+        XCTAssertEqual(actual, "💳-💳-💳-💳")
+    }
+    
+    func testBuildingWithLiteral() {
+        // See the source code: building from literal cannot throw
+        // so the following call will crash if the given pattern is invalid.
+        let regex: Regex = "[[:digit:]]{4}"
+        let actual = "1234-2345-3456-4567".replace(regex, with: "💳")
+        XCTAssertEqual(actual, "💳-💳-💳-💳")
     }
 
 
@@ -126,17 +134,17 @@ public class RegexTests: XCTestCase {
         XCTAssertFalse(try "111-aaaa-333" ~ "[[:digit:]]{3}-[[:digit:]]{4}-[[:digit:]]{3}")
 
         // no throws or optionals if regex pre-exists
-        let r0 = try Regex(pattern: "[[:alpha:]]")
+        let r0 = try Regex("[[:alpha:]]")
         XCTAssert("hello world 1" ~ r0)
 
-        let r1 = try Regex(pattern: "[[:digit:]]{3}-[[:digit:]]{4}-[[:digit:]]{3}")
+        let r1 = try Regex("[[:digit:]]{3}-[[:digit:]]{4}-[[:digit:]]{3}")
         XCTAssert("111-2222-333" ~ r1)
     }
 
     func testGroupsUsingOperators() throws {
 
         // one group
-        let digits = try Regex(pattern: "[[:digit:]]{3}-([[:digit:]]{4})-[[:digit:]]{3}")
+        let digits = try Regex("[[:digit:]]{3}-([[:digit:]]{4})-[[:digit:]]{3}")
 
         XCTAssertEqual("111-2222-333" ~* digits, ["2222"])
 
@@ -169,7 +177,7 @@ public class RegexTests: XCTestCase {
 
 
         //: using an existing Regex instance
-        let r1 = try Regex(pattern: "(hel)(lo)")
+        let r1 = try Regex("(hel)(lo)")
 
         XCTAssertEqual("hello world" ~* r1, ["hel", "lo"])
 
@@ -182,10 +190,8 @@ public class RegexTests: XCTestCase {
             return v.contains("lo") ? v.uppercased() : nil
         }
         XCTAssertEqual(actual6, ["LO"])
-
-
     }
-
+    
 }
 
 extension RegexTests {

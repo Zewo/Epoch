@@ -1,7 +1,7 @@
 #if os(Linux)
-    @_exported import Glibc
+    import Glibc
 #else
-    @_exported import Darwin.C
+    import Darwin.C
 #endif
 
 import Foundation
@@ -55,7 +55,7 @@ public final class Regex {
     /// - parameter options: Options such as `Regex.Options.basic` (BRE) or `Regex.Options.extended` (ERE).
     ///
     /// - throws: `RegexError` if the given pattern is not a valid Regex.
-    public init(pattern: String, options: Options = .extended) throws {
+    public init(_ pattern: String, options: Options = .extended) throws {
         let result = regcomp(&preg, pattern, options.rawValue)
 
         guard result == 0 else {
@@ -67,28 +67,35 @@ public final class Regex {
         regfree(&preg)
     }
 
-    /// In the context of a String UTF8View, returns the UTF8View.Index
-    /// of a given character (designated by `regoff`)
-    /// 
-    /// Helper that simplifies the code written at the call site.
-    ///
-    /// - parameter offset:   Offset to a char (returned by native `regexec()`).
-    /// - parameter utf8view: UTF8View of the string.
-    ///
-    /// - returns: UTF8View.Index of the character designated by `regoff`.
-    func index(from offset: regoff_t, in utf8view: String.UTF8View) -> String.UTF8View.Index {
-        return utf8view.index(utf8view.startIndex, offsetBy: Int(offset))
-    }
+}
 
-    /// Check if a given string matches the regex.
+
+/// In the context of a String UTF8View, returns the UTF8View.Index
+/// of a given character (designated by `regoff`)
+///
+/// Helper that simplifies the code written at the call site.
+///
+/// - parameter offset:   Offset to a char (returned by native `regexec()`).
+/// - parameter utf8view: UTF8View of the string.
+///
+/// - returns: UTF8View.Index of the character designated by `regoff`.
+fileprivate func utf8Index(from offset: regoff_t, in utf8view: String.UTF8View) -> String.UTF8View.Index {
+    return utf8view.index(utf8view.startIndex, offsetBy: Int(offset))
+}
+
+
+extension String {
+
+    /// Check if the string matches a given Regex Regular Expression.
     ///
-    /// - parameter string:  String to validate against the regex.
+    /// - parameter regex: Regex regular expression.
     /// - parameter options: Matching options like `firstCharacterNotAtBeginningOfLine` (`REG_NOTBOL` in POSIX parlance).
     ///
     /// - returns: `true` if the string matches the regex, else `false`.
-    public func matches(_ string: String, options: MatchOptions = []) -> Bool {
+    public func matches(_ regex: Regex, options: Regex.MatchOptions = []) -> Bool {
+        
         var regexMatches = [regmatch_t](repeating: regmatch_t(), count: 1)
-        let result = regexec(&preg, string, regexMatches.count, &regexMatches, options.rawValue)
+        let result = regexec(&(regex.preg), self, regexMatches.count, &regexMatches, options.rawValue)
 
         guard result == 0 else {
             return false
@@ -96,22 +103,37 @@ public final class Regex {
         
         return true
     }
-    
-    /// Substrings of a given string that match the regex groups.
+
+    /// Check if the string matches a given Regular Expression pattern string.
     ///
-    /// - parameter in:  String in which to search for groups.
+    /// - parameter pattern: Regular Expression pattern string, like `[[:digit:]]{4,}`.
+    /// - parameter options: Matching options like `firstCharacterNotAtBeginningOfLine` (`REG_NOTBOL` in POSIX parlance).
+    ///
+    /// - throws: `RegexError` indicating why the given pattern string cannot be used to construct a valid Regex Regular Expression.
+    ///
+    /// - returns: `true` if the string matches the regex, else `false`.
+    public func matches(_ pattern: String, options: Regex.MatchOptions = []) throws -> Bool {
+        let regex = try Regex(pattern)
+        return self.matches(regex, options: options)
+    }
+
+    
+    /// Substrings matching a given Regex Regular Expression.
+    ///
+    /// - parameter regex: Regex regular expression.
     /// - parameter options: Matching options like `firstCharacterNotAtBeginningOfLine` (`REG_NOTBOL` in POSIX parlance).
     ///
     /// - returns: Matching substrings.
-    public func groups(in string: String, options: MatchOptions = []) -> [String] {
-        var string = string
+    public func groupsMatching(_ regex: Regex, options: Regex.MatchOptions = []) -> [String] {
+
+        var string = self
         let maxMatches = 10
         var groups = [String]()
         var regexMatches = [regmatch_t](repeating: regmatch_t(), count: maxMatches)
 
         // Iterate over the string per batch of 10 matches
         while true {
-            let result = regexec(&preg, string, regexMatches.count, &regexMatches, options.rawValue)
+            let result = regexec(&(regex.preg), string, regexMatches.count, &regexMatches, options.rawValue)
 
             guard result == 0 else {
                 break // Unmatched regex
@@ -128,15 +150,15 @@ public final class Regex {
                 let group = (start: regexMatches[groupIdx].rm_so, end: regexMatches[groupIdx].rm_eo)
 
                 // Use UTF8View for unicode regexes
-                let startIndexUTF8 = index(from: group.start, in: string.utf8)
-                let endIndexUTF8 = index(from: group.end, in: string.utf8)
+                let startIndexUTF8 = utf8Index(from: group.start, in: string.utf8)
+                let endIndexUTF8 = utf8Index(from: group.end, in: string.utf8)
 
                 let match = String(string.utf8[startIndexUTF8..<endIndexUTF8])!
                 groups.append(match)
                 groupIdx += 1
             }
 
-            let indexOfEndOfMatchUTF8 = index(from: regexMatches[0].rm_eo, in: string.utf8)
+            let indexOfEndOfMatchUTF8 = utf8Index(from: regexMatches[0].rm_eo, in: string.utf8)
             let remainderString = String(string.utf8[indexOfEndOfMatchUTF8..<string.utf8.endIndex])!
 
             guard remainderString.isEmpty else {
@@ -148,23 +170,38 @@ public final class Regex {
 
         return groups
     }
-
-    /// Given a string, replace substrings matching this regex with a template.
+    
+    /// Substrings matching a given Regular Expression pattern string.
     ///
-    /// - parameter template: String used to replace all substrings matching this Regex.
-    /// - parameter string:   String on which replacing takes place.
+    /// - parameter pattern: Regular Expression pattern string, like `([[:digit:]]{4,})`.
+    /// - parameter options: Matching options like `firstCharacterNotAtBeginningOfLine` (`REG_NOTBOL` in POSIX parlance).
+    ///
+    /// - throws: `RegexError` indicating why the given pattern string cannot be used to construct a valid Regex Regular Expression.
+    ///
+    /// - returns: Matching substrings.
+    public func groupsMatching(_ pattern: String, options: Regex.MatchOptions = []) throws -> [String] {
+        let regex = try Regex(pattern)
+        return self.groupsMatching(regex, options: options)
+    }
+
+    
+    /// Return a new string in which substrings matching a given Regex Regular Expression were replaced with the given template string.
+    ///
+    /// - parameter regex: Regex Regular Expression.
+    /// - parameter template: String used to replace all substrings matching the Regular Expression.
     /// - parameter options:  Matching options like `firstCharacterNotAtBeginningOfLine` (`REG_NOTBOL` in POSIX parlance).
     ///
     /// - returns: New string in which all substrings matching the regex were replaced with the template.
-    public func replace(with template: String, in string: String, options: MatchOptions = []) -> String {
-        var string = string
+    public func replace(_ regex: Regex, with template: String, options: Regex.MatchOptions = []) -> String {
+        
+        var string = self
         let maxMatches = 10
         var totalReplacedString: String = ""
         let templateArray = [UInt8](template.utf8)
-
+        
         while true {
             var regexMatches = [regmatch_t](repeating: regmatch_t(), count: maxMatches)
-            let result = regexec(&preg, string, regexMatches.count, &regexMatches, options.rawValue)
+            let result = regexec(&(regex.preg), string, regexMatches.count, &regexMatches, options.rawValue)
 
             guard result == 0 else {
                 break // Unmatched regex
@@ -194,27 +231,45 @@ public final class Regex {
 
         return totalReplacedString + string
     }
+    
+    /// Return a new string in which substrings matching a given Regular Expression pattern string were replaced with the given template string.
+    ///
+    /// - parameter pattern: Regular Expression pattern string, like `[[:digit:]]{4,}`.
+    /// - parameter template: String used to replace all substrings matching the Regular Expression.
+    /// - parameter options:  Matching options like `firstCharacterNotAtBeginningOfLine` (`REG_NOTBOL` in POSIX parlance).
+    ///
+    /// - returns: New string in which all substrings matching the regex were replaced with the template.
+    public func replace(_ pattern: String, with template: String, options: Regex.MatchOptions = []) throws -> String {
+        let regex = try Regex(pattern)
+        return self.replace(regex, with: template, options: options)
+    }
 }
 
 
-/*
+
+// MARK: - Helper for building Regex Regular Expression from string literal.
+//
+// Warning: Errors will not be caught if the given string literal cannot yield a valid Regular Expression
+//
+// Example usage: `let regex: Regex = "[[:digit:]]{4,}"`
+//
 extension Regex : ExpressibleByStringLiteral {
     public typealias UnicodeScalarLiteralType = String
     public typealias ExtendedGraphemeClusterLiteralType = StringLiteralType
 
     public convenience init(unicodeScalarLiteral value: UnicodeScalarLiteralType) {
-        try! self.init(pattern: value, options: .extended)
+        try! self.init(value, options: .extended)
     }
 
     public convenience init(extendedGraphemeClusterLiteral value: ExtendedGraphemeClusterLiteralType) {
-        try! self.init(pattern: value, options: .extended)
+        try! self.init(value, options: .extended)
     }
 
     public convenience init(stringLiteral value: StringLiteralType) {
-        try! self.init(pattern: value, options: .extended)
+        try! self.init(value, options: .extended)
     }
 }
-*/
+
 
 /// MARK: - Operators
 
@@ -226,7 +281,7 @@ extension Regex : ExpressibleByStringLiteral {
 ///
 /// - returns: `true` if the given string matches the Regex, else `false`.
 public func ~ (string: String, regex: Regex) -> Bool {
-    return regex.matches(string)
+    return string.matches(regex)
 }
 
 /// Check if a string matches a given regex pattern.
@@ -238,7 +293,7 @@ public func ~ (string: String, regex: Regex) -> Bool {
 ///
 /// - returns: `true` if the given string matches the regex pattern, else `false`.
 public func ~ (string: String, pattern: String) throws -> Bool {
-    let regex = try Regex(pattern: pattern)
+    let regex = try Regex(pattern)
     return string ~ regex
 }
 
@@ -266,7 +321,7 @@ public func ~? (string: String, pattern: String) -> Bool? {
 ///
 /// - returns: Matching groups as an array of strings
 public func ~* (string: String, pattern: String) throws -> [String] {
-    let regex = try Regex(pattern: pattern)
+    let regex = try Regex(pattern)
     return string ~* regex
 }
 
@@ -277,7 +332,7 @@ public func ~* (string: String, pattern: String) throws -> [String] {
 ///
 /// - returns: Matching groups as an array of strings
 public func ~* (string: String, regex: Regex) -> [String] {
-    return regex.groups(in: string)
+    return string.groupsMatching(regex)
 }
 
 /// Matching groups in a string, given a regex pattern.
@@ -289,28 +344,11 @@ public func ~* (string: String, regex: Regex) -> [String] {
 ///
 /// - returns: Matching groups as an array of strings, or `nil` if the given pattern is not a valid Regex.
 public func ~*? (string: String, pattern: String) -> [String]? {
-    guard let regex = try? Regex(pattern: pattern) else {
+    guard let regex = try? Regex(pattern) else {
         return nil
     }
     return string ~* regex
 }
-
-// FIXME: let's talk about this
-//func ~* <Result> (left: String, right: String) throws -> ((String) -> Result) -> [Result] {
-//    let matchResults = try left ~* right
-//
-//    return { (f: (String) -> Result) -> [Result] in
-//        return matchResults.map(f)
-//    }
-//}
-//
-//func ~* <Result> (left: String, right: Regex) -> ((String) -> Result) -> [Result] {
-//    let matchResults = left ~* right
-//
-//    return { (f: (String) -> Result) -> [Result] in
-//        return matchResults.map(f)
-//    }
-//}
 
 
 infix operator ~
