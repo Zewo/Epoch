@@ -48,7 +48,7 @@ public final class Logger {
         self.name = name
     }
 
-    fileprivate static let logTimeFormatter: DateFormatter = {
+    public static let logTimeFormatter: DateFormatter = {
         let formatter = DateFormatter()
         let format = DateFormatter.dateFormat(fromTemplate: "yyMMdd HHmmssSSS z", options: 0, locale: .current)
         formatter.dateFormat = format
