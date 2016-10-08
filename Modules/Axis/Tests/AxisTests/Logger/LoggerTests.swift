@@ -1,4 +1,5 @@
 import XCTest
+import Foundation
 @testable import Axis
 
 public class LoggerTests : XCTestCase {
