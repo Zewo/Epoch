@@ -62,3 +62,16 @@ public protocol OutMap {
     static func from(_ string: String) -> Self?
 
 }
+
+public enum OutMapError : Error {
+    case deepSetIsNotImplementedYet
+}
+
+extension OutMap {
+    mutating func set(_ map: Self, at indexPath: [IndexPathElement]) throws {
+        guard indexPath.count <= 1 else {
+            throw OutMapError.deepSetIsNotImplementedYet
+        }
+        try set(map, at: indexPath)
+    }
+}
