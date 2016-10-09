@@ -50,7 +50,7 @@ public final class Logger {
 
     public static let logTimeFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        let format = DateFormatter.dateFormat(fromTemplate: "yyMMdd HHmmssSSS z", options: 0, locale: .current)
+        let format = DateFormatter.dateFormat(fromTemplate: "yyMMdd kkmmssSSS z", options: 0, locale: .current)
         formatter.dateFormat = format
         return formatter
     }()

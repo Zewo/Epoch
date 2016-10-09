@@ -35,7 +35,7 @@ public class LoggerTests : XCTestCase {
         let itLocale = Locale(identifier: "it_IT")
 
         func testLocale(_ locale: Locale, with timestamps: [Double:String]) {
-            formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "yyMMdd HHmmssSSS z", options: 0, locale: locale)
+            formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "yyMMdd kkmmssSSS z", options: 0, locale: locale)
             for (timestamp, expected) in timestamps {
                 let date = Date(timeIntervalSince1970: timestamp)
                 let formatted = formatter.string(from: date)
