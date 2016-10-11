@@ -34,20 +34,20 @@ func reverseBytes(_ value: UInt32) -> UInt32 {
 
 func arrayOfBytes<T>(_ value: T, length: Int? = nil) -> [UInt8] {
     let totalBytes = length ?? MemoryLayout<T>.size
-
+    
     let valuePointer = UnsafeMutablePointer<T>.allocate(capacity: 1)
     valuePointer.pointee = value
-    defer {
-        valuePointer.deinitialize()
-        valuePointer.deallocate(capacity: 1)
+    
+    let bytesPointer = UnsafeMutablePointer<UInt8>(OpaquePointer(valuePointer))
+    var bytes = Array<UInt8>(repeating: 0, count: totalBytes)
+    for j in 0..<min(MemoryLayout<T>.size,totalBytes) {
+        bytes[totalBytes - 1 - j] = (bytesPointer + j).pointee
     }
-
-    return valuePointer.withMemoryRebound(to: UInt8.self, capacity: totalBytes) { bytes in
-        for i in 0..<min(MemoryLayout<T>.size, totalBytes) {
-            bytes[totalBytes - 1 - i] = (bytes + i).pointee
-        }
-        return Array(UnsafeBufferPointer(start: bytes, count: totalBytes))
-    }
+    
+    valuePointer.deinitialize()
+    valuePointer.deallocate(capacity: 1)
+    
+    return bytes
 }
 
 func toUInt32Array(_ slice: ArraySlice<UInt8>) -> Array<UInt32> {
