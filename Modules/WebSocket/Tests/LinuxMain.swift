@@ -3,5 +3,6 @@ import XCTest
 
 XCTMain([
     testCase(FrameTests.allTests),
+    testCase(SHA1Tests.allTests),
     testCase(WebSocketTests.allTests),
 ])
