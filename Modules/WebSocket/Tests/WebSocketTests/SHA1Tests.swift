@@ -1,7 +1,7 @@
 import XCTest
 @testable import WebSocket
 
-class SHA1Tests : XCTestCase {
+public class SHA1Tests : XCTestCase {
     func testSHA1() {
         let data = Array("sha1".utf8)
         let hash = sha1(data)
