@@ -68,10 +68,10 @@ public enum OutMapError : Error {
 }
 
 extension OutMap {
-    mutating func set(_ map: Self, at indexPath: [IndexPathElement]) throws {
-        guard indexPath.count <= 1 else {
+    mutating public func set(_ map: Self, at indexPath: [IndexPathElement]) throws {
+        guard indexPath.count == 1 else {
             throw OutMapError.deepSetIsNotImplementedYet
         }
-        try set(map, at: indexPath)
+        try set(map, at: indexPath[0])
     }
 }
