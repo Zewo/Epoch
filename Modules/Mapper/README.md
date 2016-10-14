@@ -283,6 +283,10 @@ struct Team : Mappable {
 }
 ```
 
+#### Mapping with context
+
+There are some 
+
 #### Plain mapping
 
 Tutorial by example: making **Foundation**'s `Date` conform to `Mappable`.
@@ -525,6 +529,8 @@ extension MapperNeomap : InMap {
         case .float(let value as T):        return value
         case .array(let value as T):        return value
         case .dictionary(let value as T):   return value
+        default:
+            return nil
         }
     }
     
@@ -533,6 +539,8 @@ extension MapperNeomap : InMap {
         case .int32(let value):     return Int(value)
         case .uint(let value):      return Int(value)
         case .uint8(let value):     return Int(value)
+        default:
+            return nil
         }
     }
     
@@ -540,18 +548,21 @@ extension MapperNeomap : InMap {
         if case .float(let value) = self {
             return Double(value)
         }
+        return nil
     }
     
     public var bool: Bool? {
         if case .bool(let value) = self {
             return value
         }
+        return nil
     }
     
     public var string: String? {
         if case .string(let value) = self {
             return value
         }
+        return nil
     }
 }
 ```
