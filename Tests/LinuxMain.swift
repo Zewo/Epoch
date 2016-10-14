@@ -30,6 +30,7 @@ var testCases = [
     testCase(PublicTests.allTests),
     testCase(StringTests.allTests),
     testCase(MapTests.allTests),
+    testCase(URLTests.allTests),
 
 
     // HTTP
