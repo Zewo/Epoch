@@ -10,6 +10,13 @@ public enum StringError : Error {
 }
 
 extension String {
+    public enum Error: Swift.Error {
+        case invalidUTF8
+        case invalidPercentEncoding
+    }
+}
+
+extension String {
     // Todo: Use Swift's standard library implemenation
     // https://github.com/apple/swift/blob/7b2f91aad83a46b33c56147c224afbde8a670376/stdlib/public/core/CString.swift#L46
     // Alternative:
@@ -27,7 +34,7 @@ extension String {
     }
 
     public func capitalizedWord() -> String {
-        return String(self.characters.prefix(1)).uppercased() + String(self.characters.dropFirst()).lowercased()
+        return String(characters.prefix(1)).uppercased() + String(characters.dropFirst()).lowercased()
     }
 
     public func split(separator: UnicodeScalar, maxSplits: Int = .max, omittingEmptySubsequences: Bool = true) -> [String] {
@@ -66,7 +73,7 @@ extension String {
         return String(unicodeScalars[unicodeScalars.startIndex..<_endIndex])
     }
 
-	public func index(of string: String) -> String.CharacterView.Index? {
+	public func index(of string: String) -> String.Index? {
         return characters.index(of: string.characters)
 	}
 
@@ -97,82 +104,42 @@ extension String {
     }
 }
 
-extension String.CharacterView {
-    func character(at i: Index, offsetBy offset: Int) -> Character? {
-        var i = i
-        if !formIndex(&i, offsetBy: offset, limitedBy: index(before: self.endIndex)) {
-            return nil
-        }
-        return self[i]
-    }
-}
-
 extension String {
     public init(percentEncoded: String) throws {
-        let characters = percentEncoded.characters
-        var decoded = ""
-        var index = characters.startIndex
+        var reader = percentEncoded.unicodeScalars.makeIterator()
+        var buffer: [UTF8.CodeUnit] = []
+        var result = String.UnicodeScalarView()
 
-        while index < characters.endIndex {
-            let character = characters[index]
-
-            switch character {
+        while var nextScalar = reader.next() {
+            switch nextScalar {
             case "%":
-                var encoded: [UInt8] = []
+                guard let hexH = reader.next(), let hexL = reader.next() else { throw String.Error.invalidPercentEncoding }
 
-                while true {
-                    guard let unicodeA = characters.character(at: index, offsetBy: 1) else {
-                        throw StringError.invalidString
-                    }
-                    guard let unicodeB = characters.character(at: index, offsetBy: 2) else {
-                        throw StringError.invalidString
-                    }
+                var hex = UnicodeScalarView()
+                hex.append(hexH)
+                hex.append(hexL)
 
-                    let hexString = String(unicodeA) + String(unicodeB)
+                guard let decodedHex = UTF8.CodeUnit(String(hex), radix: 16) else { throw String.Error.invalidPercentEncoding }
 
-                    guard let unicodeScalar = UInt8(hexString, radix: 16) else {
-                        throw StringError.invalidString
-                    }
-
-                    encoded.append(unicodeScalar)
-                    characters.formIndex(&index, offsetBy: 3)
-
-                    if index == characters.endIndex || characters[index] != "%" {
-                        break
-                    }
-                }
-
-                decoded += try decode(encoded: encoded)
-
+                buffer.append(decodedHex)
             case "+":
-                decoded.append(" ")
-                characters.formIndex(after: &index)
-
+                nextScalar = " "
+                fallthrough
             default:
-                decoded.append(character)
-                characters.formIndex(after: &index)
+                if buffer.count > 0 {
+                    try result.append(contentsOf: buffer.decodeUTF8())
+                    buffer.removeAll(keepingCapacity: true)
+                }
+                result.append(nextScalar)
             }
         }
 
-        self = decoded
-    }
-}
-
-func decode(encoded: [UInt8]) throws -> String {
-    var decoded = ""
-    var decoder = UTF8()
-    var iterator = encoded.makeIterator()
-    var finished = false
-
-    while !finished {
-        switch decoder.decode(&iterator) {
-        case .scalarValue(let char): decoded.unicodeScalars.append(char)
-        case .emptyInput: finished = true
-        case .error: throw StringError.utf8EncodingFailed
+        if buffer.count > 0 {
+            try result.append(contentsOf: buffer.decodeUTF8())
         }
+        
+        self = String(result)
     }
-
-    return decoded
 }
 
 extension String {
