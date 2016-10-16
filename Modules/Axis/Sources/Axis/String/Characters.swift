@@ -74,9 +74,3 @@ public struct Characters : ExpressibleByArrayLiteral {
         return codeUnits
     }
 }
-
-//extension Characters {
-//    enum Failure : Error {
-//        case characterIsNotUTF8
-//    }
-//}

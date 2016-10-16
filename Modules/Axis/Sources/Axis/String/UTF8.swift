@@ -45,3 +45,10 @@ extension UTF8 {
         56, 33, 54, 85, 89, 97, 53, 112, 36, 57, 126, 69, 119
     ]
 }
+
+extension UTF8.CodeUnit {
+    func hexadecimal() -> String {
+        let hexadecimal =  String(self, radix: 16, uppercase: true)
+        return (self < 16 ? "0" : "") + hexadecimal
+    }
+}

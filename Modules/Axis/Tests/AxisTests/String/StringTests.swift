@@ -75,13 +75,13 @@ public class StringTests : XCTestCase {
         XCTAssertThrowsError(try String(percentEncoded: "%00%FF%FF%00"))
     }
 
-    func testURLQueryPercentEncoding() {
-        XCTAssertEqual("abc".percentEncoded(allowing: .uriQueryAllowed), "abc")
-        XCTAssertEqual("joão".percentEncoded(allowing: .uriQueryAllowed), "jo%C3%A3o")
-        XCTAssertEqual("💩".percentEncoded(allowing: .uriQueryAllowed), "%F0%9F%92%A9")
-        XCTAssertEqual("foo bar".percentEncoded(allowing: .uriQueryAllowed), "foo%20bar")
-        XCTAssertEqual("foo\nbar".percentEncoded(allowing: .uriQueryAllowed), "foo%0Abar")
-    }
+//    func testURLQueryPercentEncoding() {
+//        XCTAssertEqual("abc".percentEncoded(allowing: .uriQueryAllowed), "abc")
+//        XCTAssertEqual("joão".percentEncoded(allowing: .uriQueryAllowed), "jo%C3%A3o")
+//        XCTAssertEqual("💩".percentEncoded(allowing: .uriQueryAllowed), "%F0%9F%92%A9")
+//        XCTAssertEqual("foo bar".percentEncoded(allowing: .uriQueryAllowed), "foo%20bar")
+//        XCTAssertEqual("foo\nbar".percentEncoded(allowing: .uriQueryAllowed), "foo%0Abar")
+//    }
 
     func testUTF8URLQueryPercentEncoding() {
         XCTAssertEqual("abc".percentEncoded(allowing: UTF8.uriQueryAllowed), "abc")
@@ -102,7 +102,7 @@ extension StringTests {
             ("testIndex", testIndex),
             ("testContains", testContains),
             ("testPercentEncodedInit", testPercentEncodedInit),
-            ("testURLQueryPercentEncoding", testURLQueryPercentEncoding),
+//            ("testURLQueryPercentEncoding", testURLQueryPercentEncoding),
             ("testUTF8URLQueryPercentEncoding", testUTF8URLQueryPercentEncoding),
         ]
     }

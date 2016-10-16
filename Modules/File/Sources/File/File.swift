@@ -239,7 +239,7 @@ extension File {
         if createIntermediates {
             let (exists, directory) = (fileExists(path: path), isDirectory(path: path))
             if !exists {
-                let parent = path.dropLastPathComponent()
+                let parent = path.droppingLastPathComponent()
 
                 if !fileExists(path: parent) {
                     try createDirectory(path: parent, withIntermediateDirectories: true)
@@ -269,103 +269,5 @@ extension File {
         if fileremove(path) != 0 {
             try ensureLastOperationSucceeded()
         }
-    }
-}
-
-// Warning: We're gonna need this when we split Venice from Quark in the future
-
-// extension String {
-//     func split(separator: Character, maxSplits: Int = .max, omittingEmptySubsequences: Bool = true) -> [String] {
-//         return characters.split(separator: separator, maxSplits: maxSplits, omittingEmptySubsequences: omittingEmptySubsequences).map(String.init)
-//     }
-//
-//    public func has(prefix: String) -> Bool {
-//        return prefix == String(self.characters.prefix(prefix.characters.count))
-//    }
-//
-//    public func has(suffix: String) -> Bool {
-//        return suffix == String(self.characters.suffix(suffix.characters.count))
-//    }
-//}
-
-extension String {
-    func dropLastPathComponent() -> String {
-        let string = self.fixSlashes()
-
-        if string == "/" {
-            return string
-        }
-
-        switch string.startOfLastPathComponent {
-
-        // relative path, single component
-        case string.startIndex:
-            return ""
-
-        // absolute path, single component
-        case string.index(after: startIndex):
-            return "/"
-
-        // all common cases
-        case let startOfLast:
-            return String(string.characters.prefix(upTo: string.index(before: startOfLast)))
-        }
-    }
-
-    func fixSlashes(compress: Bool = true, stripTrailing: Bool = true) -> String {
-        if self == "/" {
-            return self
-        }
-
-        var result = self
-
-        if compress {
-            result.withMutableCharacters { characterView in
-                let startPosition = characterView.startIndex
-                var endPosition = characterView.endIndex
-                var currentPosition = startPosition
-
-                while currentPosition < endPosition {
-                    if characterView[currentPosition] == "/" {
-                        var afterLastSlashPosition = currentPosition
-                        while afterLastSlashPosition < endPosition && characterView[afterLastSlashPosition] == "/" {
-                            afterLastSlashPosition = characterView.index(after: afterLastSlashPosition)
-                        }
-                        if afterLastSlashPosition != characterView.index(after: currentPosition) {
-                            characterView.replaceSubrange(currentPosition ..< afterLastSlashPosition, with: ["/"])
-                            endPosition = characterView.endIndex
-                        }
-                        currentPosition = afterLastSlashPosition
-                    } else {
-                        currentPosition = characterView.index(after: currentPosition)
-                    }
-                }
-            }
-        }
-
-        if stripTrailing && result.has(suffix: "/") {
-            result.remove(at: result.characters.index(before: result.characters.endIndex))
-        }
-
-        return result
-    }
-
-    var startOfLastPathComponent: String.CharacterView.Index {
-        precondition(!has(suffix: "/") && characters.count > 1)
-
-        let characterView = characters
-        let startPos = characterView.startIndex
-        let endPosition = characterView.endIndex
-        var currentPosition = endPosition
-
-        while currentPosition > startPos {
-            let previousPosition = characterView.index(before: currentPosition)
-            if characterView[previousPosition] == "/" {
-                break
-            }
-            currentPosition = previousPosition
-        }
-
-        return currentPosition
     }
 }

@@ -143,21 +143,21 @@ extension String {
 }
 
 extension String {
-    public func percentEncoded(allowing allowed: Characters) -> String {
-        var string = ""
-        let allowed = allowed.utf8()
-
-        for codeUnit in self.utf8 {
-            if allowed.contains(codeUnit) {
-                string.append(String(UnicodeScalar(codeUnit)))
-            } else {
-                string.append("%")
-                string.append(codeUnit.hexadecimal())
-            }
-        }
-
-        return string
-    }
+//    public func percentEncoded(allowing allowed: Characters) -> String {
+//        var string = ""
+//        let allowed = allowed.utf8()
+//
+//        for codeUnit in self.utf8 {
+//            if allowed.contains(codeUnit) {
+//                string.append(String(UnicodeScalar(codeUnit)))
+//            } else {
+//                string.append("%")
+//                string.append(codeUnit.hexadecimal())
+//            }
+//        }
+//
+//        return string
+//    }
 
     public func percentEncoded(allowing allowed: Set<UTF8.CodeUnit>) -> String {
         var string = ""
@@ -175,9 +175,18 @@ extension String {
     }
 }
 
-extension UInt8 {
-    func hexadecimal() -> String {
-        let hexadecimal =  String(self, radix: 16, uppercase: true)
-        return (self < 16 ? "0" : "") + hexadecimal
+extension String.UnicodeScalarView: ExpressibleByStringLiteral {
+
+    public init(stringLiteral value: String.StringLiteralType) {
+        self = value.unicodeScalars
     }
+
+    public init(extendedGraphemeClusterLiteral value: String.ExtendedGraphemeClusterLiteralType) {
+        self = value.unicodeScalars
+    }
+
+    public init(unicodeScalarLiteral value: String.UnicodeScalarLiteralType) {
+        self = value.unicodeScalars
+    }
+    
 }
