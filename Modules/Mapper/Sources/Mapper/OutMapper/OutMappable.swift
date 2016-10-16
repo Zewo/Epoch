@@ -19,7 +19,7 @@ public protocol BasicOutMappable {
 }
 
 /// Entity which can be mapped to any structured data type in multiple ways using user-determined context instance.
-public protocol OutMappableWithContext : OutMappable {
+public protocol OutMappableWithContext {
     
     associatedtype Keys : IndexPathElement
     
@@ -33,16 +33,6 @@ public protocol OutMappableWithContext : OutMappable {
     ///
     /// - throws: `OutMapperError`
     func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, Keys, Context>) throws
-    
-}
-
-extension OutMappableWithContext {
-    
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Keys>) throws {
-        var contextual = ContextualOutMapper<Destination, Keys, Context>(of: mapper.destination, context: nil)
-        try self.outMap(mapper: &contextual)
-        mapper.destination = contextual.destination
-    }
     
 }
 

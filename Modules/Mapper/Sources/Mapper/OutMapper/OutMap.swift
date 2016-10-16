@@ -10,7 +10,7 @@ public protocol OutMap {
     /// - parameter indexPath: path to set value to.
     ///
     /// - throws: throw if value cannot be set for some reason.
-    mutating func set(_ map: Self, at indexPath: IndexPathElement) throws
+    mutating func set(_ map: Self, at indexPath: IndexPathValue) throws
     
     /// Sets value to given index path.
     ///
@@ -18,7 +18,7 @@ public protocol OutMap {
     /// - parameter indexPath: path to set value to.
     ///
     /// - throws: throw if value cannot be set for some reason.
-    mutating func set(_ map: Self, at indexPath: [IndexPathElement]) throws
+    mutating func set(_ map: Self, at indexPath: [IndexPathValue]) throws
     
     /// Creates instance from array of instances of the same type.
     ///
@@ -68,7 +68,7 @@ public enum OutMapError : Error {
 }
 
 extension OutMap {
-    mutating public func set(_ map: Self, at indexPath: [IndexPathElement]) throws {
+    mutating public func set(_ map: Self, at indexPath: [IndexPathValue]) throws {
         guard indexPath.count == 1 else {
             throw OutMapError.deepSetIsNotImplementedYet
         }

@@ -62,10 +62,10 @@ struct DirectPrimitive {
     let double: Double
     
     init?(map: Map) {
-        guard let int = map.get(at: "int")?.int,
-            let string = map.get(at: "string")?.string,
-            let bool = map.get(at: "bool")?.bool,
-            let double = map.get(at: "double")?.double else {
+        guard let int = map["int"].int,
+            let string = map["string"].string,
+            let bool = map["bool"].bool,
+            let double = map["double"].double else {
                 return nil
         }
         self.int = int

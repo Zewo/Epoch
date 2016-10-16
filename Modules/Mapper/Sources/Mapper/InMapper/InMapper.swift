@@ -13,7 +13,7 @@ public protocol InMapperProtocol {
 public protocol ContextualInMapperProtocol : InMapperProtocol {
     
     associatedtype Context
-    var context: Context? { get }
+    var context: Context { get }
     
 }
 
@@ -31,7 +31,8 @@ public enum InMapperError : Error {
 fileprivate extension InMapperProtocol {
     
     func dive(to indexPath: [IndexPath]) throws -> Source {
-        if let value = source.get(at: indexPath) {
+        let indexPathValues = indexPath.map({ $0.indexPathValue })
+        if let value = source.get(at: indexPathValues) {
             return value
         } else {
             throw InMapperError.noValue(forIndexPath: indexPath)
@@ -155,7 +156,7 @@ extension InMapperProtocol {
     /// - throws: `InMapperError`.
     ///
     /// - returns: value at `indexPath` represented as `T`.
-    public func map<T : InMappableWithContext>(from indexPath: IndexPath..., usingContext context: T.Context) throws -> T {
+    public func map<T : InMappableWithContext>(from indexPath: IndexPath..., withContext context: T.Context) throws -> T {
         let leveled = try dive(to: indexPath)
         return try T(mapper: ContextualInMapper(of: leveled, context: context))
     }
@@ -171,7 +172,7 @@ extension InMapperProtocol {
         let leveled = try dive(to: indexPath)
         return try T(mapper: BasicInMapper(of: leveled))
     }
-    
+        
     /// Returns value at `indexPath` represented as `T`, when `T` is `RawRepresentable` (in most cases - `enum` with raw type).
     ///
     /// - parameter indexPath: path to desired value.
@@ -270,7 +271,7 @@ extension InMapperProtocol {
     /// - throws: `InMapperError`.
     ///
     /// - returns: array of values at `indexPath` represented as `T`.
-    public func map<T : InMappableWithContext>(from indexPath: IndexPath..., usingContext context: T.Context) throws -> [T] {
+    public func map<T : InMappableWithContext>(from indexPath: IndexPath..., withContext context: T.Context) throws -> [T] {
         let leveled = try dive(to: indexPath)
         let array = try self.array(from: leveled)
         return try array.map({ try T(mapper: ContextualInMapper(of: $0, context: context)) })
@@ -364,7 +365,7 @@ public struct ContextualInMapper<Source : InMap, Keys : IndexPathElement, Contex
     
     public let source: Source
     /// Context is used to determine the way of mapping, so it allows to map instance in several different ways.
-    public let context: Context?
+    public let context: Context
     public typealias IndexPath = Keys
     
     
@@ -372,26 +373,7 @@ public struct ContextualInMapper<Source : InMap, Keys : IndexPathElement, Contex
     ///
     /// - parameter source:  source of mapping.
     /// - parameter context: context for mapping describal.
-    public init(of source: Source, context: Context?) {
-        self.source = source
-        self.context = context
-    }
-    
-}
-
-public struct BasicContextualInMapper<Source : InMap, Context> : ContextualInMapperProtocol {
-    
-    public let source: Source
-    /// Context is used to determine the way of mapping, so it allows to map instance in several different ways.
-    public let context: Context?
-    public typealias IndexPath = NoKeys
-    
-    
-    /// Creates mapper for given `source` and `context`.
-    ///
-    /// - parameter source:  source of mapping.
-    /// - parameter context: context for mapping describal.
-    public init(of source: Source, context: Context?) {
+    public init(of source: Source, context: Context) {
         self.source = source
         self.context = context
     }
@@ -400,3 +382,5 @@ public struct BasicContextualInMapper<Source : InMap, Context> : ContextualInMap
 
 /// Mapper for mapping without keys.
 public typealias PlainInMapper<Source : InMap> = InMapper<Source, NoKeys>
+/// Contextual Mapper for mapping without keys.
+public typealias PlainContextualInMapper<Source : InMap, Context> = ContextualInMapper<Source, NoKeys, Context>

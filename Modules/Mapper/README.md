@@ -284,8 +284,115 @@ struct Team : Mappable {
 ```
 
 #### Mapping with context
+*(Advanced topic)*
 
-There are some 
+There are some situations when you need to describe more than one way of mappings. It can be for several reasons - different sources/destinations of data, architectural restrictions and so on. For this situation we have "contextual mapping".
+
+Let's start with something called `InMappableWithContext`:
+
+```swift
+enum SuperContext {
+    case json
+    case mongo
+    case gordon
+}
+
+struct SuperheroHelper {
+    
+    let name: String
+    let id: Int
+    
+    enum Keys : String, IndexPathElement {
+        case name
+        case id, identifier, g_id
+    }
+    
+    typealias Context = SuperContext
+    
+}
+
+extension SuperheroHelper : InMappableWithContext {
+    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, Context>) throws {
+        self.name = try mapper.map(from: .name)
+        switch mapper.context {
+        case .json:
+            self.id = try mapper.map(from: .id)
+        case .mongo:
+            self.id = try mapper.map(from: .identifier)
+        case .gordon:
+            self.id = try mapper.map(from: .g_id)
+        }
+    }
+}
+
+extension SuperheroHelper : OutMappableWithContext {
+    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, SuperheroHelper.Keys, SuperContext>) throws {
+        try mapper.map(self.name, to: .name)
+        switch mapper.context {
+        case .json:
+            try mapper.map(self.id, to: .id)
+        case .mongo:
+            try mapper.map(self.id, to: .identifier)
+        case .gordon:
+            try mapper.map(self.id, to: .g_id)
+        }
+    }
+}
+
+// now we can do
+let robin = try BatmanHelper(from: robinJSON, withContext: .json)
+// or
+let robin = try BatmanHelper(from: robinMongo, withContext: .mongo)
+// or whatever that is
+let robin = try BatmanHelper(from: robinGordon, withContext: .gordon)
+
+// And also
+let robinJSON: JSON = try robin.map(withContext: .json)
+```
+
+Now let's get to something even more cool:
+
+```swift
+struct Superhero {
+    
+    let name: String
+    let helper: SuperheroHelper
+    
+    enum Keys : String, IndexPathElement {
+        case name, helper
+    }
+    
+    typealias Context = SuperContext
+    
+}
+
+extension Superhero : InMappableWithContext {
+    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, Context>) throws {
+        self.name = try mapper.map(from: .name)
+        self.helper = try mapper.map(from: .helper)
+    }
+}
+
+extension Superhero : OutMappableWithContext {
+    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, Superhero.Keys, SuperContext>) throws {
+        try mapper.map(self.name, to: .name)
+        try mapper.map(self.helper, to: .helper)
+    }
+}
+
+let batman = try Superhero(from: batJSON, withContext: .json)
+```
+
+Noticed something strange? Yes, `self.helper` is mapped even though we didn't specify the context! That's because `Superhero` has, actually, the same context as `SuperheroHelper`, and is also `InMappableWithContext`/`OutMappableWithContext`, and so the right context is passed to `SuperheroHelper` *automatically*. This is *context infering*.
+
+If you don't want that, you can specify the context manually:
+
+```swift
+// in
+self.helper = try mapper.map(from: .helper, withContext: .json)
+// out
+try mapper.map(self.helper, to: .helper, withContext: .json)
+```
 
 #### Plain mapping
 
@@ -307,6 +414,40 @@ extension Date : Mappable {
 ```
 
 Mappers take variadic parameter as index path, so it's possible to pass no index path at all. We call it "plain mapping".
+
+And using `MappableWithContext`, we can even do something like that:
+
+```swift
+public enum DateMappingContext {
+    case timeIntervalSince1970
+    case timeIntervalSinceReferenceDate
+}
+
+extension Date : InMappableWithContext {
+    public typealias Context = DateMappingContext
+    
+    public init<Source : InMap>(mapper: PlainContextualInMapper<Source, Context>) throws {
+        let interval: TimeInterval = try mapper.map()
+        switch mapper.context {
+        case .timeIntervalSince1970:
+            self.init(timeIntervalSince1970: interval)
+        case .timeIntervalSinceReferenceDate:
+            self.init(timeIntervalSinceReferenceDate: interval)
+        }
+    }
+}
+
+extension Date : OutMappableWithContext {
+    public func outMap<Destination : OutMap>(mapper: inout PlainContextualOutMapper<Destination, DateMappingContext>) throws {
+        switch mapper.context {
+        case .timeIntervalSince1970:
+            try mapper.map(self.timeIntervalSince1970)
+        case .timeIntervalSinceReferenceDate:
+            try mapper.map(self.timeIntervalSinceReferenceDate)
+        }
+    }
+}
+```
 
 #### "Unsafe" mapping
 
@@ -391,8 +532,8 @@ Let's look at `InMap` protocol:
 
 ```swift
 public protocol InMap {
-    func get(at indexPath: IndexPathElement) -> Self?
-    func get(at indexPath: [IndexPathElement]) -> Self?
+    func get(at indexPath: IndexPathValue) -> Self?
+    func get(at indexPath: [IndexPathValue]) -> Self?
     func asArray() -> [Self]?
     func get<T>() -> T?
     var int: Int? { get }
@@ -402,7 +543,7 @@ public protocol InMap {
 }
 ```
 
-Where `IndexPathElement` is basically any type that can be represented as `IndexPathValue`:
+Where `IndexPathValue` is:
 
 ```swift
 public enum IndexPathValue {
@@ -418,8 +559,8 @@ So, here is our `MapperMap : InMap` implementation:
 ```swift
 extension MapperMap : InMap {
     
-    public func get(at indexPath: IndexPathElement) -> MapperMap? {
-        switch (indexPath.indexPathValue, self) {
+    public func get(at indexPath: IndexPathValue) -> MapperMap? {
+        switch (indexPath, self) {
         case (.key(let key), .dictionary(let dict)):
             return dict[key]
         case (.index(let index), .array(let array)):
@@ -574,8 +715,8 @@ Now let's look at `OutMap`:
 ```swift
 public protocol OutMap {
     static var blank: Self { get }
-    mutating func set(_ map: Self, at indexPath: IndexPathElement) throws
-    mutating func set(_ map: Self, at indexPath: [IndexPathElement]) throws
+    mutating func set(_ map: Self, at indexPath: IndexPathValue) throws
+    mutating func set(_ map: Self, at indexPath: [IndexPathValue]) throws
     static func fromArray(_ array: [Self]) -> Self?
     static func from<T>(_ value: T) -> Self?
     static func from(_ int: Int) -> Self?
@@ -596,8 +737,8 @@ extension MapperMap : OutMap {
         return .dictionary([:])
     }
     
-    public mutating func set(_ map: MapperMap, at indexPath: IndexPathElement) throws {
-        switch (indexPath.indexPathValue, self) {
+    public mutating func set(_ map: MapperMap, at indexPath: IndexPathValue) throws {
+        switch (indexPath, self) {
         case (.key(let key), .dictionary(var dict)):
             dict[key] = map
             self = .dictionary(dict)

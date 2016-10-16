@@ -819,14 +819,10 @@ extension Map : CustomStringConvertible {
 
 extension Map: InMap {
     
-    public func get(at indexPath: IndexPathElement) -> Map? {
+    public func get(at indexPath: IndexPathValue) -> Map? {
         return try? get(indexPath)
     }
-    
-    public func get(at indexPath: [IndexPathElement]) -> Map? {
-        return try? get(indexPath)
-    }
-    
+        
     public func get<T>() -> T? {
         return try? get()
     }
@@ -839,11 +835,11 @@ extension Map: InMap {
 
 extension Map: OutMap {
     
-    mutating public func set(_ map: Map, at indexPath: IndexPathElement) throws {
+    mutating public func set(_ map: Map, at indexPath: IndexPathValue) throws {
         try self.set(map, for: [indexPath])
     }
     
-    mutating public func set(_ map: Map, at indexPath: [IndexPathElement]) throws {
+    mutating public func set(_ map: Map, at indexPath: [IndexPathValue]) throws {
         try self.set(map, for: indexPath)
     }
     

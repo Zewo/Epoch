@@ -8,7 +8,7 @@ public protocol InMap {
     /// - parameter indexPath: path to desired value.
     ///
     /// - returns: `Self` instance if available; `nil` otherwise.
-    func get(at indexPath: IndexPathElement) -> Self?
+    func get(at indexPath: IndexPathValue) -> Self?
     
     
     /// Returns instance of the same type for given index path.
@@ -16,7 +16,7 @@ public protocol InMap {
     /// - parameter indexPath: path to desired value.
     ///
     /// - returns: `Self` instance if available; `nil` otherwise.
-    func get(at indexPath: [IndexPathElement]) -> Self?
+    func get(at indexPath: [IndexPathValue]) -> Self?
 
     
     /// The representation of `self` as an array of `Self`; `nil` if `self` is not an array.
@@ -46,13 +46,13 @@ extension InMap {
     /// - parameter indexPath: path to desired value.
     ///
     /// - returns: `Self` instance if available; `nil` otherwise.
-    public func get(at indexPath: [IndexPathElement]) -> Self? {
+    public func get(at indexPath: [IndexPathValue]) -> Self? {
         var result = self
         for index in indexPath {
             if let deeped = result.get(at: index) {
                 result = deeped
             } else {
-                break
+                return nil
             }
         }
         return result

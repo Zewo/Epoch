@@ -48,9 +48,9 @@ struct Test2: InMappable {
 }
 
 struct Test3: InMappable {
-    let string: String
+    let rio: String
     init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
-        self.string = try mapper.map(from: .rio)
+        self.rio = try mapper.map(from: .rio)
     }
     enum Keys: String, IndexPathElement {
         case rio = "rio-2016"
@@ -134,8 +134,7 @@ struct Nest3: InMappableWithContext {
     let int: Int
     typealias Context = TestContext
     init<Source : InMap>(mapper: ContextualInMapper<Source, String, Context>) throws {
-        let context = mapper.context ?? .apple
-        switch context {
+        switch mapper.context {
         case .apple:
             int = try mapper.map(from: "apple-int")
         case .peach:
@@ -164,8 +163,8 @@ struct Test11: BasicInMappable {
     let nest: Nest3
     let nests: [Nest3]
     init<Source : InMap>(mapper: BasicInMapper<Source>) throws {
-        self.nest = try mapper.map(from: "nest", usingContext: .peach)
-        self.nests = try mapper.map(from: "nests", usingContext: .orange)
+        self.nest = try mapper.map(from: "nest", withContext: .peach)
+        self.nests = try mapper.map(from: "nests", withContext: .orange)
     }
 }
 
@@ -271,6 +270,25 @@ extension AdvancedEnum: InMappable {
     }
 #endif
 
+public enum DateMappingContext {
+    case timeIntervalSince1970
+    case timeIntervalSinceReferenceDate
+}
+
+extension Date : InMappableWithContext {
+    public typealias Context = DateMappingContext
+    
+    public init<Source : InMap>(mapper: PlainContextualInMapper<Source, Context>) throws {
+        let interval: TimeInterval = try mapper.map()
+        switch mapper.context {
+        case .timeIntervalSince1970:
+            self.init(timeIntervalSince1970: interval)
+        case .timeIntervalSinceReferenceDate:
+            self.init(timeIntervalSinceReferenceDate: interval)
+        }
+    }
+}
+
 class InMapperTests: XCTestCase {
     
     func testPrimitiveMapping() throws {
@@ -293,7 +311,8 @@ class InMapperTests: XCTestCase {
     func testFailNoValue() {
         let dict: Map = ["string": "Rio-2016"]
         XCTAssertThrowsError(try Test3(from: dict)) { error in
-            guard let error = error as? InMapperError, case .noValue = error else {
+            guard let cError = error as? InMapperError, case .noValue = cError else {
+                print(error)
                 XCTFail("Wrong error thrown; must be .noValue")
                 return
             }
@@ -355,8 +374,6 @@ class InMapperTests: XCTestCase {
         let appleDict: Map = ["apple-int": 1]
         let apple = try Nest3(from: appleDict, withContext: .apple)
         XCTAssertEqual(apple.int, 1)
-        let defaulted = try Nest3(from: appleDict)
-        XCTAssertEqual(defaulted.int, 1)
         let peachDict: Map = ["peach-int": 2]
         let peach = try Nest3(from: peachDict, withContext: .peach)
         XCTAssertEqual(peach.int, 2)
@@ -431,6 +448,15 @@ class InMapperTests: XCTestCase {
             let test = try Test15(from: map)
             XCTAssertEqual(test.date.timeIntervalSince1970, date.timeIntervalSince1970)
         #endif
+    }
+    
+    func testDateMapping() throws {
+        let dateMap = Map(5.0)
+        let date1970 = try Date(from: dateMap, withContext: .timeIntervalSince1970)
+        XCTAssertEqual(date1970, Date(timeIntervalSince1970: 5.0))
+        
+        let date2001 = try Date(from: dateMap, withContext: .timeIntervalSinceReferenceDate)
+        XCTAssertEqual(date2001, Date(timeIntervalSinceReferenceDate: 5.0))
     }
     
 }

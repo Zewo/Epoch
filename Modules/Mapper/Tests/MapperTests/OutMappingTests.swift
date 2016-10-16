@@ -54,8 +54,7 @@ extension Test7: OutMappable {
 
 extension Nest3: OutMappableWithContext {
     func outMap<Map : OutMap>(mapper: inout ContextualOutMapper<Map, String, TestContext>) throws {
-        let context = mapper.context ?? .apple
-        switch context {
+        switch mapper.context {
         case .apple:
             try mapper.map(self.int, to: "apple-int")
         case .peach:
@@ -80,8 +79,8 @@ extension Test10: OutMappableWithContext {
 
 extension Test11: BasicOutMappable {
     func outMap<Map : OutMap>(mapper: inout BasicOutMapper<Map>) throws {
-        try mapper.map(self.nest, to: "nest", usingContext: .peach)
-        try mapper.map(self.nests, to: "nests", usingContext: .orange)
+        try mapper.map(self.nest, to: "nest", withContext: .peach)
+        try mapper.map(self.nests, to: "nests", withContext: .orange)
     }
 }
 
@@ -122,6 +121,17 @@ struct OutDictTest: BasicOutMappable {
         }
     }
 #endif
+
+extension Date : OutMappableWithContext {
+    public func outMap<Destination : OutMap>(mapper: inout PlainContextualOutMapper<Destination, DateMappingContext>) throws {
+        switch mapper.context {
+        case .timeIntervalSince1970:
+            try mapper.map(self.timeIntervalSince1970)
+        case .timeIntervalSinceReferenceDate:
+            try mapper.map(self.timeIntervalSinceReferenceDate)
+        }
+    }
+}
 
 class OutMapperTests: XCTestCase {
     
@@ -175,8 +185,6 @@ class OutMapperTests: XCTestCase {
         let appleDict: Map = ["apple-int": 1]
         let apple = try Nest3(from: appleDict, withContext: .apple)
         XCTAssertEqual(appleDict, try apple.map(withContext: .apple))
-        let defaulted = try Nest3(from: appleDict)
-        XCTAssertEqual(appleDict, try defaulted.map())
         let peachDict: Map = ["peach-int": 2]
         let peach = try Nest3(from: peachDict, withContext: .peach)
         XCTAssertEqual(peachDict, try peach.map(withContext: .peach))
@@ -216,6 +224,16 @@ class OutMapperTests: XCTestCase {
             let backDate: TimeInterval = back["date"].double!
             XCTAssertEqual(date.timeIntervalSince1970, backDate)
         #endif
+    }
+    
+    func testDateMapping() throws {
+        let date1970 = Date.init(timeIntervalSince1970: 5.0)
+        let date1970Map: Map = try date1970.map(withContext: .timeIntervalSince1970)
+        XCTAssertEqual(date1970Map.double!, 5.0)
+        
+        let date2001 = Date.init(timeIntervalSinceReferenceDate: 5.0)
+        let date2001Map: Map = try date2001.map(withContext: .timeIntervalSinceReferenceDate)
+        XCTAssertEqual(date2001Map.double!, 5.0)
     }
     
 //    func testStringAnyExhaustive() throws {
