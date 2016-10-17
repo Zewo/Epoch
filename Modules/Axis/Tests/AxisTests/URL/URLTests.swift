@@ -1,4 +1,5 @@
 import XCTest
+import Foundation
 @testable import Axis
 
 public class URLTests : XCTestCase {
@@ -8,21 +9,12 @@ public class URLTests : XCTestCase {
         XCTAssertEqual(queryItems[0], URLQueryItem(name: "a", value: "b"))
         XCTAssertEqual(queryItems[1], URLQueryItem(name: "c", value: "d e"))
     }
-    
-    func testURLComponentsQueryItems() {
-        let url = URL(string: "http://zewo.io?a=b&c=d%20e")!
-        let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)!.queryItems!
-        
-        XCTAssertEqual(queryItems[0], URLQueryItem(name: "a", value: "b"))
-        XCTAssertEqual(queryItems[1], URLQueryItem(name: "c", value: "d e"))
-    }
 }
 
 extension URLTests {
     public static var allTests: [(String, (URLTests) -> () throws -> Void)] {
         return [
             ("testQueryItems", testQueryItems),
-            ("testQueryItems", testURLComponentsQueryItems),
         ]
     }
 }
