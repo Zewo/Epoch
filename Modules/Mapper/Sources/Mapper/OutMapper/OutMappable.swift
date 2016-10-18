@@ -24,7 +24,7 @@ public protocol OutMappableWithContext {
     associatedtype Keys : IndexPathElement
     
     /// Context allows user to map data in different ways.
-    associatedtype Context
+    associatedtype MappingContext
     
     
     /// Maps instance data to contextual `mapper`.
@@ -32,7 +32,7 @@ public protocol OutMappableWithContext {
     /// - parameter mapper: wraps the actual structured data instance.
     ///
     /// - throws: `OutMapperError`
-    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, Keys, Context>) throws
+    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, Keys, MappingContext>) throws
     
 }
 
@@ -80,8 +80,8 @@ extension OutMappableWithContext {
     /// - throws: `OutMapperError`.
     ///
     /// - returns: structured data instance created from `self`.
-    public func map<Destination : OutMap>(to destination: Destination = .blank, withContext context: Context) throws -> Destination {
-        var mapper = ContextualOutMapper<Destination, Keys, Context>(of: destination, context: context)
+    public func map<Destination : OutMap>(to destination: Destination = .blank, withContext context: MappingContext) throws -> Destination {
+        var mapper = ContextualOutMapper<Destination, Keys, MappingContext>(of: destination, context: context)
         try outMap(mapper: &mapper)
         return mapper.destination
     }

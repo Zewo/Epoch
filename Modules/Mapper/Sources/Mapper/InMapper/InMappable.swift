@@ -18,11 +18,11 @@ public protocol BasicInMappable {
 /// Entity which can be mapped (initialized) from any structured data type in multiple ways using user-determined context instance.
 public protocol InMappableWithContext {
     
-    associatedtype Context
+    associatedtype MappingContext
     associatedtype Keys: IndexPathElement
     
     /// Creates instance from instance of `Source` packed into contextual mapper with type-specific `Keys`.
-    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, Context>) throws
+    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, MappingContext>) throws
     
 }
 
@@ -49,8 +49,8 @@ extension BasicInMappable {
 extension InMappableWithContext {
     
     /// Creates instance from `source` using given context.
-    public init<Source : InMap>(from source: Source, withContext context: Context) throws {
-        let mapper = ContextualInMapper<Source, Keys, Context>(of: source, context: context)
+    public init<Source : InMap>(from source: Source, withContext context: MappingContext) throws {
+        let mapper = ContextualInMapper<Source, Keys, MappingContext>(of: source, context: context)
         try self.init(mapper: mapper)
     }
     

@@ -156,7 +156,7 @@ extension InMapperProtocol {
     /// - throws: `InMapperError`.
     ///
     /// - returns: value at `indexPath` represented as `T`.
-    public func map<T : InMappableWithContext>(from indexPath: IndexPath..., withContext context: T.Context) throws -> T {
+    public func map<T : InMappableWithContext>(from indexPath: IndexPath..., withContext context: T.MappingContext) throws -> T {
         let leveled = try dive(to: indexPath)
         return try T(mapper: ContextualInMapper(of: leveled, context: context))
     }
@@ -271,7 +271,7 @@ extension InMapperProtocol {
     /// - throws: `InMapperError`.
     ///
     /// - returns: array of values at `indexPath` represented as `T`.
-    public func map<T : InMappableWithContext>(from indexPath: IndexPath..., withContext context: T.Context) throws -> [T] {
+    public func map<T : InMappableWithContext>(from indexPath: IndexPath..., withContext context: T.MappingContext) throws -> [T] {
         let leveled = try dive(to: indexPath)
         let array = try self.array(from: leveled)
         return try array.map({ try T(mapper: ContextualInMapper(of: $0, context: context)) })
@@ -314,9 +314,9 @@ extension ContextualInMapperProtocol {
     /// - throws: `InMapperError`.
     ///
     /// - returns: value at `indexPath` represented as `T`.
-    public func map<T : InMappableWithContext>(from indexPath: IndexPath...) throws -> T where T.Context == Context {
+    public func map<T : InMappableWithContext>(from indexPath: IndexPath...) throws -> T where T.MappingContext == Context {
         let leveled = try dive(to: indexPath)
-        return try T(mapper: ContextualInMapper<Source, T.Keys, T.Context>(of: leveled, context: self.context))
+        return try T(mapper: ContextualInMapper<Source, T.Keys, T.MappingContext>(of: leveled, context: self.context))
     }
     
     /// Returns array of values at `indexPath` represented as `T` which has the same associated `Context`, automatically passing the context.
@@ -326,10 +326,10 @@ extension ContextualInMapperProtocol {
     /// - throws: `InMapperError`.
     ///
     /// - returns: array of values at `indexPath` represented as `T`.
-    public func map<T : InMappableWithContext>(from indexPath: IndexPath...) throws -> [T] where T.Context == Context {
+    public func map<T : InMappableWithContext>(from indexPath: IndexPath...) throws -> [T] where T.MappingContext == Context {
         let leveled = try dive(to: indexPath)
         let array = try self.array(from: leveled)
-        return try array.map({ try T(mapper: ContextualInMapper<Source, T.Keys, T.Context>(of: $0, context: self.context)) })
+        return try array.map({ try T(mapper: ContextualInMapper<Source, T.Keys, T.MappingContext>(of: $0, context: self.context)) })
     }
     
 }

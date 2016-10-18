@@ -17,13 +17,11 @@ struct SuperheroHelper {
         case name
         case id, identifier, g_id
     }
-    
-    typealias Context = SuperContext
-    
+        
 }
 
 extension SuperheroHelper : InMappableWithContext {
-    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, Context>) throws {
+    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, SuperContext>) throws {
         self.name = try mapper.map(from: .name)
         switch mapper.context {
         case .json:

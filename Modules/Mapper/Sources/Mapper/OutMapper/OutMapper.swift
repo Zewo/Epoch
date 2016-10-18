@@ -133,7 +133,7 @@ extension OutMapperProtocol {
     /// - parameter context: value-specific context, used to describe the way of mapping.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func map<T : OutMappableWithContext>(_ value: T, to indexPath: IndexPath..., withContext context: T.Context) throws {
+    public mutating func map<T : OutMappableWithContext>(_ value: T, to indexPath: IndexPath..., withContext context: T.MappingContext) throws {
         let new = try value.map(withContext: context) as Destination
         try set(new, at: indexPath)
     }
@@ -217,7 +217,7 @@ extension OutMapperProtocol {
     /// - parameter context: values-specific context, used to describe the way of mapping.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func map<T : OutMappableWithContext>(_ array: [T], to indexPath: IndexPath..., withContext context: T.Context) throws {
+    public mutating func map<T : OutMappableWithContext>(_ array: [T], to indexPath: IndexPath..., withContext context: T.MappingContext) throws {
         let maps: [Destination] = try array.map({ try $0.map(withContext: context) })
         let map = try arrayMap(of: maps)
         try set(map, at: indexPath)
@@ -233,7 +233,7 @@ extension ContextualOutMapperProtocol {
     /// - parameter indexPath: path to set values to.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func map<T : OutMappableWithContext>(_ value: T, to indexPath: IndexPath...) throws where T.Context == Context {
+    public mutating func map<T : OutMappableWithContext>(_ value: T, to indexPath: IndexPath...) throws where T.MappingContext == Context {
         let new: Destination = try value.map(withContext: self.context)
         try set(new, at: indexPath)
     }
@@ -244,7 +244,7 @@ extension ContextualOutMapperProtocol {
     /// - parameter indexPath: path to set values to.
     ///
     /// - throws: `OutMapperError`.
-    public mutating func map<T : OutMappableWithContext>(_ array: [T], to indexPath: IndexPath...) throws where T.Context == Context {
+    public mutating func map<T : OutMappableWithContext>(_ array: [T], to indexPath: IndexPath...) throws where T.MappingContext == Context {
         let maps: [Destination] = try array.map({ try $0.map(withContext: context) })
         let map = try arrayMap(of: maps)
         try set(map, at: indexPath)

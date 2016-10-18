@@ -307,12 +307,12 @@ struct SuperheroHelper {
         case id, identifier, g_id
     }
     
-    typealias Context = SuperContext
+    typealias MappingContext = SuperContext
     
 }
 
 extension SuperheroHelper : InMappableWithContext {
-    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, Context>) throws {
+    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, MappingContext>) throws {
         self.name = try mapper.map(from: .name)
         switch mapper.context {
         case .json:
@@ -326,7 +326,7 @@ extension SuperheroHelper : InMappableWithContext {
 }
 
 extension SuperheroHelper : OutMappableWithContext {
-    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, SuperheroHelper.Keys, SuperContext>) throws {
+    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, SuperheroHelper.Keys, MappingContext>) throws {
         try mapper.map(self.name, to: .name)
         switch mapper.context {
         case .json:
@@ -362,19 +362,19 @@ struct Superhero {
         case name, helper
     }
     
-    typealias Context = SuperContext
+    typealias MappingContext = SuperContext
     
 }
 
 extension Superhero : InMappableWithContext {
-    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, Context>) throws {
+    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, MappingContext>) throws {
         self.name = try mapper.map(from: .name)
         self.helper = try mapper.map(from: .helper)
     }
 }
 
 extension Superhero : OutMappableWithContext {
-    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, Superhero.Keys, SuperContext>) throws {
+    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, Keys, MappingContext>) throws {
         try mapper.map(self.name, to: .name)
         try mapper.map(self.helper, to: .helper)
     }
@@ -424,9 +424,7 @@ public enum DateMappingContext {
 }
 
 extension Date : InMappableWithContext {
-    public typealias Context = DateMappingContext
-    
-    public init<Source : InMap>(mapper: PlainContextualInMapper<Source, Context>) throws {
+    public init<Source : InMap>(mapper: PlainContextualInMapper<Source, DateMappingContext>) throws {
         let interval: TimeInterval = try mapper.map()
         switch mapper.context {
         case .timeIntervalSince1970:
