@@ -29,8 +29,8 @@ var testCases = [
     testCase(PerformanceTests.allTests),
     testCase(PublicTests.allTests),
     testCase(StringTests.allTests),
+    testCase(CollectionTests.allTests),
     testCase(MapTests.allTests),
-
 
     // HTTP
     testCase(RequestContentTests.allTests),

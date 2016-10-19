@@ -1,7 +1,7 @@
 extension Sequence where Iterator.Element == UTF8.CodeUnit {
     /// Decodes `self` into `String.UnicodeScalarView` using standard `UTF8` decoder.
     ///
-    /// - throws: `String.Error.invalidUTF8` if the decoding fails with an error.
+    /// - throws: `StringError.invalidUTF8` if the decoding fails with an error.
     func decodeUTF8() throws -> String.UnicodeScalarView {
         var reader = makeIterator()
         var decoder = UTF8()
@@ -14,7 +14,7 @@ extension Sequence where Iterator.Element == UTF8.CodeUnit {
             case .emptyInput:
                 break decoding
             case .error:
-                throw String.Error.invalidUTF8
+                throw StringError.invalidUTF8
             }
         }
 

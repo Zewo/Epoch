@@ -809,11 +809,11 @@ extension Map : CustomStringConvertible {
         func escape(_ source: String) -> String {
             var string: String.UnicodeScalarView = "\""
 
-            source.unicodeScalars.forEach {
-                if let escaped = escapeMapping[$0] {
+            for scalar in source.unicodeScalars {
+                if let escaped = escapeMapping[scalar] {
                     string.append(contentsOf: escaped)
                 } else {
-                    string.append($0)
+                    string.append(scalar)
                 }
             }
 

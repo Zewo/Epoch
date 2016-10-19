@@ -58,9 +58,9 @@ extension String {
         var result = UnicodeScalarView()
 
         if mergeRepetitive {
-            unicodeScalars.forEach {
-                if $0 != "/" || result.last != "/" {
-                    result.append($0)
+            for scalar in unicodeScalars {
+                if scalar != "/" || result.last != "/" {
+                    result.append(scalar)
                 }
             }
         } else {

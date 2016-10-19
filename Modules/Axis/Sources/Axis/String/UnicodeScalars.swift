@@ -67,17 +67,11 @@ public struct UnicodeScalars : ExpressibleByArrayLiteral {
 
     public func utf8() -> Set<UTF8.CodeUnit> {
         var codeUnits: Set<UTF8.CodeUnit> = []
-        scalars.forEach {
-            UTF8.encode($0) {
+        for scalar in scalars {
+            UTF8.encode(scalar) {
                 codeUnits.insert($0)
             }
         }
         return codeUnits
     }
 }
-
-//extension UnicodeScalars {
-//    enum Failure : Error {
-//        case scalarIsNotUTF8
-//    }
-//}

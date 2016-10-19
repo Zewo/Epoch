@@ -7,13 +7,8 @@
 public enum StringError : Error {
     case invalidString
     case utf8EncodingFailed
-}
-
-extension String {
-    public enum Error: Swift.Error {
-        case invalidUTF8
-        case invalidPercentEncoding
-    }
+    case invalidUTF8
+    case invalidPercentEncoding
 }
 
 extension String {
@@ -113,13 +108,13 @@ extension String {
         while var nextScalar = reader.next() {
             switch nextScalar {
             case "%":
-                guard let hexH = reader.next(), let hexL = reader.next() else { throw String.Error.invalidPercentEncoding }
+                guard let hexH = reader.next(), let hexL = reader.next() else { throw StringError.invalidPercentEncoding }
 
                 var hex = UnicodeScalarView()
                 hex.append(hexH)
                 hex.append(hexL)
 
-                guard let decodedHex = UTF8.CodeUnit(String(hex), radix: 16) else { throw String.Error.invalidPercentEncoding }
+                guard let decodedHex = UTF8.CodeUnit(String(hex), radix: 16) else { throw StringError.invalidPercentEncoding }
 
                 buffer.append(decodedHex)
             case "+":
