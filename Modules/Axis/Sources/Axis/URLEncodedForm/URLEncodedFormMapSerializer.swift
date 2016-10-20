@@ -27,7 +27,7 @@ public final class URLEncodedFormMapSerializer : MapSerializer {
 
                 try append(string: key + "=", body: body)
                 let value = try map.asString(converting: true)
-                try append(string: value.percentEncoded(allowing: UTF8.uriQueryAllowed), body: body)
+                try append(string: value.percentEncoded(allowing: UnicodeScalars.uriQueryAllowed.utf8), body: body)
             }
         default:
             throw URLEncodedFormMapSerializerError.invalidMap

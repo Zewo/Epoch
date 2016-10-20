@@ -1,4 +1,4 @@
-public struct UnicodeScalars : ExpressibleByArrayLiteral {
+public struct UnicodeScalars : ExpressibleByArrayLiteral, Sequence {
     public static let whitespaceAndNewline: UnicodeScalars = [" ", "\t", "\r", "\n"]
 
     public static let digits: UnicodeScalars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
@@ -52,9 +52,19 @@ public struct UnicodeScalars : ExpressibleByArrayLiteral {
     ]
 
     private let scalars: Set<UnicodeScalar>
+    public let utf8: Set<UTF8.CodeUnit>
 
     public init(scalars: Set<UnicodeScalar>) {
+        var _utf8: Set<UTF8.CodeUnit> = []
+
+        for scalar in scalars {
+            UTF8.encode(scalar) {
+                _utf8.insert($0)
+            }
+        }
+
         self.scalars = scalars
+        self.utf8 = _utf8
     }
 
     public init(arrayLiteral elements: UnicodeScalar...) {
@@ -65,5 +75,7 @@ public struct UnicodeScalars : ExpressibleByArrayLiteral {
         return scalars.contains(scalar)
     }
 
+    public func makeIterator() -> AnyIterator<UnicodeScalar> {
+        return AnyIterator(scalars.makeIterator())
     }
 }

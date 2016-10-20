@@ -76,11 +76,42 @@ public class StringTests : XCTestCase {
     }
 
     func testUTF8URLQueryPercentEncoding() {
-        XCTAssertEqual("abc".percentEncoded(allowing: UTF8.uriQueryAllowed), "abc")
-        XCTAssertEqual("joão".percentEncoded(allowing: UTF8.uriQueryAllowed), "jo%C3%A3o")
-        XCTAssertEqual("💩".percentEncoded(allowing: UTF8.uriQueryAllowed), "%F0%9F%92%A9")
-        XCTAssertEqual("foo bar".percentEncoded(allowing: UTF8.uriQueryAllowed), "foo%20bar")
-        XCTAssertEqual("foo\nbar".percentEncoded(allowing: UTF8.uriQueryAllowed), "foo%0Abar")
+        XCTAssertEqual("abc".percentEncoded(allowing: UnicodeScalars.uriQueryAllowed.utf8), "abc")
+        XCTAssertEqual("joão".percentEncoded(allowing: UnicodeScalars.uriQueryAllowed.utf8), "jo%C3%A3o")
+        XCTAssertEqual("💩".percentEncoded(allowing: UnicodeScalars.uriQueryAllowed.utf8), "%F0%9F%92%A9")
+        XCTAssertEqual("foo bar".percentEncoded(allowing: UnicodeScalars.uriQueryAllowed.utf8), "foo%20bar")
+        XCTAssertEqual("foo\nbar".percentEncoded(allowing: UnicodeScalars.uriQueryAllowed.utf8), "foo%0Abar")
+    }
+
+    func testUnicode2UTF8Mapping() {
+        func testUTFMappping(of scalars: UnicodeScalars) {
+            for scalar in scalars {
+                UTF8.encode(scalar) {
+                    XCTAssertTrue(scalars.utf8.contains($0))
+                }
+            }
+
+            var decoder = UTF8()
+
+            for codeUnit in scalars.utf8 {
+                var input = [codeUnit].makeIterator()
+                switch decoder.decode(&input) {
+                case .scalarValue(let scalar):
+                    XCTAssertTrue(scalars.contains(scalar))
+                default:
+                    XCTFail("Incomplete mapping between scalars and UTF8 code units")
+                }
+            }
+        }
+
+        testUTFMappping(of: UnicodeScalars.whitespaceAndNewline)
+        testUTFMappping(of: UnicodeScalars.digits)
+        testUTFMappping(of: UnicodeScalars.uriQueryAllowed)
+        testUTFMappping(of: UnicodeScalars.uriFragmentAllowed)
+        testUTFMappping(of: UnicodeScalars.uriPathAllowed)
+        testUTFMappping(of: UnicodeScalars.uriHostAllowed)
+        testUTFMappping(of: UnicodeScalars.uriPasswordAllowed)
+        testUTFMappping(of: UnicodeScalars.uriUserAllowed)
     }
 }
 
@@ -95,6 +126,7 @@ extension StringTests {
             ("testContains", testContains),
             ("testPercentEncodedInit", testPercentEncodedInit),
             ("testUTF8URLQueryPercentEncoding", testUTF8URLQueryPercentEncoding),
+            ("testUnicode2UTF8Mapping", testUnicode2UTF8Mapping),
         ]
     }
 }
