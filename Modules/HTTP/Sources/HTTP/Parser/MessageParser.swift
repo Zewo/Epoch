@@ -11,7 +11,7 @@ public final class MessageParser {
         case response
     }
     
-    private enum State: Int {
+    fileprivate enum State: Int {
         case ready = 1
         case messageBegin = 2
         case url = 3
