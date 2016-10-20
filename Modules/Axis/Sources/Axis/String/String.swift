@@ -138,22 +138,6 @@ extension String {
 }
 
 extension String {
-//    public func percentEncoded(allowing allowed: Characters) -> String {
-//        var string = ""
-//        let allowed = allowed.utf8()
-//
-//        for codeUnit in self.utf8 {
-//            if allowed.contains(codeUnit) {
-//                string.append(String(UnicodeScalar(codeUnit)))
-//            } else {
-//                string.append("%")
-//                string.append(codeUnit.hexadecimal())
-//            }
-//        }
-//
-//        return string
-//    }
-
     public func percentEncoded(allowing allowed: Set<UTF8.CodeUnit>) -> String {
         var string = ""
 

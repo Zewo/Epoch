@@ -1,11 +1,9 @@
 extension Collection where Iterator.Element: Equatable, Iterator.Element == SubSequence.Iterator.Element {
-
     /// Returns the first index where the specified `subcollection` appears in the collection.
     ///
     /// - parameter subcollection: A subcollection to search for within `self`.
     ///
     /// - returns: The first index where `subcollection` is found. If it is not found, returns `nil`.
-
     func index(of subcollection: Self) -> Index? {
         guard count >= subcollection.count else { return nil }
 
