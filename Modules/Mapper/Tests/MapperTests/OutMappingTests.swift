@@ -3,7 +3,7 @@ import Foundation
 @testable import Mapper
 
 extension Test1: OutMappable {
-    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, Keys>) throws {
+    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, MappingKeys>) throws {
         try mapper.map(self.int, to: .int)
         try mapper.map(self.double, to: .double)
         try mapper.map(self.string, to: .string)
@@ -12,13 +12,13 @@ extension Test1: OutMappable {
 }
 
 extension Nest2: OutMappable {
-    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, Keys>) throws {
+    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, MappingKeys>) throws {
         try mapper.map(self.int, to: .int)
     }
 }
 
 extension Test2: OutMappable {
-    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, Keys>) throws {
+    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, MappingKeys>) throws {
         try mapper.map(self.string, to: .string)
         try mapper.map(self.ints, to: .ints)
         try mapper.map(self.nest, to: .nest)
@@ -33,20 +33,20 @@ struct Test14: BasicOutMappable {
 }
 
 extension Test5: OutMappable {
-    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, Keys>) throws {
+    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, MappingKeys>) throws {
         try mapper.map(self.nests, to: .nests)
     }
 }
 
 extension Test6: OutMappable {
-    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, Keys>) throws {
+    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, MappingKeys>) throws {
         try mapper.map(self.string, to: .string)
         try mapper.map(self.int, to: .int)
     }
 }
 
 extension Test7: OutMappable {
-    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, Keys>) throws {
+    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, MappingKeys>) throws {
         try mapper.map(self.strings, to: .strings)
         try mapper.map(self.ints, to: .ints)
     }
@@ -116,7 +116,7 @@ struct OutDictTest: BasicOutMappable {
     extension NSDate : BasicOutMappable { }
     
     extension Test15 : OutMappable {
-        func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Test15.Keys>) throws {
+        func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Test15.MappingKeys>) throws {
             try mapper.map(self.date, to: .date)
         }
     }

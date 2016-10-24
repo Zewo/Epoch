@@ -13,7 +13,7 @@ struct SuperheroHelper {
     let name: String
     let id: Int
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case name
         case id, identifier, g_id
     }
@@ -21,7 +21,7 @@ struct SuperheroHelper {
 }
 
 extension SuperheroHelper : InMappableWithContext {
-    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, SuperContext>) throws {
+    init<Source : InMap>(mapper: ContextualInMapper<Source, MappingKeys, SuperContext>) throws {
         self.name = try mapper.map(from: .name)
         switch mapper.context {
         case .json:
@@ -35,7 +35,7 @@ extension SuperheroHelper : InMappableWithContext {
 }
 
 extension SuperheroHelper : OutMappableWithContext {
-    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, SuperheroHelper.Keys, SuperContext>) throws {
+    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, SuperheroHelper.MappingKeys, SuperContext>) throws {
         try mapper.map(self.name, to: .name)
         switch mapper.context {
         case .json:
@@ -53,7 +53,7 @@ struct Superhero {
     let name: String
     let helper: SuperheroHelper
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case name, helper
     }
     
@@ -62,14 +62,14 @@ struct Superhero {
 }
 
 extension Superhero : InMappableWithContext {
-    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, Context>) throws {
+    init<Source : InMap>(mapper: ContextualInMapper<Source, MappingKeys, Context>) throws {
         self.name = try mapper.map(from: .name)
         self.helper = try mapper.map(from: .helper)
     }
 }
 
 extension Superhero : OutMappableWithContext {
-    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, Superhero.Keys, SuperContext>) throws {
+    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, Superhero.MappingKeys, SuperContext>) throws {
         try mapper.map(self.name, to: .name)
         try mapper.map(self.helper, to: .helper)
     }

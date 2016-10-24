@@ -316,7 +316,7 @@ extension ContextualInMapperProtocol {
     /// - returns: value at `indexPath` represented as `T`.
     public func map<T : InMappableWithContext>(from indexPath: IndexPath...) throws -> T where T.MappingContext == Context {
         let leveled = try dive(to: indexPath)
-        return try T(mapper: ContextualInMapper<Source, T.Keys, T.MappingContext>(of: leveled, context: self.context))
+        return try T(mapper: ContextualInMapper<Source, T.MappingKeys, T.MappingContext>(of: leveled, context: self.context))
     }
     
     /// Returns array of values at `indexPath` represented as `T` which has the same associated `Context`, automatically passing the context.
@@ -329,16 +329,16 @@ extension ContextualInMapperProtocol {
     public func map<T : InMappableWithContext>(from indexPath: IndexPath...) throws -> [T] where T.MappingContext == Context {
         let leveled = try dive(to: indexPath)
         let array = try self.array(from: leveled)
-        return try array.map({ try T(mapper: ContextualInMapper<Source, T.Keys, T.MappingContext>(of: $0, context: self.context)) })
+        return try array.map({ try T(mapper: ContextualInMapper<Source, T.MappingKeys, T.MappingContext>(of: $0, context: self.context)) })
     }
     
 }
 
 /// Object that maps structured data instances to strongly-typed instances.
-public struct InMapper<Source : InMap, Keys : IndexPathElement> : InMapperProtocol {
+public struct InMapper<Source : InMap, MappingKeys : IndexPathElement> : InMapperProtocol {
     
     public let source: Source
-    public typealias IndexPath = Keys
+    public typealias IndexPath = MappingKeys
     
     /// Creates mapper for given `source`.
     ///
@@ -361,12 +361,12 @@ public struct BasicInMapper<Source : InMap> : InMapperProtocol {
 }
 
 /// Object that maps structured data instances to strongly-typed instances using type-specific context.
-public struct ContextualInMapper<Source : InMap, Keys : IndexPathElement, Context> : ContextualInMapperProtocol {
+public struct ContextualInMapper<Source : InMap, MappingKeys : IndexPathElement, Context> : ContextualInMapperProtocol {
     
     public let source: Source
     /// Context is used to determine the way of mapping, so it allows to map instance in several different ways.
     public let context: Context
-    public typealias IndexPath = Keys
+    public typealias IndexPath = MappingKeys
     
     
     /// Creates mapper for given `source` and `context`.
@@ -380,7 +380,7 @@ public struct ContextualInMapper<Source : InMap, Keys : IndexPathElement, Contex
     
 }
 
-/// Mapper for mapping without keys.
+/// Mapper for mapping without MappingKeys.
 public typealias PlainInMapper<Source : InMap> = InMapper<Source, NoKeys>
-/// Contextual Mapper for mapping without keys.
+/// Contextual Mapper for mapping without MappingKeys.
 public typealias PlainContextualInMapper<Source : InMap, Context> = ContextualInMapper<Source, NoKeys, Context>

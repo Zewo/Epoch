@@ -7,17 +7,17 @@ struct Primitive : Mappable {
     let bool: Bool
     let double: Double
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case int, string, bool, double
     }
     
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.int = try mapper.map(from: .int)
         self.string = try mapper.map(from: .string)
         self.bool = try mapper.map(from: .bool)
         self.double = try mapper.map(from: .double)
     }
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Primitive.Keys>) throws {
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Primitive.MappingKeys>) throws {
         try mapper.map(self.int, to: .int)
         try mapper.map(self.string, to: .string)
         try mapper.map(self.bool, to: .bool)
@@ -29,11 +29,11 @@ struct PrimitiveWrap : InMappable {
     let primitive: Primitive
     let ints: [Int]
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case primitive, ints
     }
     
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.primitive = try mapper.map(from: .primitive)
         self.ints = try mapper.map(from: .ints)
     }
@@ -45,9 +45,9 @@ struct UnsafePrimitive : InMappable {
     let bool: Bool
     let double: Double
     
-    typealias Keys = Primitive.Keys
+    typealias MappingKeys = Primitive.MappingKeys
     
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.int = try mapper.unsafe_map(from: .int)
         self.string = try mapper.unsafe_map(from: .string)
         self.bool = try mapper.unsafe_map(from: .bool)

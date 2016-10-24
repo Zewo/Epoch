@@ -253,9 +253,9 @@ extension ContextualOutMapperProtocol {
 }
 
 /// Object that maps strongly-typed instances to structured data instances.
-public struct OutMapper<Destination : OutMap, Keys : IndexPathElement> : OutMapperProtocol {
+public struct OutMapper<Destination : OutMap, MappingKeys : IndexPathElement> : OutMapperProtocol {
     
-    public typealias IndexPath = Keys
+    public typealias IndexPath = MappingKeys
     public var destination: Destination
     
     /// Creates `OutMapper` instance of blank `Destination`.
@@ -288,9 +288,9 @@ public struct BasicOutMapper<Destination : OutMap> : OutMapperProtocol {
 }
 
 /// Object that maps strongly-typed instances to structured data instances using type-specific context.
-public struct ContextualOutMapper<Destination : OutMap, Keys : IndexPathElement, Context> : ContextualOutMapperProtocol {
+public struct ContextualOutMapper<Destination : OutMap, MappingKeys : IndexPathElement, Context> : ContextualOutMapperProtocol {
     
-    public typealias IndexPath = Keys
+    public typealias IndexPath = MappingKeys
     public var destination: Destination
     /// Context allows to map data in several different ways.
     public let context: Context
@@ -306,7 +306,7 @@ public struct ContextualOutMapper<Destination : OutMap, Keys : IndexPathElement,
     
 }
 
-/// Mapper for mapping without keys.
+/// Mapper for mapping without MappingKeys.
 public typealias PlainOutMapper<Destination : OutMap> = OutMapper<Destination, NoKeys>
-/// Contextual Mapper for mapping without keys.
+/// Contextual Mapper for mapping without MappingKeys.
 public typealias PlainContextualOutMapper<Destination : OutMap, Context> = ContextualOutMapper<Destination, NoKeys, Context>

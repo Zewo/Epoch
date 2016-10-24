@@ -7,13 +7,13 @@ struct Test1: InMappable {
     let string: String
     let double: Double
     let bool: Bool
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.int = try mapper.map(from: .int)
         self.string = try mapper.map(from: .string)
         self.double = try mapper.map(from: .double)
         self.bool = try mapper.map(from: .bool)
     }
-    enum Keys: String, IndexPathElement {
+    enum MappingKeys: String, IndexPathElement {
         case int
         case string
         case double
@@ -23,10 +23,10 @@ struct Test1: InMappable {
 
 struct Nest2: InMappable {
     let int: Int
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.int = try mapper.map(from: .int)
     }
-    enum Keys: String, IndexPathElement {
+    enum MappingKeys: String, IndexPathElement {
         case int
     }
 }
@@ -35,12 +35,12 @@ struct Test2: InMappable {
     let string: String
     let ints: [Int]
     let nest: Nest2
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.string = try mapper.map(from: .string)
         self.ints = try mapper.map(from: .ints)
         self.nest = try mapper.map(from: .nest)
     }
-    enum Keys: String, IndexPathElement {
+    enum MappingKeys: String, IndexPathElement {
         case string
         case ints
         case nest
@@ -49,30 +49,30 @@ struct Test2: InMappable {
 
 struct Test3: InMappable {
     let rio: String
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.rio = try mapper.map(from: .rio)
     }
-    enum Keys: String, IndexPathElement {
+    enum MappingKeys: String, IndexPathElement {
         case rio = "rio-2016"
     }
 }
 
 struct Test4: InMappable {
     let ints: [Int]
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.ints = try mapper.map(from: .ints)
     }
-    enum Keys: String, IndexPathElement {
+    enum MappingKeys: String, IndexPathElement {
         case ints
     }
 }
 
 struct Test5: InMappable {
     let nests: [Nest2]
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.nests = try mapper.map(from: .nests)
     }
-    enum Keys: String, IndexPathElement {
+    enum MappingKeys: String, IndexPathElement {
         case nests
     }
 }
@@ -91,11 +91,11 @@ enum IntEnum: Int {
 struct Test6: InMappable {
     let string: StringEnum
     let int: IntEnum
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.string = try mapper.map(from: .string)
         self.int = try mapper.map(from: .int)
     }
-    enum Keys: String, IndexPathElement {
+    enum MappingKeys: String, IndexPathElement {
         case string = "next-big-thing"
         case int = "city"
     }
@@ -104,11 +104,11 @@ struct Test6: InMappable {
 struct Test7: InMappable {
     let strings: [StringEnum]
     let ints: [IntEnum]
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.strings = try mapper.map(from: .strings)
         self.ints = try mapper.map(from: .ints)
     }
-    enum Keys: String, IndexPathElement {
+    enum MappingKeys: String, IndexPathElement {
         case strings = "zewo-projects"
         case ints = "ukraine-capitals"
     }
@@ -116,10 +116,10 @@ struct Test7: InMappable {
 
 struct Test8: InMappable {
     let string: StringEnum
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.string = try mapper.map(from: .string)
     }
-    enum Keys: String, IndexPathElement {
+    enum MappingKeys: String, IndexPathElement {
         case string = "project"
     }
 }
@@ -211,7 +211,7 @@ struct DictTest: InMappable {
 enum AdvancedEnum {
     case fire(rate: Int)
     case takeAim(when: TimeInterval)
-    enum Keys: String, IndexPathElement {
+    enum MappingKeys: String, IndexPathElement {
         case main
         case rate
         case timeInterval = "time-interval"
@@ -219,7 +219,7 @@ enum AdvancedEnum {
 }
 
 extension AdvancedEnum: OutMappable {
-    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, Keys>) throws {
+    func outMap<Map : OutMap>(mapper: inout OutMapper<Map, MappingKeys>) throws {
         switch self {
         case .fire(rate: let rate):
             try mapper.map("fire", to: .main)
@@ -232,7 +232,7 @@ extension AdvancedEnum: OutMappable {
 }
 
 extension AdvancedEnum: InMappable {
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         let main: String = try mapper.map(from: .main)
         switch main {
         case "fire":
@@ -260,11 +260,11 @@ extension AdvancedEnum: InMappable {
     struct Test15 : InMappable {
         let date: NSDate
         
-        enum Keys : String, IndexPathElement {
+        enum MappingKeys : String, IndexPathElement {
             case date
         }
         
-        init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+        init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
             self.date = try mapper.map(from: .date)
         }
     }

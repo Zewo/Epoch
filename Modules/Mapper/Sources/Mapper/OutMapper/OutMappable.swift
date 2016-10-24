@@ -1,14 +1,14 @@
 /// Entity which can be mapped to any structured data type.
 public protocol OutMappable {
     
-    associatedtype Keys : IndexPathElement
+    associatedtype MappingKeys : IndexPathElement
     
     /// Maps instance data to `mapper`.
     ///
     /// - parameter mapper: wraps the actual structured data instance.
     ///
     /// - throws: `OutMapperError`.
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Keys>) throws
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws
     
 }
 
@@ -21,7 +21,7 @@ public protocol BasicOutMappable {
 /// Entity which can be mapped to any structured data type in multiple ways using user-determined context instance.
 public protocol OutMappableWithContext {
     
-    associatedtype Keys : IndexPathElement
+    associatedtype MappingKeys : IndexPathElement
     
     /// Context allows user to map data in different ways.
     associatedtype MappingContext
@@ -32,7 +32,7 @@ public protocol OutMappableWithContext {
     /// - parameter mapper: wraps the actual structured data instance.
     ///
     /// - throws: `OutMapperError`
-    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, Keys, MappingContext>) throws
+    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, MappingKeys, MappingContext>) throws
     
 }
 
@@ -46,7 +46,7 @@ extension OutMappable {
     ///
     /// - returns: structured data instance created from `self`.
     public func map<Destination : OutMap>(to destination: Destination = .blank) throws -> Destination {
-        var mapper = OutMapper<Destination, Keys>(of: destination)
+        var mapper = OutMapper<Destination, MappingKeys>(of: destination)
         try outMap(mapper: &mapper)
         return mapper.destination
     }
@@ -81,7 +81,7 @@ extension OutMappableWithContext {
     ///
     /// - returns: structured data instance created from `self`.
     public func map<Destination : OutMap>(to destination: Destination = .blank, withContext context: MappingContext) throws -> Destination {
-        var mapper = ContextualOutMapper<Destination, Keys, MappingContext>(of: destination, context: context)
+        var mapper = ContextualOutMapper<Destination, MappingKeys, MappingContext>(of: destination, context: context)
         try outMap(mapper: &mapper)
         return mapper.destination
     }
