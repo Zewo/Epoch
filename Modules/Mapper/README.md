@@ -28,16 +28,16 @@ struct City : InMappable, OutMappable {
     let name: String
     let population: Int
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case name, population
     }
     
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.name = try mapper.map(from: .name)
         self.population = try mapper.map(from: .population)
     }
     
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Keys>) throws {
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.name, to: .name)
         try mapper.map(self.population, to: .population)
     }
@@ -59,11 +59,11 @@ struct Person : Mappable {
     let isRegistered: Bool
     let biographyPoints: [String]
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case name, gender, city, identifier, registered, biographyPoints
     }
     
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.name = try mapper.map(from: .name)
         self.gender = try mapper.map(from: .gender)
         self.city = try mapper.map(from: .city)
@@ -72,7 +72,7 @@ struct Person : Mappable {
         self.biographyPoints = try mapper.map(from: .biographyPoints)
     }
     
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Person.Keys>) throws {
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Person.MappingKeys>) throws {
         try mapper.map(self.name, to: .name)
         try mapper.map(self.gender, to: .gender)
         try mapper.map(self.city, to: .city)
@@ -101,7 +101,7 @@ let messi: MessagePack = try messi.map()
 
 **Mapper** allows you to map data in both ways, and so it has two major parts: **in** mapping (for example, *JSON -> your model*) and **out** mapping (*your model -> JSON*). So the two main protocols of **Mapper** is `InMappable` and `OutMappable`.
 
-To use **Mapper** in it's full glory, first you need to define nested `Keys` enum. `Keys` are needed to represent keys from/to which your properties will be mapped. Using nested `Keys` is a win for type-safety and can save you from some painful typos:
+To use **Mapper** in it's full glory, first you need to define nested `MappingKeys` enum. `MappingKeys` are needed to represent keys from/to which your properties will be mapped. Using nested `MappingKeys` is a win for type-safety and can save you from some painful typos:
 
 ```swift
 struct City {
@@ -109,20 +109,20 @@ struct City {
     let name: String
     let population: Int
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case name, population
     }
     
 }
 ```
 
-Make sure to declare `Keys` as `IndexPathElement`!
+Make sure to declare `MappingKeys` as `IndexPathElement`!
 
 Now we're going to write mapping code. Let's start with *in mapping*:
 
 ```swift
 extension City : InMappable {
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.name = try mapper.map(from: .name)
         self.population = try mapper.map(from: .population)
     }
@@ -131,7 +131,7 @@ extension City : InMappable {
 let city = try City(from: json)
 ```
 
-Actually, that's it! Now your `City` can be created from JSON, BSON, MessagePack and a whole range of other data formats. And that's all thanks to the amazing power of generics. As you see, that's why your initializer is generic. And `from: .name` is actually where your `Keys` are used.
+Actually, that's it! Now your `City` can be created from JSON, BSON, MessagePack and a whole range of other data formats. And that's all thanks to the amazing power of generics. As you see, that's why your initializer is generic. And `from: .name` is actually where your `MappingKeys` are used.
 
 Each call to `mapper` is marked with `try` because, obviously, it can fail. In this case initializer will throw with `InMapperError`. If one of your properties is optional, you can just write `try?`.
 
@@ -139,7 +139,7 @@ Let's continue with *out mapping*:
 
 ```swift
 extension City : OutMappable {
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Keys>) throws {
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.name, to: .name)
         try mapper.map(self.population, to: .population)
     }
@@ -150,9 +150,9 @@ let json: JSON = city.map()
 
 As you see, the code is pretty similar, easy to reason about, and very expressive.
 
-As you see, both mappers have two generic arguments: `Source`/`Destination`, which is the structured data format, and `Keys`, which is specific `Keys` defined for your model. 
+As you see, both mappers have two generic arguments: `Source`/`Destination`, which is the structured data format, and `MappingKeys`, which is specific `MappingKeys` defined for your model. 
 
-Actually, if you don't want to write that `Keys`, we made `BasicInMappable`/`BasicOutMappable` just for you.
+Actually, if you don't want to write that `MappingKeys`, we made `BasicInMappable`/`BasicOutMappable` just for you.
 
 ```swift
 struct Planet : BasicInMappable, BasicOutMappable {
@@ -179,15 +179,15 @@ struct Album : Mappable {
     
     let songs: [String]
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case songs
     }
     
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.songs = try mapper.map(from: .songs)
     }
     
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Album.Keys>) throws {
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Album.MappingKeys>) throws {
         try mapper.map(self.songs, to: .songs)
     }
     
@@ -216,16 +216,16 @@ struct Guitar : Mappable {
     let wood: Wood
     let strings: Strings
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case wood, strings
     }
     
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.wood = try mapper.map(from: .wood)
         self.strings = try mapper.map(from: .strings)
     }
     
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Guitar.Keys>) throws {
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Guitar.MappingKeys>) throws {
         try mapper.map(self.wood, to: .wood)
         try mapper.map(self.strings, to: .strings)
     }
@@ -242,15 +242,15 @@ struct Sport : Mappable {
     
     let name: String
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case name
     }
     
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.name = try mapper.map(from: .name)
     }
     
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Sport.Keys>) throws {
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Sport.MappingKeys>) throws {
         try mapper.map(self.name, to: .name)
     }
     
@@ -262,19 +262,19 @@ struct Team : Mappable {
     let name: String
     let foundationYear: Int
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case sport
         case name
         case foundationYear = "foundation-year"
     }
     
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.sport = try mapper.map(from: .sport)
         self.name = try mapper.map(from: .name)
         self.foundationYear = try mapper.map(from: .foundationYear)
     }
     
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Team.Keys>) throws {
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, Team.MappingKeys>) throws {
         try mapper.map(self.sport, to: .sport)
         try mapper.map(self.name, to: .name)
         try mapper.map(self.foundationYear, to: .foundationYear)
@@ -302,7 +302,7 @@ struct SuperheroHelper {
     let name: String
     let id: Int
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case name
         case id, identifier, g_id
     }
@@ -312,7 +312,7 @@ struct SuperheroHelper {
 }
 
 extension SuperheroHelper : InMappableWithContext {
-    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, MappingContext>) throws {
+    init<Source : InMap>(mapper: ContextualInMapper<Source, MappingKeys, MappingContext>) throws {
         self.name = try mapper.map(from: .name)
         switch mapper.context {
         case .json:
@@ -326,7 +326,7 @@ extension SuperheroHelper : InMappableWithContext {
 }
 
 extension SuperheroHelper : OutMappableWithContext {
-    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, SuperheroHelper.Keys, MappingContext>) throws {
+    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, SuperheroHelper.MappingKeys, MappingContext>) throws {
         try mapper.map(self.name, to: .name)
         switch mapper.context {
         case .json:
@@ -358,7 +358,7 @@ struct Superhero {
     let name: String
     let helper: SuperheroHelper
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case name, helper
     }
     
@@ -367,14 +367,14 @@ struct Superhero {
 }
 
 extension Superhero : InMappableWithContext {
-    init<Source : InMap>(mapper: ContextualInMapper<Source, Keys, MappingContext>) throws {
+    init<Source : InMap>(mapper: ContextualInMapper<Source, MappingKeys, MappingContext>) throws {
         self.name = try mapper.map(from: .name)
         self.helper = try mapper.map(from: .helper)
     }
 }
 
 extension Superhero : OutMappableWithContext {
-    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, Keys, MappingContext>) throws {
+    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, MappingKeys, MappingContext>) throws {
         try mapper.map(self.name, to: .name)
         try mapper.map(self.helper, to: .helper)
     }
@@ -457,16 +457,16 @@ struct TeamStat : Mappable {
     let rate: Int32
     let goals: [Int32]
     
-    enum Keys : String, IndexPathElement {
+    enum MappingKeys : String, IndexPathElement {
         case rate, goals
     }
     
-    init<Source : InMap>(mapper: InMapper<Source, Keys>) throws {
+    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.rate = try mapper.unsafe_map(from: .rate)
         self.goals = try mapper.unsafe_mapArray(from: .goals)
     }
     
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, TeamStat.Keys>) throws {
+    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, TeamStat.MappingKeys>) throws {
         try mapper.unsafe_map(self.rate, to: .rate)
         try mapper.unsafe_mapArray(self.goals, to: .goals)
     }
