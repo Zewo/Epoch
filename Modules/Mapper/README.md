@@ -502,6 +502,16 @@ extension NSDate : BasicOutMappable { }
 
 Now `NSDate` can be mapped as usual.
 
+#### Productivity hack
+
+**Mapper** boosts your productivity dramatically, but we didn't stop there. We have prepared for you [Xcode code snippets](http://nshipster.com/xcode-snippets/) located in `CodeSnippets/` directory that will speed you up even more. Just put them in `~/Library/Developer/Xcode/UserData/CodeSnippets/` and restart Xcode. Then you can just type `mappable` and Xcode will give you this:
+
+![Mappable](Images/Mappable-Snippet.png)
+
+Or type `context mappable` and you see this:
+
+![Mappable](Images/ContextMappable-Snippet.png)
+
 ## Mapper-compatible libraries
 
 - Zewo/Map
