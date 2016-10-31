@@ -2,6 +2,7 @@ public enum Body {
     case buffer(Buffer)
     case reader(InputStream)
     case writer((OutputStream) throws -> Void)
+    case file(String)
 }
 
 extension Body {
@@ -40,6 +41,10 @@ extension Body {
     }
 }
 
+public enum BodyError : Error {
+    case notConvertible
+}
+
 extension Body {
     public mutating func becomeBuffer(deadline: Double) throws -> Buffer {
         switch self {
@@ -55,6 +60,8 @@ extension Body {
             let buffer = bufferStream.buffer
             self = .buffer(buffer)
             return buffer
+        case .file:
+            throw BodyError.notConvertible
         }
     }
 
@@ -71,6 +78,8 @@ extension Body {
             try writer(bufferStream)
             self = .reader(bufferStream)
             return bufferStream
+        case .file:
+            throw BodyError.notConvertible
         }
     }
 
@@ -93,6 +102,8 @@ extension Body {
             return writer
         case .writer(let writer):
             return writer
+        case .file:
+            throw BodyError.notConvertible
         }
     }
 }

@@ -1,13 +1,19 @@
 import HTTPServer
 import HTTPClient
 
-let arguments = try Configuration.commandLineArguments()
-let port = arguments["port"].int ?? 8080
-let log = LogMiddleware()
-
 let router = BasicRouter { route in
-    route.get("/hello") { request in
-        return Response(body: "Hello, world!")
+    route.get("/old-file") { request in
+        let file = try FileDescriptorStream(path: "/Users/paulofaria/Desktop/book.pdf")
+        return Response(body: file)
+    }
+
+    route.get("/new-file") { request in
+        let file = try File(path: "/Users/paulofaria/Desktop/book.pdf")
+        return Response(body: file)
+    }
+
+    route.get("/newer-file") { request in
+        return Response(filePath: "/Users/paulofaria/Desktop/book.pdf")
     }
 
     route.get("/orgs/*") { request in
@@ -16,5 +22,6 @@ let router = BasicRouter { route in
     }
 }
 
-let server = try Server(port: port, middleware: [log], responder: router)
+let server = try Server(port: 8383, bufferSize: Int(2E6), responder: router)
 try server.start()
+

@@ -48,7 +48,7 @@ public struct ContentNegotiationMiddleware : Middleware {
                         content = try parse(buffer: buffer, mediaType: contentType)
                 case .reader(let stream):
                         content = try parse(stream: stream, deadline: .never, mediaType: contentType)
-                case .writer:
+                default:
                     // TODO: Deal with writer bodies
                     throw ContentNegotiationMiddlewareError.writerBodyNotSupported
                 }
@@ -136,7 +136,7 @@ public struct ContentNegotiationMiddleware : Middleware {
                 content = try parse(buffer: buffer, mediaType: contentType)
             case .reader(let stream):
                 content = try parse(stream: stream, deadline: .never, mediaType: contentType)
-            case .writer:
+            default:
                 // TODO: Deal with writer bodies
                 throw ContentNegotiationMiddlewareError.writerBodyNotSupported
             }

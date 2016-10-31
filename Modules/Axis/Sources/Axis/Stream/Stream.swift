@@ -1,6 +1,7 @@
 public enum StreamError : Error {
     case closedStream
     case timeout
+    case writeFileUnsupported
 }
 
 public protocol InputStream {
@@ -52,15 +53,27 @@ extension InputStream {
         return Buffer(bytes)
     }
 
-    /// Drains the `Stream` and returns the contents in a `Buffer`. At the end of this operation the stream will be closed.
-    public func drain(deadline: Double) throws -> Buffer {
-        var buffer = Buffer()
-
-        while !self.closed, let chunk = try? self.read(upTo: 2048, deadline: deadline), chunk.count > 0 {
-            buffer.append(chunk)
+    /// Drains the `Stream` and returns the contents in a `Buffer`.
+    public func drain(bufferSize: Int = 4096, deadline: Double) throws -> Buffer {
+        guard !self.closed else {
+            throw StreamError.closedStream
         }
 
-        return buffer
+        var drainBuffer = Buffer()
+        var readBuffer = UnsafeMutableBufferPointer<Byte>(capacity: bufferSize)
+        defer { readBuffer.deallocate(capacity: bufferSize) }
+
+        while !self.closed {
+            let chunk = try self.read(into: readBuffer, deadline: deadline)
+
+            guard !chunk.isEmpty else {
+                break
+            }
+
+            drainBuffer.append(chunk)
+        }
+
+        return drainBuffer
     }
 }
 
@@ -72,6 +85,7 @@ public protocol OutputStream {
     func write(_ buffer: UnsafeBufferPointer<Byte>, deadline: Double) throws
     func write(_ buffer: Buffer, deadline: Double) throws
     func write(_ buffer: BufferRepresentable, deadline: Double) throws
+    func write(filePath: String, deadline: Double) throws
     func flush(deadline: Double) throws
 }
 
@@ -95,6 +109,10 @@ extension OutputStream {
             return
         }
         try bytes.withUnsafeBufferPointer { try self.write($0, deadline: deadline) }
+    }
+
+    public func write(filePath: String, deadline: Double) throws {
+        throw StreamError.writeFileUnsupported
     }
 }
 

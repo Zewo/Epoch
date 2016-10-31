@@ -101,6 +101,13 @@ extension Response : ResponseConvertible {
     }
 }
 
+
+
+
+
+import class Foundation.FileManager
+
+
 extension Response {
     public init(status: Status = .ok, headers: Headers = [:], body: Body) {
         self.init(
@@ -112,8 +119,13 @@ extension Response {
         )
 
         switch body {
-        case let .buffer(body):
+        case .buffer(let body):
             self.headers["Content-Length"] = body.count.description
+        case .file(let filePath):
+            let attributes = try? FileManager.default.attributesOfItem(atPath: filePath)
+            if let size = attributes?[.size] as? Int {
+                self.headers["Content-Length"] = size.description
+            }
         default:
             self.headers["Transfer-Encoding"] = "chunked"
         }
@@ -140,6 +152,14 @@ extension Response {
             status: status,
             headers: headers,
             body: .writer(body)
+        )
+    }
+
+    public init(status: Status = .ok, headers: Headers = [:], filePath: String) {
+        self.init(
+            status: status,
+            headers: headers,
+            body: .file(filePath)
         )
     }
 }

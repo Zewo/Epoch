@@ -43,6 +43,16 @@ public final class TCPStream : Stream {
             throw SystemError.other(errorNumber: -1)
         }
     }
+
+    public func write(filePath: String, deadline: Double) throws {
+        let socket = try getSocket()
+        try ensureStreamIsOpen()
+
+        filePath.withCString {
+            tcpsendfile(socket, $0, deadline.int64milliseconds)
+        }
+        try ensureLastOperationSucceeded()
+    }
     
     public func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte> {
         let socket = try getSocket()
@@ -100,4 +110,16 @@ public final class TCPStream : Stream {
             tcpclose(socket)
         }
     }
+}
+
+fileprivate func openFile(atPath path: String) throws -> FileDescriptor {
+    let fileDescriptor = path.withCString {
+        open($0, O_RDONLY)
+    }
+
+    guard fileDescriptor != -1 else {
+        throw SystemError.lastOperationError!
+    }
+
+    return fileDescriptor
 }

@@ -6,19 +6,178 @@
 
 @_exported import Axis
 import CLibvenice
+import Dispatch
+import class Foundation.FileManager
 
-public enum FileMode {
-    case read
-    case createWrite
-    case truncateWrite
-    case appendWrite
-    case readWrite
-    case createReadWrite
-    case truncateReadWrite
-    case appendReadWrite
+public final class File : Stream {
+    public enum Mode {
+        case read
+        case createWrite
+        case truncateWrite
+        case appendWrite
+        case readWrite
+        case createReadWrite
+        case truncateReadWrite
+        case appendReadWrite
+    }
+
+    private let io: DispatchIO
+    private let path: String
+    private let fileDescriptor: FileDescriptor
+    private let semaphore = try! Semaphore()
+    private let queue = DispatchQueue.global()
+    public private(set) var closed = false
+
+    public init(path: String, mode: Mode = .read) throws {
+        let fileDescriptor = try openFile(path: path, mode: mode)
+        self.path = path
+        self.fileDescriptor = fileDescriptor
+        self.io = DispatchIO(type: .stream, fileDescriptor: fileDescriptor, queue: queue) { _ in
+            closeFile(fileDescriptor: fileDescriptor)
+        }
+    }
+
+    deinit {
+        close()
+    }
+
+    public func open(deadline: Double) throws {}
+
+    public func close() {
+        if !closed {
+            io.close()
+            closed = true
+        }
+    }
+
+    public func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte> {
+        try ensureFileIsOpen()
+
+        guard var readPointer = readBuffer.baseAddress else {
+            return UnsafeBufferPointer()
+        }
+
+        var resultError: Error?
+        var bytesRead = 0
+
+        io.read(offset: 0, length: readBuffer.count, queue: queue) { (done, data, errorNumber) in
+            if let error = SystemError(errorNumber: errorNumber) {
+                resultError = error
+            }
+
+            if let data = data, !data.isEmpty {
+                data.copyBytes(to: readPointer, count: data.count)
+                readPointer += data.count
+                bytesRead += data.count
+            }
+
+            if done {
+                self.semaphore.signal()
+            }
+        }
+
+        try semaphore.wait(deadline: deadline)
+
+        guard resultError == nil else {
+            throw resultError!
+        }
+
+        return UnsafeBufferPointer(start: readBuffer.baseAddress, count: bytesRead)
+    }
+
+    public func write(_ writeBuffer: UnsafeBufferPointer<Byte>, deadline: Double) throws {
+        try ensureFileIsOpen()
+
+        guard !writeBuffer.isEmpty else {
+            return
+        }
+
+        var resultError: Error?
+        let data = DispatchData(bytesNoCopy: writeBuffer, deallocator: .custom(nil, {}))
+
+        io.write(offset: 0, data: data, queue: queue) { (done, data, errorNumber) in
+            if let error = SystemError(errorNumber: errorNumber) {
+                resultError = error
+            }
+
+            if done {
+                self.semaphore.signal()
+            }
+        }
+
+        try semaphore.wait(deadline: deadline)
+
+        guard resultError == nil else {
+            throw resultError!
+        }
+    }
+
+    public func flush(deadline: Double) throws {
+        try ensureFileIsOpen()
+    }
+
+    private func ensureFileIsOpen() throws {
+        if closed {
+            throw StreamError.closedStream
+        }
+    }
+
+    public lazy var fileExtension: String? = {
+        guard let fileExtension = self.path.split(separator: ".").last else {
+            return nil
+        }
+
+        if fileExtension.split(separator: "/").count > 1 {
+            return nil
+        }
+
+        return fileExtension
+    }()
+
+    public func cursorPosition() throws -> Int {
+        let position = lseek(fileDescriptor, 0, SEEK_CUR)
+
+        guard position != -1 else {
+            throw SystemError.lastOperationError!
+        }
+
+        return Int(position)
+    }
+
+    public func seek(cursorPosition: Int) throws -> Int {
+        let position = lseek(fileDescriptor, off_t(cursorPosition), SEEK_SET)
+
+        guard position != -1 else {
+            throw SystemError.lastOperationError!
+        }
+
+        return Int(position)
+    }
+
+    public func size() throws -> Int {
+        let currentPosition = lseek(fileDescriptor, 0, SEEK_CUR)
+
+        guard currentPosition != -1 else {
+            throw SystemError.lastOperationError!
+        }
+
+        let size = lseek(fileDescriptor, 0, SEEK_END)
+
+        guard size != -1 else {
+            throw SystemError.lastOperationError!
+        }
+
+        let result = lseek(fileDescriptor, currentPosition, SEEK_SET)
+
+        guard result != -1 else {
+            throw SystemError.lastOperationError!
+        }
+
+        return Int(size)
+    }
 }
 
-extension FileMode {
+extension File.Mode {
     var value: Int32 {
         switch self {
         case .read: return O_RDONLY
@@ -33,339 +192,104 @@ extension FileMode {
     }
 }
 
-public let standardInputStream: Stream = try! File(fileDescriptor: STDIN_FILENO)
-public let standardOutputStream: Stream = try! File(fileDescriptor: STDOUT_FILENO)
-public let standardErrorStream: Stream = try! File(fileDescriptor: STDERR_FILENO)
+fileprivate func openFile(path: String, mode: File.Mode) throws -> FileDescriptor {
+    let fileDescriptor = path.withCString {
+        open($0, mode.value, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
+    }
 
-public final class File : Stream {
-    fileprivate var file: mfile?
-    public fileprivate(set) var closed = false
-    public fileprivate(set) var path: String? = nil
+    guard fileDescriptor != -1 else {
+        throw SystemError.lastOperationError!
+    }
 
-    public func cursorPosition() throws -> Int {
-        let position = Int(filetell(file))
+    return fileDescriptor
+}
+
+fileprivate func closeFile(fileDescriptor: FileDescriptor) {
+    close(fileDescriptor)
+}
+
+extension File {
+    public static var currentDirectoryPath: String {
+        return FileManager.default.currentDirectoryPath
+    }
+
+    public static func changeCurrentDirectory(path: String) throws {
+        guard chdir(path) == 0 else {
+            throw SystemError.lastOperationError!
+        }
+    }
+
+    public static func contentsOfDirectory(atPath path: String) throws -> [String] {
+        return try FileManager.default.contentsOfDirectory(atPath: path)
+    }
+
+    public static func fileExists(atPath path: String) -> Bool {
+        return FileManager.default.fileExists(atPath: path)
+    }
+
+    public static func directoryExists(atPath path: String) -> Bool {
+        var isDirectory: ObjCBool = false
+        FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory)
+        return isDirectory.boolValue
+    }
+
+    public static func createDirectory(atPath path: String, withIntermediateDirectories createIntermediates: Bool = false, attributes: [String: Any] = [:]) throws {
+        try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: createIntermediates, attributes: attributes)
+    }
+
+    public static func removeItem(atPath path: String) throws {
+        try FileManager.default.removeItem(atPath: path)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+public class Semaphore {
+    private var reader: unixsock?
+    private let writerFileDescriptor: FileDescriptor
+
+    public init() throws {
+        var writer: unixsock? = nil
+        unixpair(&reader, &writer)
         try ensureLastOperationSucceeded()
-        return position
-    }
 
-    public func seek(cursorPosition: Int) throws -> Int {
-        let position = Int(fileseek(file, off_t(cursorPosition)))
+        writerFileDescriptor = unixdetach(writer)
         try ensureLastOperationSucceeded()
-        return position
-    }
 
-    public var length: Int {
-        return Int(filesize(self.file))
-    }
+        let flags = fcntl(writerFileDescriptor, F_GETFL)
 
-    public var cursorIsAtEndOfFile: Bool {
-        return fileeof(file) != 0
-    }
-
-    public lazy var fileExtension: String? = {
-        guard let path = self.path else {
-            return nil
+        guard flags != -1 else {
+            throw SystemError.lastOperationError!
         }
 
-        guard let fileExtension = path.split(separator: ".").last else {
-            return nil
+        guard fcntl(writerFileDescriptor, F_SETFL, flags & ~O_NONBLOCK) != -1 else {
+            throw SystemError.lastOperationError!
         }
-
-        if fileExtension.split(separator: "/").count > 1 {
-            return nil
-        }
-
-        return fileExtension
-    }()
-
-    init(file: mfile) {
-        self.file = file
-    }
-
-    public convenience init(fileDescriptor: FileDescriptor) throws {
-        let file = fileattach(fileDescriptor)
-        try ensureLastOperationSucceeded()
-        self.init(file: file!)
-    }
-
-    public convenience init(path: String, mode: FileMode = .read) throws {
-        let file = fileopen(path, mode.value, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
-        try ensureLastOperationSucceeded()
-        self.init(file: file!)
-        self.path = path
     }
 
     deinit {
-        if let file = file, !closed {
-            fileclose(file)
-        }
+        unixclose(reader)
+        close(writerFileDescriptor)
     }
-}
 
-extension File {
-    // TODO: Actually open the file here instead of init.
-    public func open(deadline: Double) throws {}
-
-    public func close() {
-        if !closed {
-            fileclose(file)
-        }
-        closed = true
-    }
-    
-    public func write(_ buffer: UnsafeBufferPointer<UInt8>, deadline: Double) throws {
-        guard !buffer.isEmpty else {
-            return
-        }
-        
-        try ensureFileIsOpen()
-        
-        let bytesWritten = filewrite(file, buffer.baseAddress!, buffer.count, deadline.int64milliseconds)
-        guard bytesWritten == buffer.count else {
-            try ensureLastOperationSucceeded()
-            throw SystemError.other(errorNumber: -1)
+    public func signal() {
+        var byte: Byte = 0
+        guard send(writerFileDescriptor, &byte, 1, 0) != -1 else {
+            fatalError(SystemError.lastOperationError!.description)
         }
     }
 
-    public func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte> {
-        guard let readPointer = readBuffer.baseAddress else {
-            return UnsafeBufferPointer()
-        }
-        
-        try ensureFileIsOpen()
-        
-        let bytesRead = filereadlh(file, readPointer, 1, readBuffer.count, deadline.int64milliseconds)
-        
-        guard bytesRead > 0 else {
-            try ensureLastOperationSucceeded()
-            return UnsafeBufferPointer()
-        }
-        
-        return UnsafeBufferPointer(start: readPointer, count: bytesRead)
-    }
-
-    public func readAll(bufferSize: Int = 2048, deadline: Double) throws -> Buffer {
-        var buffer = Buffer()
-        
-        while true {
-            let chunk = try self.read(upTo: bufferSize, deadline: deadline)
-            
-            if chunk.count == 0 || cursorIsAtEndOfFile {
-                break
-            }
-            
-            buffer.append(chunk)
-        }
-        
-        return buffer
-    }
-
-    public func flush(deadline: Double) throws {
-        try ensureFileIsOpen()
-        fileflush(file, deadline.int64milliseconds)
+    public func wait(deadline: Double) throws {
+        var byte: Byte = 0
+        unixrecv(reader, &byte, 1, deadline.int64milliseconds)
         try ensureLastOperationSucceeded()
-    }
-
-    private func ensureFileIsOpen() throws {
-        if closed {
-            throw StreamError.closedStream
-        }
-    }
-}
-
-extension File {
-    public static var workingDirectory: String {
-        var buffer = [Int8](repeating: 0, count: Int(MAXNAMLEN))
-        let workingDirectory = getcwd(&buffer, buffer.count)
-        return String(cString: workingDirectory!)
-    }
-
-    public static func changeWorkingDirectory(path: String) throws {
-        if chdir(path) == -1 {
-            try ensureLastOperationSucceeded()
-        }
-    }
-
-    public static func contentsOfDirectory(path: String) throws -> [String] {
-        var contents: [String] = []
-
-        guard let dir = opendir(path) else {
-            try ensureLastOperationSucceeded()
-            return []
-        }
-
-        defer {
-            closedir(dir)
-        }
-
-        let excludeNames = [".", ".."]
-
-        while let file = readdir(dir) {
-            let entry: UnsafeMutablePointer<dirent> = file
-
-            if let entryName = withUnsafeMutablePointer(to: &entry.pointee.d_name, { (ptr) -> String? in
-                let entryPointer = unsafeBitCast(ptr, to: UnsafePointer<CChar>.self)
-                return String(validatingUTF8: entryPointer)
-            }) {
-                if !excludeNames.contains(entryName) {
-                    contents.append(entryName)
-                }
-            }
-        }
-
-        return contents
-    }
-
-    public static func fileExists(path: String) -> Bool {
-        var s = stat()
-        return lstat(path, &s) >= 0
-    }
-
-    public static func isDirectory(path: String) -> Bool {
-        var s = stat()
-        if lstat(path, &s) >= 0 {
-            if (s.st_mode & S_IFMT) == S_IFLNK {
-                if stat(path, &s) >= 0 {
-                    return (s.st_mode & S_IFMT) == S_IFDIR
-                }
-                return false
-            }
-            return (s.st_mode & S_IFMT) == S_IFDIR
-        }
-        return false
-    }
-
-    public static func createDirectory(path: String, withIntermediateDirectories createIntermediates: Bool = false) throws {
-        if createIntermediates {
-            let (exists, directory) = (fileExists(path: path), isDirectory(path: path))
-            if !exists {
-                let parent = path.dropLastPathComponent()
-
-                if !fileExists(path: parent) {
-                    try createDirectory(path: parent, withIntermediateDirectories: true)
-                }
-                if mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO) == -1 {
-                    try ensureLastOperationSucceeded()
-                }
-            } else if directory {
-                return
-            } else {
-                throw SystemError.fileExists
-            }
-        } else {
-            if mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO) == -1 {
-                try ensureLastOperationSucceeded()
-            }
-        }
-    }
-
-    public static func removeFile(path: String) throws {
-        if unlink(path) != 0 {
-            try ensureLastOperationSucceeded()
-        }
-    }
-
-    public static func removeDirectory(path: String) throws {
-        if fileremove(path) != 0 {
-            try ensureLastOperationSucceeded()
-        }
-    }
-}
-
-// Warning: We're gonna need this when we split Venice from Quark in the future
-
-// extension String {
-//     func split(separator: Character, maxSplits: Int = .max, omittingEmptySubsequences: Bool = true) -> [String] {
-//         return characters.split(separator: separator, maxSplits: maxSplits, omittingEmptySubsequences: omittingEmptySubsequences).map(String.init)
-//     }
-//
-//    public func has(prefix: String) -> Bool {
-//        return prefix == String(self.characters.prefix(prefix.characters.count))
-//    }
-//
-//    public func has(suffix: String) -> Bool {
-//        return suffix == String(self.characters.suffix(suffix.characters.count))
-//    }
-//}
-
-extension String {
-    func dropLastPathComponent() -> String {
-        let string = self.fixSlashes()
-
-        if string == "/" {
-            return string
-        }
-
-        switch string.startOfLastPathComponent {
-
-        // relative path, single component
-        case string.startIndex:
-            return ""
-
-        // absolute path, single component
-        case string.index(after: startIndex):
-            return "/"
-
-        // all common cases
-        case let startOfLast:
-            return String(string.characters.prefix(upTo: string.index(before: startOfLast)))
-        }
-    }
-
-    func fixSlashes(compress: Bool = true, stripTrailing: Bool = true) -> String {
-        if self == "/" {
-            return self
-        }
-
-        var result = self
-
-        if compress {
-            result.withMutableCharacters { characterView in
-                let startPosition = characterView.startIndex
-                var endPosition = characterView.endIndex
-                var currentPosition = startPosition
-
-                while currentPosition < endPosition {
-                    if characterView[currentPosition] == "/" {
-                        var afterLastSlashPosition = currentPosition
-                        while afterLastSlashPosition < endPosition && characterView[afterLastSlashPosition] == "/" {
-                            afterLastSlashPosition = characterView.index(after: afterLastSlashPosition)
-                        }
-                        if afterLastSlashPosition != characterView.index(after: currentPosition) {
-                            characterView.replaceSubrange(currentPosition ..< afterLastSlashPosition, with: ["/"])
-                            endPosition = characterView.endIndex
-                        }
-                        currentPosition = afterLastSlashPosition
-                    } else {
-                        currentPosition = characterView.index(after: currentPosition)
-                    }
-                }
-            }
-        }
-
-        if stripTrailing && result.has(suffix: "/") {
-            result.remove(at: result.characters.index(before: result.characters.endIndex))
-        }
-
-        return result
-    }
-
-    var startOfLastPathComponent: String.CharacterView.Index {
-        precondition(!has(suffix: "/") && characters.count > 1)
-
-        let characterView = characters
-        let startPos = characterView.startIndex
-        let endPosition = characterView.endIndex
-        var currentPosition = endPosition
-
-        while currentPosition > startPos {
-            let previousPosition = characterView.index(before: currentPosition)
-            if characterView[previousPosition] == "/" {
-                break
-            }
-            currentPosition = previousPosition
-        }
-
-        return currentPosition
     }
 }

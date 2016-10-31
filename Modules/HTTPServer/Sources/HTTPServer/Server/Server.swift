@@ -104,7 +104,9 @@ extension Server {
                 }
             } catch SystemError.brokenPipe {
                 break
-            } catch {
+            } catch SystemError.socketIsNotConnected {
+                break
+            }catch {
                 if stream.closed {
                     break
                 }

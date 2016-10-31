@@ -136,6 +136,19 @@ extension Request {
             body: body
         )
     }
+
+    public init?(method: Method = .get, url: String, headers: Headers = [:], filePath: String) {
+        guard let url = URL(string: url) else {
+            return nil
+        }
+
+        self.init(
+            method: method,
+            url: url,
+            headers: headers,
+            body: .file(filePath)
+        )
+    }
 }
 
 extension Request {

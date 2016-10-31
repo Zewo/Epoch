@@ -46,6 +46,8 @@ public class RequestSerializer {
             try stream.write("0", deadline: deadline)
             try stream.write(newLine, deadline: deadline)
             try stream.write(newLine, deadline: deadline)
+        case .file(let filePath):
+            try stream.write(filePath: filePath, deadline: deadline)
         }
 
         try stream.flush(deadline: deadline)
