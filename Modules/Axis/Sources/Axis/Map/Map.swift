@@ -1,5 +1,3 @@
-import Mapper
-
 public protocol MapInitializable {
     init(map: Map) throws
 }

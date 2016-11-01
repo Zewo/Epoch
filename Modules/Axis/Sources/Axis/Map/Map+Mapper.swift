@@ -1,5 +1,3 @@
-import Mapper
-
 extension Map : InMap {
     
     public func get(at indexPath: IndexPathValue) -> Map? {

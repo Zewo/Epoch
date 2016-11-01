@@ -5,10 +5,10 @@ let package = Package(
     targets: [
         Target(name: "POSIX"),
         Target(name: "Reflection"),
-        Target(name: "Axis", dependencies: ["Reflection", "POSIX"]),
+        Target(name: "Axis", dependencies: ["Reflection", "POSIX", "Mapper"]),
         Target(name: "OpenSSL", dependencies: ["Axis"]),
         Target(name: "HTTP", dependencies: ["Axis"]),
-
+        Target(name: "Mapper"),
         Target(name: "Venice", dependencies: ["Axis"]),
         Target(name: "IP", dependencies: ["Axis"]),
         Target(name: "TCP", dependencies: ["IP", "OpenSSL"]),
