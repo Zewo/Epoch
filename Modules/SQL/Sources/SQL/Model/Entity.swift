@@ -32,7 +32,7 @@ public extension EntityProtocol where Model.Field.RawValue == String {
         return try fetch(where: predicate, limit: 1, offset: 0, connection: connection).first
     }
 
-    public static func fetch<Connection: ConnectionProtocol> (where predicate: Predicate? = nil, limit: Int? = 0, offset: Int? = 0, connection: Connection) throws -> [PersistedEntity<Model>] where Connection.Result.Iterator.Element: RowProtocol {
+    public static func fetch<Connection: ConnectionProtocol> (where predicate: Predicate? = nil, limit: Int? = nil, offset: Int? = nil, connection: Connection) throws -> [PersistedEntity<Model>] where Connection.Result.Iterator.Element: RowProtocol {
         var select = Model.select
 
         if let predicate = predicate {

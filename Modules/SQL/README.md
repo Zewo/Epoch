@@ -8,7 +8,11 @@
 [![Travis][travis-badge]][travis-url]
 [![Codebeat][codebeat-badge]][codebeat-url]
 
-**SQL** provides base conformance for SQL adapters.
+**SQL** provides
+
+- [x] Base conformance for SQL database adapters
+- [x] Typesafe table representations and queries (select, insert, join, etc.)
+- [x] A powerful, _non-intrusive_ ORM
 
 ## Installation
 
@@ -34,7 +38,9 @@ Use this package with one of the supported drivers listed above.
 ### Connecting to a database
 
 ```swift
-let connection = try PostgreSQL.Connection(URI("postgres://localhost:5432/swift_test"))
+let info = Connection.ConnectionInfo(uri: URL("postgres://localhost:5432/database_name")!)!
+let connection = PostgreSQL.Connection(info: info)
+try connection.open()
 ```
 
 ### Executing raw queries
@@ -49,8 +55,8 @@ let result = try connection.execute("SELECT * FROM artists WHERE name = %@", par
 let result = try connection.execute("SELECT * FROM artists")
 
 for row in result {
-	let name: String = try result.value("name")
-	let genre: String? = try result.value("genre")
+	let name: String = try row.value("name")
+	let genre: String? = try row.value("genre")
 	print(name)
 }
 ```
@@ -62,95 +68,92 @@ In the above example, an error will be thrown if `name` and `genre` is not prese
 You can define tables as such:
 
 ```swift
-public class Artist: Table {
-	enum Field: String {
-        case id = "id"
-        case name = "name"
-        case artistId = "artist_id"
-    }
+struct Artist : TableProtocol {
+    enum Field : String, TableField {
+        static let tableName = "artists"
 
-    static let tableName: String = "artists"
+        case id
+        case name
+        case genre
+    }
 }
 ```
 
 ```swift
-Artist.select().filter(Artist.field(.name) == "Josh Rouse")
-Artist.insert([.name: "AC/DC"])
-Artist.update([.name: "AC/DC"]).filter(Artist.field(.genre) == "Rock")
-Artist.delete().filter(Artist.field(.genre) == "Rock")
+Artist.select(where: Artist.Field.name == "Josh Rouse")
+Artist.insert([.name : "AC/DC"])
+Artist.update([.name : "AC/DC"]).filtered(Artist.Field.genre == "Rock")
+Artist.delete(where: Artist.Field.genre == "Rock")
 ```
 
 ```swift
-try connection.execute(Artist.select())
+try connection.execute(Artist.select(where: Artist.Field.name == "Josh Rouse"))
 ```
 
 ### Models
-You can define models, by extending `Table` like so:
+Models provide more ORM-like functionality than tables. You can define models like so:
 
 ```swift
-public final class Artist {
-	let id: Int?
-	let name: String
-	let genre: String
-
-	init(name: String, genre: String) {
-		self.name = name
-		self.genre = genre
-	}
+struct Artist {
+    var name: String
+    var genre: String
 }
 
-extension Artist: Model {
-	// Just like `Table`
-	enum Field: String {
-	    case id = "id"
-	    case name = "name"
-	    case genre = "genre"
-	}
+extension Artist : ModelProtocol {
+    // Just like `Table`
+    enum Field: String, ModelField {
+        // notice how we define the "id" field
+        // but don't have it as a property
+        case id
+        case name
+        case genre
 
-	// Specify a table name
-	static let tableName: String = "artists"
+        // Specify a table name
+        static let tableName = "artists"
 
-	// Specify which field is primary
-	static var primaryKeyField: Field = .id
+        // Specify which field is primary
+        static let primaryKey = Field.id
+    }
 
-	// Provide a getter and setter for the primary key
-	var primaryKey: Int? {
-	    get {
-	        return id
-	    }
-	    set {
-	        id = newValue
-	    }
-	}
+    // Specify what type the primary key is (usually int or string)
+    typealias PrimaryKey = Int
 
-	// Specify the values to be persisted
-	var serialize: [Field: ValueConvertible?] {
-	    return [.name: name, .genre: genre]
-	}
+    // The values returned here will be persisted
+    // primary key is inserted automatically
+    func serialize() -> [Field : ValueConvertible?] {
+        return [
+            .name: name,
+            .genre: genre
+        ]
+    }
 
-	// Provide an initializer for the model taking a row
-	convenience init(row: Row) throws {
-	    try self.init(
-	        name: row.value(Artist.field(.name)),
-	        genre: row.value(Artist.field(.genre))
-	    )
-	    id = try row.value(Artist.field(.id))
-	}
+    // Provide an initializer for the model taking a row
+    // a little generic but dont let it scare you
+    init<Row: RowProtocol>(row: TableRow<Artist, Row>) throws {
+        try self.init(
+            name: row.value(.name),
+            genre: row.value(.genre)
+        )
+    }
 }
-
 ```
 
 ```swift
-let rockArtists = try Artist.fetch(where: Artist.field(.genre) == "Rock", connection: connection)
+// note how we operate on Entity<Artist> rather than just Artist.
+// there also exists a type PersistedEntity<Artist>, which has a primary key
+// and methods such as refresh and update
+let rockArtists = try Entity<Artist>.fetch(where: Artist.Field.genre == "Rock", connection: connection)
 
-for artist in rockArtists {
-	artist.genre = "Rock 'n Roll"
-	artist.save()
+for var artist in rockArtists {
+    artist.model.genre = "Rock 'n Roll"
+    // since artist is of type PersistedEntity<Artist> (has a primary key),
+    // we can save it, replacing the previous record
+    artist.save(connection: connection)
 }
 
 let newArtist = Artist(name: "Elijah Blake", genre: "Hip-hop")
-try newArtist.create(connection: connection) // save() also works
-
+let persistedArtist = try Entity(model: newArtist).create(connection: connection)
+print("id of new artist: \(persistedArtist.primaryKey)")
 ```
 
 ## Support
