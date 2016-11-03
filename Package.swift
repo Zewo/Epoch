@@ -18,7 +18,7 @@ let package = Package(
         Target(name: "HTTPServer", dependencies: ["HTTPFile", "TCP", "Venice"]),
         Target(name: "HTTPClient", dependencies: ["HTTPFile", "TCP", "Venice"]),
 
-        Target(name: "ExampleApplication", dependencies: ["HTTPServer"]),
+        Target(name: "ExampleApplication", dependencies: ["HTTPServer", "HTTPClient"]),
     ],
     dependencies: [
         .Package(url: "https://github.com/Zewo/CLibvenice.git", majorVersion: 0, minor: 14),

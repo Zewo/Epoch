@@ -30,9 +30,7 @@ Each block represents a single file in the project. The size of the block repres
 
 ### Documentation improvements
 
-We host our documentation at [zewo.readme.io](http://zewo.readme.io). If you have a better way to express an idea or if you see a typo for example, you can click on the **suggest edits** link at the top right to make your suggestions.
-
-![Suggest Edits](http://i63.tinypic.com/dz70oz.png)
+We host our documentation at [docs.zewo.io](http://docs.zewo.io). If you have a better way to express an idea or if you see a typo for example, you can send a PR at [Zewo/Docs](https://github.com/Zewo/Docs).
 
 ### Reference improvements
 

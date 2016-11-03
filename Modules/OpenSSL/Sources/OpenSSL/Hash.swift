@@ -1,8 +1,8 @@
 import COpenSSL
 import Axis
 
-internal extension Hash.Function {
-	var digestLength: Int {
+public extension Hash.Function {
+	public var digestLength: Int {
 		switch self {
 		case .md5:
 			return Int(MD5_DIGEST_LENGTH)
@@ -19,7 +19,7 @@ internal extension Hash.Function {
 		}
 	}
 
-	var function: ((UnsafePointer<UInt8>?, Int, UnsafeMutablePointer<UInt8>?) -> UnsafeMutablePointer<UInt8>!) {
+	internal var function: ((UnsafePointer<UInt8>?, Int, UnsafeMutablePointer<UInt8>?) -> UnsafeMutablePointer<UInt8>!) {
 		switch self {
 		case .md5:
 			return { MD5($0!, $1, $2!) }
@@ -36,7 +36,7 @@ internal extension Hash.Function {
 		}
 	}
 
-	var evp: UnsafePointer<EVP_MD> {
+	internal var evp: UnsafePointer<EVP_MD> {
 		switch self {
 		case .md5:
 			return EVP_md5()

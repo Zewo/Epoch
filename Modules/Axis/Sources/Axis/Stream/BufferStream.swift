@@ -17,19 +17,19 @@ public final class BufferStream : Stream {
     public func close() {
         closed = true
     }
-    
+
     public func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte> {
         guard !closed, let readPointer = readBuffer.baseAddress else {
             return UnsafeBufferPointer()
         }
-        
+
         let bytesRead = min(buffer.count, readBuffer.count)
         buffer.copyBytes(to: readPointer, count: bytesRead)
         buffer = buffer.suffix(from: bytesRead)
-        
+
         return UnsafeBufferPointer(start: readPointer, count: bytesRead)
     }
-    
+
     public func write(_ writeBuffer: UnsafeBufferPointer<UInt8>, deadline: Double) {
         buffer.append(writeBuffer)
     }

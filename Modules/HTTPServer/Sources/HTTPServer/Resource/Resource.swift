@@ -73,12 +73,12 @@ public extension Resource {
 extension Resource {
     public var router: BasicRouter {
         let routes = ResourceRoutes(staticFilesPath: staticFilesPath)
-        custom(routes: routes)
         routes.list(respond: list)
         routes.create(respond: create)
         routes.detail(respond: detail)
         routes.update(respond: update)
         routes.destroy(respond: destroy)
+        custom(routes: routes)
         return BasicRouter(middleware: [RecoveryMiddleware(recover)] + middleware, routes: routes)
     }
 }

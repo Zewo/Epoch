@@ -4,6 +4,8 @@
 [![License][mit-badge]][mit-url]
 [![Slack][slack-badge]][slack-url]
 [![Travis][travis-badge]][travis-url]
+[![Codecov][codecov-badge]][codecov-url]
+[![Codebeat][codebeat-badge]][codebeat-url]
 
 ## Installation
 
@@ -40,3 +42,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 [slack-url]: http://slack.zewo.io
 [travis-badge]: https://travis-ci.org/Zewo/HTTPFile.svg?branch=master
 [travis-url]: https://travis-ci.org/Zewo/HTTPFile
+[codecov-badge]: https://codecov.io/gh/Zewo/HTTPFile/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/Zewo/HTTPFile
+[codebeat-badge]: https://codebeat.co/badges/15fb0f5f-13d5-48ad-87c2-3a94ca9083d2
+[codebeat-url]: https://codebeat.co/projects/github-com-zewo-httpfile
