@@ -40,10 +40,11 @@ public final class Connection: ConnectionProtocol {
             self.password = uri.password
         }
 
-        public init(host: String, port: Int = 5432, databaseName: String, password: String? = nil, options: String? = nil, tty: String? = nil) {
+        public init(host: String, port: Int = 5432, databaseName: String, username: String? = nil, password: String? = nil, options: String? = nil, tty: String? = nil) {
             self.host = host
             self.port = port
             self.databaseName = databaseName
+            self.username = username
             self.password = password
             self.options = options
             self.tty = tty

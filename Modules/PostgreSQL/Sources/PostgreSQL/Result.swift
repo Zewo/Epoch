@@ -81,9 +81,15 @@ public class Result: SQL.ResultProtocol {
     }
 
     public func data(atRow rowIndex: Int, forFieldIndex fieldIndex: Int) -> Buffer? {
+        let rowIndex = Int32(rowIndex)
+        let fieldIndex = Int32(fieldIndex)
 
-        let count = PQgetlength(resultPointer, Int32(rowIndex), Int32(fieldIndex))
-        guard count > 0, let start = PQgetvalue(resultPointer, Int32(rowIndex), Int32(fieldIndex)) else {
+        guard PQgetisnull(resultPointer, rowIndex, fieldIndex) == 0 else {
+            return nil
+        }
+
+        let count = PQgetlength(resultPointer, rowIndex, fieldIndex)
+        guard count > 0, let start = PQgetvalue(resultPointer, rowIndex, fieldIndex) else {
             return Buffer()
         }
 

@@ -6,6 +6,6 @@
 [subrepo]
 	remote = https://github.com/Zewo/PostgreSQL
 	branch = master
-	commit = a11464e399326b1f8aa15331c871063914d4812a
-	parent = 6511d2b04960acd94686543dd542e65c32d6380a
+	commit = a3dbab5f63e834d111fa0ec5f6a33b5797abcfa8
+	parent = a2a30b205268b82f6ec0c031597a5cb5fccb369c
 	cmdver = 0.3.0
