@@ -1,12 +1,7 @@
-private var uuidCount = 0
-
-private func uuid() -> String {
-    uuidCount += 1
-    return String(uuidCount)
-}
+import Foundation
 
 public struct SessionMiddleware: Middleware {
-    public static let cookieName = "zewo-session"
+    public static var cookieName = "zewo-session"
     public let storage: SessionStorage
 
     public init(storage: SessionStorage = SessionInMemoryStorage()) {
@@ -41,7 +36,7 @@ public struct SessionMiddleware: Middleware {
         }
 
         // otherwise, create a new cookie
-        let cookie = Cookie(name: SessionMiddleware.cookieName, value: uuid())
+        let cookie = Cookie(name: SessionMiddleware.cookieName, value: UUID().uuidString)
         return (cookie, true)
     }
 
@@ -62,12 +57,19 @@ public struct SessionMiddleware: Middleware {
 }
 
 extension Request {
-    // TODO: Add a Quark compiler flag and then make different versions Session/Session?
-    public var session: Session {
+    public var rawSession: Session {
         guard let session = storage[SessionMiddleware.cookieName] as? Session else {
-            fatalError("SessionMiddleware should be applied to the chain. Quark guarantees it, so this error should never happen within Quark.")
+            fatalError("SessionMiddleware has to be applied to the middleware chain.")
         }
         return session
+    }
+    public var session: Map {
+        get {
+            return rawSession.storage
+        }
+        set {
+            rawSession.storage = newValue
+        }
     }
 }
 

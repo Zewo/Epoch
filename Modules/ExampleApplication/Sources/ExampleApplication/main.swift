@@ -9,9 +9,27 @@ let port = arguments["port"].int ?? 8080
 let log = LogMiddleware()
 // catches errors and formats them if possible
 let recover = RecoveryMiddleware()
+let session = SessionMiddleware()
 
 // sends requests to different handlers based on their path
 let router = BasicRouter { route in
+
+    route.get("/dash") { request in
+        guard try request.session["loggedIn"].get() ?? false else {
+            return Response(body: "<html><head></head><body>Not logged in. <a href='/login'>login</login></body></html>")
+        }
+        return Response(body: "Hello!")
+    }
+
+    route.get("/login") { request in
+        //TODO: is there anyting we can do about this? request.rawSession.storage mutation 
+        var request = request
+        if try request.session["loggedIn"].get() ?? false {
+            return Response(body: "Already logged in")
+        }
+        request.session["loggedIn"] = true
+        return Response(body: "Now logged in!")
+    }
 
     // reponds to GET /hello with hello world
     route.get("/hello") { request in
@@ -27,7 +45,7 @@ let router = BasicRouter { route in
 }
 
 // ties everything together
-let server = try Server(port: port, middleware: [log, recover], responder: router)
+let server = try Server(port: port, middleware: [log, recover, session], responder: router)
 
 // starts the actual server
 try server.start()
