@@ -22,13 +22,16 @@ public struct Update: PredicatedQuery {
 
 extension Update: StatementParameterListConvertible {
     public var sqlParameters: [Value?] {
+        // order matters here. we assume that queries rendered as
+        // UPDATE <table> SET <values> WHERE <predicate>
+        // therefore, value parameters go first, with predicate parameters following them
         var parameters = [Value?]()
+
+        parameters += valuesByField.values
 
         if let predicate = predicate {
             parameters += predicate.sqlParameters
         }
-
-        parameters += valuesByField.values
 
         return parameters
     }
