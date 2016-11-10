@@ -69,7 +69,7 @@ public var yield: Void {
 
 /// Fork the current process.
 public func fork() -> PID {
-    return 0//mill_mfork_()
+    return mill_mfork_()
 }
 
 /// Get the number of logical CPU cores available. This might return a bigger number than the physical CPU Core number if the CPU supports hyper-threading.
