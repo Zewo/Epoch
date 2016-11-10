@@ -4,6 +4,8 @@
 [![License][mit-badge]][mit-url]
 [![Slack][slack-badge]][slack-url]
 [![Travis][travis-badge]][travis-url]
+[![Codecov][codecov-badge]][codecov-url]
+[![Codebeat][codebeat-badge]][codebeat-url]
 
 ## Installation
 
@@ -28,6 +30,7 @@ If you need any help you can join our [Slack](http://slack.zewo.io) and go to th
 The entire Zewo code base is licensed under MIT. By contributing to Zewo you are contributing to an open and engaged community of brilliant Swift programmers. Join us on [Slack](http://slack.zewo.io) to get to know us!
 
 ## License
+
 This project is released under the MIT license. See [LICENSE](LICENSE) for details.
 
 [swift-badge]: https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat
@@ -39,3 +42,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 [slack-url]: http://slack.zewo.io
 [travis-badge]: https://travis-ci.org/Zewo/File.svg?branch=master
 [travis-url]: https://travis-ci.org/Zewo/File
+[codecov-badge]: https://codecov.io/gh/Zewo/File/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/Zewo/File
+[codebeat-badge]: https://codebeat.co/badges/9b2fed4e-b3e7-4177-86c0-35829730dfa7
+[codebeat-url]: https://codebeat.co/projects/github-com-zewo-file

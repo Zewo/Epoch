@@ -4,6 +4,8 @@
 [![License][mit-badge]][mit-url]
 [![Slack][slack-badge]][slack-url]
 [![Travis][travis-badge]][travis-url]
+[![Codecov][codecov-badge]][codecov-url]
+[![Codebeat][codebeat-badge]][codebeat-url]
 
 **Venice** provides [CSP](https://en.wikipedia.org/wiki/Communicating_sequential_processes) for **Swift 3.0**.
 
@@ -1799,3 +1801,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 [slack-url]: http://slack.zewo.io
 [travis-badge]: https://travis-ci.org/Zewo/Venice.svg?branch=master
 [travis-url]: https://travis-ci.org/Zewo/Venice
+[codecov-badge]: https://codecov.io/gh/Zewo/Venice/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/Zewo/Venice
+[codebeat-badge]: https://codebeat.co/badges/bd12fff5-d499-4636-83e6-d4edf89585c5
+[codebeat-url]: https://codebeat.co/projects/github-com-zewo-venice

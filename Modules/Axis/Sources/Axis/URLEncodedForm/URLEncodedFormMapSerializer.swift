@@ -26,7 +26,7 @@ public final class URLEncodedFormMapSerializer : MapSerializer {
         default:
             throw URLEncodedFormMapSerializerError.invalidMap
         }
-        
+
         try write(body: body)
     }
 

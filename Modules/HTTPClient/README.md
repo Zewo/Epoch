@@ -4,6 +4,8 @@
 [![License][mit-badge]][mit-url]
 [![Slack][slack-badge]][slack-url]
 [![Travis][travis-badge]][travis-url]
+[![Codecov][codecov-badge]][codecov-url]
+[![Codebeat][codebeat-badge]][codebeat-url]
 
 ## Installation
 
@@ -15,6 +17,40 @@ let package = Package(
         .Package(url: "https://github.com/Zewo/HTTPClient.git", majorVersion: 0, minor: 14)
     ]
 )
+```
+
+## Usage
+
+### Creating a client
+
+```swift
+let client = try Client(url: "http://httpbin.org")
+```
+
+### Basic GET request
+
+```swift
+let response = try client.get("/get")
+```
+
+### POST request with JSON body
+
+```swift
+let content: Map = [
+    "hello": "world",
+    "numbers": [1, 2, 3, 4, 5]
+]
+let body = try JSONMapSerializer.serialize(content)
+let response = try client.post("/post", body: body)
+```
+
+### Parsing response body
+
+```swift
+// converts response to a common type `Map` from pool of types
+let contentNegotiation = ContentNegotiationMiddleware(mediaTypes: [.json, .urlEncodedForm], mode: .client)
+let response = try client.get("/get", middleware: [contentNegotiation])
+print(response.content)
 ```
 
 ## Support
@@ -40,3 +76,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 [slack-url]: http://slack.zewo.io
 [travis-badge]: https://travis-ci.org/Zewo/HTTPClient.svg?branch=master
 [travis-url]: https://travis-ci.org/Zewo/HTTPClient
+[codecov-badge]: https://codecov.io/gh/Zewo/HTTPClient/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/Zewo/HTTPClient
+[codebeat-badge]: https://codebeat.co/badges/bc032b4e-3a28-413e-a71c-c7467ce24499
+[codebeat-url]: https://codebeat.co/projects/github-com-zewo-httpclient

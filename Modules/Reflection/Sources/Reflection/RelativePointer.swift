@@ -1,6 +1,5 @@
 func relativePointer<T, U, V>(base: UnsafePointer<T>, offset: U) -> UnsafePointer<V> where U : Integer {
-    let p = UnsafeRawPointer(base).assumingMemoryBound(to: Int8.self)
-    return UnsafeRawPointer(p.advanced(by: Int(integer: offset))).assumingMemoryBound(to: V.self)
+    return UnsafeRawPointer(base).advanced(by: Int(integer: offset)).assumingMemoryBound(to: V.self)
 }
 
 extension Int {

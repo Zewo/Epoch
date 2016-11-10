@@ -10,13 +10,13 @@ public struct Buffer : RandomAccessCollection {
     public typealias Iterator = Array<Byte>.Iterator
     public typealias Index = Int
     public typealias Indices = DefaultRandomAccessIndices<Buffer>
-    
+
     public private(set) var bytes: [Byte]
-    
+
     public var count: Int {
         return bytes.count
     }
-    
+
     public init(_ bytes: [Byte] = []) {
         self.bytes = bytes
     }
@@ -24,89 +24,89 @@ public struct Buffer : RandomAccessCollection {
     public init(_ bytes: ArraySlice<Byte>) {
         self.bytes = [Byte](bytes)
     }
-    
+
     public init(_ bytes: UnsafeBufferPointer<Byte>) {
         self.bytes = [Byte](bytes)
     }
-    
+
     public mutating func append(_ other: Buffer) {
         bytes.append(contentsOf: other.bytes)
     }
-    
+
     public mutating func append(_ other: [Byte]) {
         bytes.append(contentsOf: other)
     }
-    
+
     public mutating func append(_ other: UnsafeBufferPointer<Byte>) {
         guard other.count > 0 else {
             return
         }
         bytes.append(contentsOf: [Byte](other))
     }
-    
+
     public mutating func append(_ other: UnsafePointer<Byte>, count: Int) {
         guard count > 0 else {
             return
         }
         bytes.append(contentsOf: [Byte](UnsafeBufferPointer(start: other, count: count)))
     }
-    
+
     public subscript(index: Index) -> Byte {
         return bytes[index]
     }
-    
+
     public subscript(bounds: Range<Int>) -> Buffer {
         return Buffer(bytes[bounds])
     }
-    
+
     public subscript(bounds: CountableRange<Int>) -> Buffer {
         return Buffer(bytes[bounds])
     }
-    
+
     public var startIndex: Int {
         return 0
     }
-    
+
     public var endIndex: Int {
         return count
     }
-    
+
     public func index(before i: Int) -> Int {
         return i - 1
     }
-    
+
     public func index(after i: Int) -> Int {
         return i + 1
     }
-    
+
     public func makeIterator() -> Iterator {
         return bytes.makeIterator()
     }
-    
+
     public func copyBytes(to pointer: UnsafeMutablePointer<Byte>, count: Int) {
         copyBytes(to: UnsafeMutableBufferPointer(start: pointer, count: count))
     }
-    
+
     public func copyBytes(to pointer: UnsafeMutableBufferPointer<Byte>) {
         guard pointer.count > 0 else {
             return
         }
-        
+
         precondition(bytes.endIndex >= 0)
         precondition(bytes.endIndex <= pointer.count, "The pointer is not large enough")
-        
+
         _ = bytes.withUnsafeBufferPointer {
             memcpy(pointer.baseAddress!, $0.baseAddress!, count)
         }
-        
+
     }
-    
+
     public func withUnsafeBytes<Result, ContentType>(body: (UnsafePointer<ContentType>) throws -> Result) rethrows -> Result {
         return try bytes.withUnsafeBufferPointer {
             let capacity = count / MemoryLayout<ContentType>.stride
             return try $0.baseAddress!.withMemoryRebound(to: ContentType.self, capacity: capacity) { try body($0) }
         }
-        
+
     }
 
     public func withUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Byte>) throws -> R) rethrows -> R {
@@ -165,7 +165,7 @@ extension Buffer {
     public init(_ string: String) {
         self = Buffer([Byte](string.utf8))
     }
-    
+
     public init(count: Int, fill: (UnsafeMutableBufferPointer<Byte>) throws -> Void) rethrows {
         self = try Buffer(capacity: count) {
             guard count > 0 else {
@@ -176,7 +176,7 @@ extension Buffer {
         }
     }
 
-    
+
     public init(capacity: Int, fill: (UnsafeMutableBufferPointer<Byte>) throws -> Int) rethrows {
         var bytes = [Byte](repeating: 0, count: capacity)
         let usedCapacity = try bytes.withUnsafeMutableBufferPointer { try fill($0) }
@@ -186,7 +186,7 @@ extension Buffer {
             return
         }
 
-        
+
         self = Buffer([Byte](bytes.prefix(usedCapacity)))
     }
 }
