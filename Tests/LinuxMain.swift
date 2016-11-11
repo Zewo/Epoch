@@ -12,6 +12,10 @@ import ReflectionTests
 import TCPTests
 import UDPTests
 import VeniceTests
+import WebSocketTests
+import WebSocketClientTests
+import WebSocketServerTests
+
 
 var testCases = [
     // POSIX
@@ -29,8 +33,9 @@ var testCases = [
     testCase(PerformanceTests.allTests),
     testCase(PublicTests.allTests),
     testCase(StringTests.allTests),
+    testCase(CollectionTests.allTests),
     testCase(MapTests.allTests),
-
+    testCase(URLTests.allTests),
 
     // HTTP
     testCase(RequestContentTests.allTests),
@@ -71,6 +76,15 @@ var testCases = [
     testCase(TCPTests.allTests),
     testCase(TickerTests.allTests),
     testCase(TimerTests.allTests),
+
+    // WebSocket
+    testCase(FrameTests.allTests),
+    testCase(SHA1Tests.allTests),
+    testCase(WebSocketTests.allTests),
+    // WebSocketClient
+    testCase(WebSocketClientTests.allTests),
+    // WebSocketServer
+    testCase(WebSocketServerTests.allTests),
 ]
 
 #if os(macOS)

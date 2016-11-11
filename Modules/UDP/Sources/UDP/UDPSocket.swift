@@ -11,7 +11,7 @@ public final class UDPSocket {
 
     /// Local IP port
     public var port: Int {
-        return Int(udpport(socket))
+        return Int(mill_udpport_(socket))
     }
 
     // MARK: - Initializers
@@ -21,7 +21,7 @@ public final class UDPSocket {
     }
 
     public convenience init(ip: IP) throws {
-        guard let socket = udplisten(ip.address) else {
+        guard let socket = mill_udplisten_(ip.address) else {
             throw SystemError.socketTypeNotSupported
         }
         try ensureLastOperationSucceeded()
@@ -43,7 +43,7 @@ public final class UDPSocket {
     
     public func write(_ buffer: UnsafeBufferPointer<Byte>, to ip: IP) throws {
         try ensureStreamIsOpen()
-        udpsend(socket, ip.address, buffer.baseAddress!, buffer.count)
+        mill_udpsend_(socket, ip.address, buffer.baseAddress!, buffer.count)
         try ensureLastOperationSucceeded()
     }
 
@@ -55,7 +55,7 @@ public final class UDPSocket {
         }
 
         var address = ipaddr()
-        let bytesRead = udprecv(socket, &address, readPointer, readBuffer.count, deadline.int64milliseconds)
+        let bytesRead = mill_udprecv_(socket, &address, readPointer, readBuffer.count, deadline.int64milliseconds)
 
         try ensureLastOperationSucceeded()
 
@@ -77,7 +77,7 @@ public final class UDPSocket {
 
     public func close() {
         if !closed, let socket = socket {
-            udpclose(socket)
+            mill_udpclose_(socket)
             try? ensureLastOperationSucceeded()
             closed = true
         }

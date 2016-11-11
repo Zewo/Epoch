@@ -11,7 +11,7 @@ public final class MessageParser {
         case response
     }
     
-    private enum State: Int {
+    fileprivate enum State: Int {
         case ready = 1
         case messageBegin = 2
         case url = 3
@@ -23,7 +23,7 @@ public final class MessageParser {
         case messageComplete = 9
     }
     
-    private class Context {
+    fileprivate class Context {
         var method: Request.Method? = nil
         var status: Response.Status? = nil
         var version: Version? = nil
@@ -91,20 +91,41 @@ public final class MessageParser {
         }
     }
     
-    public func parse(_ from: UnsafeBufferPointer<UInt8>) throws -> [Message] {
-        if !from.isEmpty {
-            let processedCount = from.baseAddress!.withMemoryRebound(to: Int8.self, capacity: from.count) {
-                return http_parser_execute(&self.parser, &self.parserSettings, $0, from.count)
+    public func parse(_ bytes: UnsafeBufferPointer<Byte>) throws -> [Message] {
+        let final = bytes.isEmpty
+        let needsMessage: Bool
+        switch state {
+        case .ready, .messageComplete:
+            needsMessage = false
+        default:
+            needsMessage = final
+        }
+        
+        let processedCount: Int
+        if final {
+            processedCount = http_parser_execute(&parser, &parserSettings, nil, 0)
+        } else {
+            processedCount = bytes.baseAddress!.withMemoryRebound(to: Int8.self, capacity: bytes.count) {
+                return http_parser_execute(&self.parser, &self.parserSettings, $0, bytes.count)
             }
-
-            guard processedCount == from.count else {
-                throw MessageParserError(parser.http_errno)
-            }
+        }
+        
+        guard processedCount == bytes.count else {
+            throw MessageParserError(parser.http_errno)
         }
         
         let parsed = messages
         messages = []
+        
+        guard !parsed.isEmpty || !needsMessage else {
+            throw MessageParserError(HPE_INVALID_EOF_STATE.rawValue)
+        }
+        
         return parsed
+    }
+    
+    public func finish() throws -> [Message] {
+        return try parse(UnsafeBufferPointer<Byte>())
     }
     
     fileprivate func processOnMessageBegin() -> Int32 {
@@ -210,7 +231,7 @@ public final class MessageParser {
                             .map { $0.value }
                             .reduce(Set<String>()) { initial, value in
                                 return initial.union(Set(value.components(separatedBy: ", ")))
-                            }
+                    }
                     
                     let response = Response(
                         version: context.version!,

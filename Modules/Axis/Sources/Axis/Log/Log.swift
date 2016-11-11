@@ -1,8 +1,4 @@
-#if os(Linux)
-    import Glibc
-#else
-    import Darwin.C
-#endif
+import Foundation
 
 public protocol Appender {
     var name: String { get }
@@ -51,6 +47,13 @@ public final class Logger {
         self.appenders.append(contentsOf: appenders)
         self.name = name
     }
+
+    public static let logTimeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        let format = DateFormatter.dateFormat(fromTemplate: "yyMMdd HHmmssSSS", options: 0, locale: .current)
+        formatter.dateFormat = format
+        return formatter
+    }()
 }
 
 extension Logger.LocationInfo : CustomStringConvertible {
@@ -153,8 +156,6 @@ extension Logger {
     }
 
     private var currentTime: String {
-      var tv = timeval()
-      gettimeofday(&tv, nil)
-      return String(tv.tv_sec)
+        return Logger.logTimeFormatter.string(from: Date())
     }
 }
