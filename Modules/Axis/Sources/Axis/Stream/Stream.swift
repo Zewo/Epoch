@@ -7,7 +7,7 @@ public protocol InputStream {
     var closed: Bool { get }
     func open(deadline: Double) throws
     func close()
-    
+
     func read(into readBuffer: UnsafeMutableBufferPointer<Byte>, deadline: Double) throws -> UnsafeBufferPointer<Byte>
     func read(upTo byteCount: Int, deadline: Double) throws -> Buffer
     func read(exactly byteCount: Int, deadline: Double) throws -> Buffer
@@ -19,7 +19,7 @@ extension InputStream {
         guard byteCount > 0 else {
             return Buffer()
         }
-        
+
         var bytes = [Byte](repeating: 0, count: byteCount)
 
         let bytesRead = try bytes.withUnsafeMutableBufferPointer {
@@ -28,14 +28,14 @@ extension InputStream {
 
         return Buffer(bytes[0..<bytesRead])
     }
-    
+
     public func read(exactly byteCount: Int, deadline: Double) throws -> Buffer {
         guard byteCount > 0 else {
             return Buffer()
         }
-        
+
         var bytes = [Byte](repeating: 0, count: byteCount)
-        
+
         try bytes.withUnsafeMutableBufferPointer { pointer in
             var address = pointer.baseAddress!
             var remaining = byteCount
@@ -48,7 +48,7 @@ extension InputStream {
                 remaining -= chunk.count
             }
         }
-        
+
         return Buffer(bytes)
     }
 
@@ -68,7 +68,7 @@ public protocol OutputStream {
     var closed: Bool { get }
     func open(deadline: Double) throws
     func close()
-    
+
     func write(_ buffer: UnsafeBufferPointer<Byte>, deadline: Double) throws
     func write(_ buffer: Buffer, deadline: Double) throws
     func write(_ buffer: BufferRepresentable, deadline: Double) throws
@@ -80,7 +80,7 @@ extension OutputStream {
         guard !buffer.isEmpty else {
             return
         }
-        
+
         try buffer.bytes.withUnsafeBufferPointer {
             try write($0, deadline: deadline)
         }
@@ -89,7 +89,7 @@ extension OutputStream {
     public func write(_ converting: BufferRepresentable, deadline: Double) throws {
         try write(converting.buffer, deadline: deadline)
     }
-    
+
     public func write(_ bytes: [Byte], deadline: Double) throws {
         guard !bytes.isEmpty else {
             return

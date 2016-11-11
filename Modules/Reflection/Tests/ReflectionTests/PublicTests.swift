@@ -1,5 +1,5 @@
 import XCTest
-@testable import Reflection
+import Reflection
 
 struct Person : Equatable {
     var firstName: String
@@ -42,13 +42,25 @@ func == (lhs: ReferencePerson, rhs: ReferencePerson) -> Bool {
 }
 
 public class PublicTests : XCTestCase {
+    
     func testConstructType() throws {
-        for _ in 0 ..< 1000 {
+        for _ in 0..<1000 {
             let person: Person = try construct {
                 (["firstName": "Brad", "lastName": "Hilton", "age": 27] as [String : Any])[$0.key]!
             }
             let other = Person(firstName: "Brad", lastName: "Hilton", age: 27)
             XCTAssert(person == other)
+        }
+    }
+    
+    func testConstructAnyType() throws {
+        for _ in 0..<1000 {
+            let type: Any.Type = Person.self
+            let person: Any = try construct(type) {
+                (["firstName": "Brad", "lastName": "Hilton", "age": 27] as [String : Any])[$0.key]!
+            }
+            let other = Person(firstName: "Brad", lastName: "Hilton", age: 27)
+            XCTAssert(person as! Person == other)
         }
     }
 
@@ -115,6 +127,15 @@ public class PublicTests : XCTestCase {
         let person = Person(firstName: "Brad", lastName: "Hilton", age: 29)
         let firstName: String = try get("firstName", from: person)
         XCTAssert(person.firstName == firstName)
+        let referencePerson = ReferencePerson(firstName: "Brad", lastName: "Hilton", age: 29)
+        let referenceFirstName: String = try get("firstName", from: referencePerson)
+        XCTAssert(referencePerson.firstName == referenceFirstName)
+        func testAnonymousValue(value: Any) throws {
+            let firstName: String = try get("firstName", from: value)
+            XCTAssert(person.firstName == firstName)
+        }
+        try testAnonymousValue(value: person)
+        try testAnonymousValue(value: referencePerson)
     }
 
     func testValueIs() {
@@ -124,7 +145,6 @@ public class PublicTests : XCTestCase {
         XCTAssert(!Reflection.value("John", is: Array<String>.self))
         XCTAssert(!Reflection.value(89, is: String.self))
         XCTAssert(!Reflection.value(["Larry"], is: Int.self))
-
         let person = Person(firstName: "Hillary", lastName: "Mason", age: 32)
         let referencePerson = ReferencePerson()
         let subclassedPerson = SubclassedPerson()
@@ -152,6 +172,39 @@ public class PublicTests : XCTestCase {
         testMemoryProperties(String.self)
         testMemoryProperties(Array<Int>.self)
     }
+    
+    func testCString() {
+        do {
+            let firstName = "Brad".withCString { return String(cString: $0) }
+            let lastName = "Hill".withCString { return String(cString: $0) }
+            let indirectStorage = ["firstName" : firstName, "lastName" : lastName]
+            var person: Person = try construct(dictionary: [
+                "firstName": firstName,
+                "lastName": "Hilton",
+                "age": 27
+                ])
+            try set(lastName, key: "lastName", for: &person)
+            XCTAssert(indirectStorage["firstName"]! == person.firstName)
+            XCTAssert(indirectStorage["lastName"]! == person.lastName)
+        } catch {}
+    }
+    
+    func testConstructionErrors() {
+        do {
+            let _: Person = try construct(dictionary: [:])
+            XCTFail()
+        } catch let constructionErrors as ConstructionErrors {
+            let expectedErrors: [ReflectionError] = [
+                .requiredValueMissing(key: "firstName"),
+                .requiredValueMissing(key: "lastName"),
+                .requiredValueMissing(key: "age")
+            ]
+            XCTAssertEqual(constructionErrors.errors.flatMap { $0 as? ReflectionError }, expectedErrors)
+        } catch {
+            XCTFail()
+        }
+    }
+    
 }
 
 extension PublicTests {
@@ -165,6 +218,7 @@ extension PublicTests {
             ("testValueForKeyOfInstance", testValueForKeyOfInstance),
             ("testValueIs", testValueIs),
             ("testMemoryProperties", testMemoryProperties),
+            ("testCString", testCString)
         ]
     }
 }

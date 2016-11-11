@@ -1,14 +1,6 @@
-#if os(Linux)
-
 import XCTest
-@testable import MapperTestSuite
+@testable import MapperTests
 
 XCTMain([
-	testCase(NormalValueTests.allTests),
-	testCase(OptionalValueTests.allTests),
-	testCase(RawRepresentableValueTests.allTests),
-	testCase(InitializableTests.allTests),
-	testCase(MappableValueTests.allTests)
+     testCase(MapperTests.allTests),
 ])
-
-#endif

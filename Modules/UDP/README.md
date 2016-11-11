@@ -1,11 +1,11 @@
 # UDP
 
 [![Swift][swift-badge]][swift-url]
-[![Zewo][zewo-badge]][zewo-url]
-[![Platform][platform-badge]][platform-url]
 [![License][mit-badge]][mit-url]
 [![Slack][slack-badge]][slack-url]
 [![Travis][travis-badge]][travis-url]
+[![Codecov][codecov-badge]][codecov-url]
+[![Codebeat][codebeat-badge]][codebeat-url]
 
 ## Installation
 
@@ -59,3 +59,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 [slack-url]: http://slack.zewo.io
 [travis-badge]: https://travis-ci.org/Zewo/UDP.svg?branch=master
 [travis-url]: https://travis-ci.org/Zewo/UDP
+[codecov-badge]: https://codecov.io/gh/Zewo/UDP/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/Zewo/UDP
+[codebeat-badge]: https://codebeat.co/badges/8c2384cd-bb32-4862-89ab-c271bc354658
+[codebeat-url]: https://codebeat.co/projects/github-com-zewo-udp

@@ -43,23 +43,23 @@ public final class File : Stream {
     public fileprivate(set) var path: String? = nil
 
     public func cursorPosition() throws -> Int {
-        let position = Int(filetell(file))
+        let position = Int(mill_mftell_(file))
         try ensureLastOperationSucceeded()
         return position
     }
 
     public func seek(cursorPosition: Int) throws -> Int {
-        let position = Int(fileseek(file, off_t(cursorPosition)))
+        let position = Int(mill_mfseek_(file, off_t(cursorPosition)))
         try ensureLastOperationSucceeded()
         return position
     }
 
     public var length: Int {
-        return Int(filesize(self.file))
+        return Int(mill_mfsize_(self.file))
     }
 
     public var cursorIsAtEndOfFile: Bool {
-        return fileeof(file) != 0
+        return mill_mfeof_(file) != 0
     }
 
     public lazy var fileExtension: String? = {
@@ -83,13 +83,13 @@ public final class File : Stream {
     }
 
     public convenience init(fileDescriptor: FileDescriptor) throws {
-        let file = fileattach(fileDescriptor)
+        let file = mill_mfattach_(fileDescriptor)
         try ensureLastOperationSucceeded()
         self.init(file: file!)
     }
 
     public convenience init(path: String, mode: FileMode = .read) throws {
-        let file = fileopen(path, mode.value, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
+        let file = mill_mfopen_(path, mode.value, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
         try ensureLastOperationSucceeded()
         self.init(file: file!)
         self.path = path
@@ -97,7 +97,7 @@ public final class File : Stream {
 
     deinit {
         if let file = file, !closed {
-            fileclose(file)
+            mill_mfclose_(file)
         }
     }
 }
@@ -108,7 +108,7 @@ extension File {
 
     public func close() {
         if !closed {
-            fileclose(file)
+            mill_mfclose_(file)
         }
         closed = true
     }
@@ -120,7 +120,7 @@ extension File {
         
         try ensureFileIsOpen()
         
-        let bytesWritten = filewrite(file, buffer.baseAddress!, buffer.count, deadline.int64milliseconds)
+        let bytesWritten = mill_mfwrite_(file, buffer.baseAddress!, buffer.count, deadline.int64milliseconds)
         guard bytesWritten == buffer.count else {
             try ensureLastOperationSucceeded()
             throw SystemError.other(errorNumber: -1)
@@ -134,7 +134,7 @@ extension File {
         
         try ensureFileIsOpen()
         
-        let bytesRead = filereadlh(file, readPointer, 1, readBuffer.count, deadline.int64milliseconds)
+        let bytesRead = mill_mfreadlh_(file, readPointer, 1, readBuffer.count, deadline.int64milliseconds)
         
         guard bytesRead > 0 else {
             try ensureLastOperationSucceeded()
@@ -162,7 +162,7 @@ extension File {
 
     public func flush(deadline: Double) throws {
         try ensureFileIsOpen()
-        fileflush(file, deadline.int64milliseconds)
+        mill_mfflush_(file, deadline.int64milliseconds)
         try ensureLastOperationSucceeded()
     }
 
@@ -266,7 +266,7 @@ extension File {
     }
 
     public static func removeDirectory(path: String) throws {
-        if fileremove(path) != 0 {
+        if mill_mfremove_(path) != 0 {
             try ensureLastOperationSucceeded()
         }
     }

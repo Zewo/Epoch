@@ -14,7 +14,7 @@ struct NominalTypeDescriptor : PointerType {
     }
 
     var fieldNames: [String] {
-        let p = UnsafeRawPointer(self.pointer).assumingMemoryBound(to: Int32.self)
+        let p = UnsafePointer<Int32>(self.pointer)
         return Array(utf8Strings: relativePointer(base: p.advanced(by: 3), offset: self.pointer.pointee.fieldNames))
     }
 
@@ -23,7 +23,7 @@ struct NominalTypeDescriptor : PointerType {
     var fieldTypesAccessor: FieldsTypeAccessor? {
         let offset = pointer.pointee.fieldTypesAccessor
         guard offset != 0 else { return nil }
-        let p = UnsafeRawPointer(self.pointer).assumingMemoryBound(to: Int32.self)
+        let p = UnsafePointer<Int32>(self.pointer)
         let offsetPointer: UnsafePointer<Int> = relativePointer(base: p.advanced(by: 4), offset: offset)
         return unsafeBitCast(offsetPointer, to: FieldsTypeAccessor.self)
     }
