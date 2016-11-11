@@ -15,16 +15,14 @@ let session = SessionMiddleware()
 let router = BasicRouter { route in
 
     route.get("/dash") { request in
-        guard try request.session["loggedIn"].get() ?? false else {
+        guard request.session["loggedIn"].bool ?? false else {
             return Response(body: "<html><head></head><body>Not logged in. <a href='/login'>login</login></body></html>")
         }
         return Response(body: "Hello!")
     }
 
     route.get("/login") { request in
-        //TODO: is there anyting we can do about this? request.rawSession.storage mutation 
-        var request = request
-        if try request.session["loggedIn"].get() ?? false {
+        if request.session["loggedIn"].bool ?? false {
             return Response(body: "Already logged in")
         }
         request.session["loggedIn"] = true

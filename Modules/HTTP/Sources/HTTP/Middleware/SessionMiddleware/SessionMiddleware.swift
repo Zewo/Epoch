@@ -67,7 +67,7 @@ extension Request {
         get {
             return rawSession.storage
         }
-        set {
+        nonmutating set {
             rawSession.storage = newValue
         }
     }
