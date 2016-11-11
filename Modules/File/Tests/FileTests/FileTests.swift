@@ -121,15 +121,15 @@ public class FileTests : XCTestCase {
     }
 
     func testDropLastPathComponent() throws {
-        XCTAssertEqual("/foo/bar//fuu///baz/".dropLastPathComponent(), "/foo/bar/fuu")
-        XCTAssertEqual("/".dropLastPathComponent(), "/")
-        XCTAssertEqual("/foo".dropLastPathComponent(), "/")
-        XCTAssertEqual("foo".dropLastPathComponent(), "")
+        XCTAssertEqual("/foo/bar//fuu///baz/".droppingLastPathComponent(), "/foo/bar/fuu")
+        XCTAssertEqual("/".droppingLastPathComponent(), "/")
+        XCTAssertEqual("/foo".droppingLastPathComponent(), "/")
+        XCTAssertEqual("foo".droppingLastPathComponent(), "")
     }
 
     func testFixSlashes() throws {
-        XCTAssertEqual("/foo/bar//fuu///baz/".fixSlashes(stripTrailing: true), "/foo/bar/fuu/baz")
-        XCTAssertEqual("/".fixSlashes(stripTrailing: true), "/")
+        XCTAssertEqual("/foo/bar//fuu///baz/".fixingSlashes(stripTrailing: true), "/foo/bar/fuu/baz")
+        XCTAssertEqual("/".fixingSlashes(stripTrailing: true), "/")
     }
 
     func testFileModeValues() {

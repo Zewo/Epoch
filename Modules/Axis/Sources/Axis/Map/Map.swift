@@ -491,26 +491,15 @@ extension Map {
 
 // MARK: IndexPath
 
-public typealias IndexPath = [IndexPathElement]
-
 extension String {
-    public func indexPath() -> IndexPath {
+    public func indexPath() -> [IndexPathValue] {
         return self.split(separator: ".").map {
             if let index = Int($0) {
-                return index as IndexPathElement
+                return .index(index)
             }
-            return $0 as IndexPathElement
+            return .key($0)
         }
     }
-}
-
-public enum IndexPathValue {
-    case index(Int)
-    case key(String)
-}
-
-public protocol IndexPathElement {
-    var indexPathValue: IndexPathValue { get }
 }
 
 extension IndexPathElement {
@@ -519,18 +508,6 @@ extension IndexPathElement {
         case .index: return []
         case .key: return [:]
         }
-    }
-}
-
-extension Int : IndexPathElement {
-    public var indexPathValue: IndexPathValue {
-        return .index(self)
-    }
-}
-
-extension String : IndexPathElement {
-    public var indexPathValue: IndexPathValue {
-        return .key(self)
     }
 }
 
@@ -562,13 +539,13 @@ extension Map {
         return try get(indexPath)
     }
 
-    public func get(_ indexPath: IndexPath) throws -> Map {
+    public func get(_ indexPath: [IndexPathElement]) throws -> Map {
         var value: Map = self
 
         for element in indexPath {
             switch element.indexPathValue {
             case .index(let index):
-                let array = try value.asArray()
+                let array: [Map] = try value.asArray()
                 if array.indices.contains(index) {
                     value = array[index]
                 } else {
@@ -795,7 +772,7 @@ extension Map : ExpressibleByDictionaryLiteral {
 
 extension Map : CustomStringConvertible {
     public var description: String {
-        let escapeMapping: [Character: String] = [
+        let escapeMapping: [UnicodeScalar: String.UnicodeScalarView] = [
              "\r": "\\r",
              "\n": "\\n",
              "\t": "\\t",
@@ -804,23 +781,22 @@ extension Map : CustomStringConvertible {
 
              "\u{2028}": "\\u2028",
              "\u{2029}": "\\u2029",
-
-             "\r\n": "\\r\\n"
         ]
 
         func escape(_ source: String) -> String {
-            var string = "\""
+            var string: String.UnicodeScalarView = "\""
 
-            for character in source.characters {
-                if let escapedSymbol = escapeMapping[character] {
-                    string.append(escapedSymbol)
+            for scalar in source.unicodeScalars {
+                if let escaped = escapeMapping[scalar] {
+                    string.append(contentsOf: escaped)
                 } else {
-                    string.append(character)
+                    string.append(scalar)
                 }
             }
 
             string.append("\"")
-            return string
+
+            return String(string)
         }
 
         func serialize(map: Map) -> String {

@@ -20,11 +20,11 @@ public final class Channel<T> : Sequence {
 
     public init(bufferSize: Int) {
         self.bufferSize = bufferSize
-        self.channel = mill_chmake(bufferSize, "Channel init")
+        self.channel = mill_chmake_(bufferSize, "Channel init")
     }
 
     deinit {
-        mill_chclose(channel, "Channel deinit")
+        mill_chclose_(channel, "Channel deinit")
     }
 
     /// Reference that can only send values.
@@ -43,21 +43,21 @@ public final class Channel<T> : Sequence {
         guard !closed else { return }
 
         closed = true
-        mill_chdone(channel, "Channel close")
+        mill_chdone_(channel, "Channel close")
     }
 
     /// Send a value to the channel.
     public func send(_ value: T) {
         if !closed {
             buffer.append(value)
-            mill_chs(channel, "Channel send")
+            mill_chs_(channel, "Channel send")
         }
     }
 
     internal func send(_ value: T, clause: UnsafeMutableRawPointer, index: Int) {
         if !closed {
             buffer.append(value)
-            mill_choose_out(clause, channel, Int32(index))
+            mill_choose_out_(clause, channel, Int32(index))
         }
     }
 
@@ -67,12 +67,12 @@ public final class Channel<T> : Sequence {
         if closed && buffer.isEmpty {
             return nil
         }
-        mill_chr(channel, "Channel receive")
+        mill_chr_(channel, "Channel receive")
         return getValueFromBuffer()
     }
 
     internal func registerReceive(_ clause: UnsafeMutableRawPointer, index: Int) {
-        mill_choose_in(clause, channel, Int32(index))
+        mill_choose_in_(clause, channel, Int32(index))
     }
 
     internal func getValueFromBuffer() -> T? {

@@ -9,6 +9,12 @@ public final class URLEncodedFormMapSerializer : MapSerializer {
 
     public init() {}
 
+    /// Serializes input `map` into URL-encoded form using a buffer of speficied size.
+    ///
+    /// - parameters:
+    ///   - map: The `Map` to encode/serialize.  Only `.dictionary` is supported.
+    ///   - bufferSize: The size of the internal buffer to be use as intermediate storage before writing the results out to `body` closure.
+    ///   - body: The closure to pass the results of the serialization to.
     public func serialize(_ map: Map, bufferSize: Int, body: Body) throws {
         self.bufferSize = bufferSize
 
@@ -21,7 +27,7 @@ public final class URLEncodedFormMapSerializer : MapSerializer {
 
                 try append(string: key + "=", body: body)
                 let value = try map.asString(converting: true)
-                try append(string: value.percentEncoded(allowing: .uriQueryAllowed), body: body)
+                try append(string: value.percentEncoded(allowing: UnicodeScalars.uriQueryAllowed.utf8), body: body)
             }
         default:
             throw URLEncodedFormMapSerializerError.invalidMap
@@ -33,7 +39,7 @@ public final class URLEncodedFormMapSerializer : MapSerializer {
     private func append(string: String, body: Body) throws {
         buffer += string
 
-        if buffer.characters.count >= bufferSize {
+        if buffer.unicodeScalars.count >= bufferSize {
             try write(body: body)
         }
     }

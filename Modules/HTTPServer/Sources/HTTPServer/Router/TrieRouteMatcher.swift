@@ -16,7 +16,7 @@ public struct TrieRouteMatcher {
                 if t.prefix == "*" {
                     return 3
                 }
-                if t.prefix?.characters.first == ":" {
+                if t.prefix?.unicodeScalars.first == ":" {
                     return 2
                 }
                 return 1
@@ -85,8 +85,8 @@ public struct TrieRouteMatcher {
             }
 
             // matched parameter
-            if let prefix = child.prefix, prefix.characters.first == ":" {
-                let param = String(prefix.characters.dropFirst())
+            if let prefix = child.prefix, prefix.unicodeScalars.first == ":" {
+                let param = String(prefix.unicodeScalars.dropFirst())
                 paths.append((node: child, param: param))
                 continue
             }

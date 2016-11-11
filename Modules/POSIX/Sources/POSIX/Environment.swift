@@ -32,13 +32,13 @@ public struct Environment {
                 continue
             }
 
-            guard let index = envString.characters.index(of: "=") else {
+            guard let index = envString.unicodeScalars.index(of: "=") else {
                 env += 1
                 continue
             }
 
-            let name = String(envString.characters.prefix(upTo: index))
-            let value = String(envString.characters.suffix(from: envString.index(index, offsetBy: 1)))
+            let name = String(envString.unicodeScalars.prefix(upTo: index))
+            let value = String(envString.unicodeScalars.suffix(from: envString.unicodeScalars.index(after: index)))
             envs[name] = value
             env += 1
         }

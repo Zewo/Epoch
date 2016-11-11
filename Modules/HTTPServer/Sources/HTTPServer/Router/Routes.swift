@@ -1120,14 +1120,11 @@ extension Routes {
 
     // Todo: if there are repeated identifiers call malformedRoute
     private func parseParameterKeys(path: String, count: Int) -> [String] {
-        let split = path.characters
+        let keys = path.unicodeScalars
             .split(separator: "/")
+            .filter { $0.first == ":" }
+            .map { $0.dropFirst() }
             .map(String.init)
-        let keys = split
-            .map({ $0.characters })
-            .filter({ $0.first == ":" })
-            .map({ $0.dropFirst() })
-            .map({ String($0) })
 
         if keys.count != count {
             fatalError("Invalid route \"\(path)\". The number of path parameters doesn't match the number of strong typed parameters in the route.")
