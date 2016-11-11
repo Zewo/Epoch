@@ -6,11 +6,8 @@ public struct TrieRouteMatcher {
         self.routes = routes
 
         for route in routes {
-            // break into components
-            let components = route.path.split(separator: "/")
-
-            // insert components into trie with route being the ending payload
-            routesTrie.insert(components, payload: route)
+            // insert path components into trie with route being the ending payload
+            routesTrie.insert(route.path.pathComponents, payload: route)
         }
 
         // ensure parameter paths are processed later than static paths
@@ -30,8 +27,7 @@ public struct TrieRouteMatcher {
     }
 
     public func match(_ request: Request) -> Route? {
-        let path = request.path!
-        let components = path.unicodeScalars.split(separator: "/").map(String.init)
+        let components = request.path!.pathComponents
         var parameters: [String: String] = [:]
 
         let matched = searchForRoute(
@@ -64,7 +60,16 @@ public struct TrieRouteMatcher {
         // if no more components, we hit the end of the path and
         // may have matched something
         guard let component = components.next() else {
-            return head.payload
+            // if we found something, great! return that
+            if let route = head.payload {
+                return route
+            }
+            // last resort: we found nothing, but there _might_ be a wildstar right here
+            if let wildstar = head.children.first(where: { child in child.prefix == "*" }) {
+                return wildstar.payload
+            }
+            // nope, got nothing
+            return nil
         }
 
         // store each possible path (ie both a static and a parameter)
@@ -120,14 +125,9 @@ public struct TrieRouteMatcher {
     }
 }
 
-extension Dictionary {
-    func mapValues<T>(_ transform: (Value) -> T) -> [Key: T] {
-        var dictionary: [Key: T] = [:]
-        
-        for (key, value) in self {
-            dictionary[key] = transform(value)
-        }
-        
-        return dictionary
+extension String {
+    fileprivate var pathComponents: [String] {
+        let components = unicodeScalars.split(separator: "/").map(String.init)
+        return (components.isEmpty ? [""] : components)
     }
 }

@@ -8,7 +8,7 @@ extension PointerType {
         func cast<T, U>(_ value: T) -> U {
             return unsafeBitCast(value, to: U.self)
         }
-        self = cast(UnsafeRawPointer(pointer).assumingMemoryBound(to: Pointee.self))
+        self = cast(UnsafePointer<Pointee>(pointer))
     }
 }
 
