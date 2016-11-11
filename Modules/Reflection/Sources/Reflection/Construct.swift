@@ -22,11 +22,19 @@ private func constructValueType<T>(_ constructor: (Property.Description) throws 
 }
 
 private func constructType(storage: UnsafeMutableRawPointer, values: inout [Any], properties: [Property.Description], constructor: (Property.Description) throws -> Any) throws {
+    var errors = [Error]()
     for property in properties {
-        let value = try constructor(property)
-        guard Reflection.value(value, is: property.type) else { throw ReflectionError.valueIsNotType(value: value, type: property.type) }
-        values.append(value)
-        extensions(of: value).write(to: storage.advanced(by: property.offset))
+        do {
+            let value = try constructor(property)
+            guard Reflection.value(value, is: property.type) else { throw ReflectionError.valueIsNotType(value: value, type: property.type) }
+            values.append(value)
+            extensions(of: value).write(to: storage.advanced(by: property.offset))
+        } catch {
+            errors.append(error)
+        }
+    }
+    if errors.count > 0 {
+        throw ConstructionErrors(errors: errors)
     }
 }
 

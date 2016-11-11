@@ -6,6 +6,6 @@
 [subrepo]
 	remote = https://github.com/Zewo/HTTPClient
 	branch = master
-	commit = 6b5fc55d164c05445e2276d417e6e41387171870
-	parent = 853bbac3fd1413a2a508e3b279b2a336a3f02bb9
+	commit = da9c7078772c54b08cea0738d3281d81c0e51e90
+	parent = 7335e085377199155a9daeefa1bf9090aabdab09
 	cmdver = 0.3.0

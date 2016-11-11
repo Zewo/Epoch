@@ -128,7 +128,23 @@ extension Client {
 
             // stream closed before we got a response out of it
             throw StreamError.closedStream
-
+            
+        } catch StreamError.closedStream {
+            defer {
+                self.stream = nil
+            }
+            
+            // rethrow error if request requires connect upgrade
+            guard request.upgradeConnection == nil else {
+                throw StreamError.closedStream
+            }
+            
+            // try and finish the parsing
+            guard let message = try parser.finish().first else {
+                throw StreamError.closedStream
+            }
+            
+            return message as! Response
         } catch let error as StreamError {
             self.stream = nil
             throw error

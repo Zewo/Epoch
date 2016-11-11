@@ -39,11 +39,11 @@ public final class FallibleChannel<T> : Sequence {
 
     public init(bufferSize: Int) {
         self.bufferSize = bufferSize
-        self.channel = mill_chmake(bufferSize, "FallibleChannel init")
+        self.channel = mill_chmake_(bufferSize, "FallibleChannel init")
     }
 
     deinit {
-        mill_chclose(channel, "FallibleChannel deinit")
+        mill_chclose_(channel, "FallibleChannel deinit")
     }
 
     /// Reference that can only send values.
@@ -62,14 +62,14 @@ public final class FallibleChannel<T> : Sequence {
         guard !closed else { return }
 
         closed = true
-        mill_chdone(channel, "Channel close")
+        mill_chdone_(channel, "Channel close")
     }
 
     /// Send a result to the channel.
     public func send(_ result: ChannelResult<T>) {
         if !closed {
             buffer.append(result)
-            mill_chs(channel, "FallibleChannel sendResult")
+            mill_chs_(channel, "FallibleChannel sendResult")
         }
     }
 
@@ -78,7 +78,7 @@ public final class FallibleChannel<T> : Sequence {
         if !closed {
             let result = ChannelResult<T>.value(value)
             buffer.append(result)
-            mill_chs(channel, "FallibleChannel send")
+            mill_chs_(channel, "FallibleChannel send")
         }
     }
 
@@ -86,7 +86,7 @@ public final class FallibleChannel<T> : Sequence {
         if !closed {
             let result = ChannelResult<T>.value(value)
             buffer.append(result)
-            mill_choose_out(clause, channel, Int32(index))
+            mill_choose_out_(clause, channel, Int32(index))
         }
     }
 
@@ -95,7 +95,7 @@ public final class FallibleChannel<T> : Sequence {
         if !closed {
             let result = ChannelResult<T>.error(error)
             buffer.append(result)
-            mill_chs(channel, "FallibleChannel send")
+            mill_chs_(channel, "FallibleChannel send")
         }
     }
 
@@ -103,7 +103,7 @@ public final class FallibleChannel<T> : Sequence {
         if !closed {
             let result = ChannelResult<T>.error(error)
             buffer.append(result)
-            mill_choose_out(clause, channel, Int32(index))
+            mill_choose_out_(clause, channel, Int32(index))
         }
     }
 
@@ -113,7 +113,7 @@ public final class FallibleChannel<T> : Sequence {
         if closed && buffer.isEmpty {
             return nil
         }
-        mill_chr(channel, "FallibleChannel receive")
+        mill_chr_(channel, "FallibleChannel receive")
         if let value = getResultFromBuffer() {
             switch value {
             case .value(let v): return v
@@ -130,12 +130,12 @@ public final class FallibleChannel<T> : Sequence {
         if closed && buffer.isEmpty {
             return nil
         }
-        mill_chr(channel, "FallibleChannel receiveResult")
+        mill_chr_(channel, "FallibleChannel receiveResult")
         return getResultFromBuffer()
     }
 
     func registerReceive(_ clause: UnsafeMutableRawPointer, index: Int) {
-        mill_choose_in(clause, channel, Int32(index))
+        mill_choose_in_(clause, channel, Int32(index))
     }
 
     func getResultFromBuffer() -> ChannelResult<T>? {
