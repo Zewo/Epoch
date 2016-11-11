@@ -1,11 +1,11 @@
 public protocol EntityProtocol {
     associatedtype Model: ModelProtocol
 
-    var model: Model { get }
+    var model: Model { get set }
 }
 
 public protocol PersistedEntityProtocol: EntityProtocol, Equatable {
-    var primaryKey: Model.PrimaryKey { get }
+    var primaryKey: Model.PrimaryKey { get set }
 }
 
 public extension EntityProtocol where Model.Field.RawValue == String {
@@ -117,13 +117,33 @@ public extension PersistedEntityProtocol where Model.Field.RawValue == String {
         return new
     }
 
+    public func update<Connection: ConnectionProtocol> (newPrimaryKey: Model.PrimaryKey, connection: Connection) throws -> PersistedEntity<Model>  where Connection.Result.Iterator.Element: RowProtocol {
+        try model.willSave()
+        try model.willUpdate()
+
+        // add primary key to update parameters
+        var serialized = model.serialize()
+        serialized[Model.Field.primaryKey] = newPrimaryKey
+
+        try connection.execute(Model.update(serialized))
+
+        var entity = self
+        entity.primaryKey = newPrimaryKey
+
+        let new = try entity.refresh(connection: connection)
+        new.model.didUpdate()
+        new.model.didSave()
+
+        return new
+    }
+
     public func save<Connection: ConnectionProtocol> (connection: Connection) throws -> PersistedEntity<Model>  where Connection.Result.Iterator.Element: RowProtocol {
         return try update(connection: connection)
     }
 }
 
 public struct Entity<Model: ModelProtocol> : EntityProtocol where Model.Field.RawValue == String {
-    public let model: Model
+    public var model: Model
 
     public init(model: Model) {
         self.model = model
@@ -132,7 +152,7 @@ public struct Entity<Model: ModelProtocol> : EntityProtocol where Model.Field.Ra
 
 public struct PersistedEntity<Model: ModelProtocol> : PersistedEntityProtocol where Model.Field.RawValue == String {
     public var model: Model
-    public let primaryKey: Model.PrimaryKey
+    public var primaryKey: Model.PrimaryKey
 
     public init(model: Model, primaryKey: Model.PrimaryKey) {
         self.model = model
