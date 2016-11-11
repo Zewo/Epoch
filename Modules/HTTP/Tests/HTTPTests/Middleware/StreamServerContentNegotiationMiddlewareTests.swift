@@ -185,6 +185,34 @@ public class StreamServerContentNegotiationMiddlewareTests : XCTestCase {
             XCTFail()
         }
     }
+
+    func testEmptyBodyRequest() throws {
+        let request = Request(
+            headers: [
+                "Content-Type": "application/json; charset=utf-8"
+            ]
+        )
+
+        let responder = BasicResponder { request in
+            XCTAssertNil(request.content)
+            return try Response(content: ["items": []])
+        }
+
+        let response = try contentNegotiation.respond(to: request, chainingTo: responder)
+
+        XCTAssertEqual(response.headers["Content-Type"], "application/json; charset=utf-8")
+        XCTAssertEqual(response.transferEncoding, "chunked")
+        XCTAssertNil(response.contentLength)
+
+        let stream = BufferStream()
+        switch response.body {
+        case .writer(let writer):
+            try writer(stream)
+            XCTAssertEqual(stream.buffer, Buffer("{\"items\":[]}"))
+        default:
+            XCTFail()
+        }
+    }
 }
 
 extension StreamServerContentNegotiationMiddlewareTests {
@@ -196,6 +224,7 @@ extension StreamServerContentNegotiationMiddlewareTests {
             ("testURLEncodedFormRequestDefaultResponse", testURLEncodedFormRequestDefaultResponse),
             ("testURLEncodedFormRequestResponse", testURLEncodedFormRequestResponse),
             ("testURLEncodedFormRequestJSONResponse", testURLEncodedFormRequestJSONResponse),
+            ("testEmptyBodyRequest", testEmptyBodyRequest)
         ]
     }
 }

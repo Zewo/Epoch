@@ -1,11 +1,10 @@
 # Reflection
 
 [![Swift][swift-badge]][swift-url]
-[![Zewo][zewo-badge]][zewo-url]
-[![Platform][platform-badge]][platform-url]
 [![License][mit-badge]][mit-url]
 [![Slack][slack-badge]][slack-url]
 [![Travis][travis-badge]][travis-url]
+[![Codecov][codecov-badge]][codecov-url]
 [![Codebeat][codebeat-badge]][codebeat-url]
 
 **Reflection** provides an API for advanced reflection at runtime including dynamic construction of types.
@@ -130,10 +129,6 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 
 [swift-badge]: https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat
 [swift-url]: https://swift.org
-[zewo-badge]: https://img.shields.io/badge/Zewo-0.5-FF7565.svg?style=flat
-[zewo-url]: http://zewo.io
-[platform-badge]: https://img.shields.io/badge/Platforms-OS%20X%20--%20Linux-lightgray.svg?style=flat
-[platform-url]: https://swift.org
 [mit-badge]: https://img.shields.io/badge/License-MIT-blue.svg?style=flat
 [mit-url]: https://tldrlegal.com/license/mit-license
 [slack-image]: http://s13.postimg.org/ybwy92ktf/Slack.png
@@ -141,5 +136,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 [slack-url]: http://slack.zewo.io
 [travis-badge]: https://travis-ci.org/Zewo/Reflection.svg?branch=master
 [travis-url]: https://travis-ci.org/Zewo/Reflection
+[codecov-badge]: https://codecov.io/gh/Zewo/Reflection/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/Zewo/Reflection
 [codebeat-badge]: https://codebeat.co/badges/85f3c10b-6574-4956-8c58-bb6ad3ea1268
 [codebeat-url]: https://codebeat.co/projects/github-com-zewo-reflection

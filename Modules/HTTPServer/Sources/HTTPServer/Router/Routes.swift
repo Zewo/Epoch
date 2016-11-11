@@ -12,6 +12,7 @@ open class Routes {
 extension Routes {
     public func compose(_ path: String, middleware: [Middleware] = [], router representable: RouterRepresentable) {
         let router = representable.router
+        let middleware = middleware + router.middleware
         for route in router.routes {
             for (method, responder) in route.actions {
                 add(method: method, path: path + route.path, middleware: middleware, responder: responder)

@@ -61,9 +61,13 @@ public class RequestTests : XCTestCase {
     }
 
     func testURLAccessors() throws {
-        let request = Request(url: "/foo?bar=baz")!
-        XCTAssertEqual(request.path, "/foo")
-        XCTAssertEqual(request.queryItems, [URLQueryItem(name: "bar", value: "baz")])
+        #if os(macOS)
+            guard let request = Request(url: "/foo?bar=baz") else {
+                return XCTFail()
+            }
+            XCTAssertEqual(request.path, "/foo")
+            XCTAssertEqual(request.queryItems, [URLQueryItem(name: "bar", value: "baz")])
+        #endif
     }
 
     func testAcceptHeader() throws {
@@ -134,15 +138,15 @@ extension RequestTests {
     public static var allTests: [(String, (RequestTests) -> () throws -> Void)] {
         return [
             ("testCreation", testCreation),
-            ("testCreation", testURLAccessors),
-            ("testCreation", testAcceptHeader),
-            ("testCreation", testCookieHeader),
-            ("testCreation", testHostHeader),
-            ("testCreation", testUserAgentHeader),
-            ("testCreation", testAuthorizationHeader),
-            ("testCreation", testUpgradeConnection),
-            ("testCreation", testPathParameters),
-            ("testCreation", testDescription),
+            ("testURLAccessors", testURLAccessors),
+            ("testAcceptHeader", testAcceptHeader),
+            ("testCookieHeader", testCookieHeader),
+            ("testHostHeader", testHostHeader),
+            ("testUserAgentHeader", testUserAgentHeader),
+            ("testAuthorizationHeader", testAuthorizationHeader),
+            ("testUpgradeConnection", testUpgradeConnection),
+            ("testPathParameters", testPathParameters),
+            ("testDescription", testDescription),
         ]
     }
 }

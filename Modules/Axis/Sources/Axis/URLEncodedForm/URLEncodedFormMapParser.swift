@@ -32,7 +32,7 @@ public final class URLEncodedFormMapParser : MapParser {
                     throw URLEncodedFormMapParserError.malformedURLEncodedForm
                 }
             }
-            
+
             return map
         }
     }

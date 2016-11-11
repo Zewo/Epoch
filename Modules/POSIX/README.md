@@ -4,6 +4,7 @@
 [![License][mit-badge]][mit-url]
 [![Slack][slack-badge]][slack-url]
 [![Travis][travis-badge]][travis-url]
+[![Codecov][codecov-badge]][codecov-url]
 [![Codebeat][codebeat-badge]][codebeat-url]
 
 ## Installation
@@ -41,5 +42,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 [slack-url]: http://slack.zewo.io
 [travis-badge]: https://travis-ci.org/Zewo/POSIX.svg?branch=master
 [travis-url]: https://travis-ci.org/Zewo/POSIX
+[codecov-badge]: https://codecov.io/gh/Zewo/POSIX/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/Zewo/POSIX
 [codebeat-badge]: https://codebeat.co/badges/7ef0c3f0-90dc-4d84-a679-2dd962286013
 [codebeat-url]: https://codebeat.co/projects/github-com-zewo-posix

@@ -313,7 +313,7 @@ public class SelectCaseBuilder {
 }
 
 private func select(_ builder: SelectCaseBuilder) {
-    mill_choose_init("select")
+    mill_choose_init_("select")
 
     var clauses: [UnsafeMutableRawPointer] = []
 
@@ -324,10 +324,10 @@ private func select(_ builder: SelectCaseBuilder) {
     }
 
     if builder.otherwise != nil {
-        mill_choose_otherwise()
+        mill_choose_otherwise_()
     }
 
-    let index = mill_choose_wait()
+    let index = mill_choose_wait_()
 
     if index == -1 {
         builder.otherwise?()

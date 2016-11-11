@@ -1,8 +1,8 @@
 import COpenSSL
 import Axis
 
-internal extension Hash.Function {
-	var digestLength: Int {
+public extension Hash.Function {
+	public var digestLength: Int {
 		switch self {
 		case .md5:
 			return Int(MD5_DIGEST_LENGTH)
@@ -19,7 +19,7 @@ internal extension Hash.Function {
 		}
 	}
 
-	var function: ((UnsafePointer<UInt8>?, Int, UnsafeMutablePointer<UInt8>?) -> UnsafeMutablePointer<UInt8>!) {
+	internal var function: ((UnsafePointer<UInt8>?, Int, UnsafeMutablePointer<UInt8>?) -> UnsafeMutablePointer<UInt8>!) {
 		switch self {
 		case .md5:
 			return { MD5($0!, $1, $2!) }
@@ -36,7 +36,7 @@ internal extension Hash.Function {
 		}
 	}
 
-	var evp: UnsafePointer<EVP_MD> {
+	internal var evp: UnsafePointer<EVP_MD> {
 		switch self {
 		case .md5:
 			return EVP_md5()
@@ -100,6 +100,30 @@ public struct Hash {
             }
         }
 	}
+    
+    // MARK: - PBKDF2
+    
+    public static func pbkdf2(_ function: Function, password: BufferRepresentable, salt: BufferRepresentable, iterations: Int) throws -> Buffer {
+        initialize()
+        
+        let passwordBuffer = password.buffer
+        let saltBuffer = salt.buffer
+        
+        return Buffer(count: Int(function.digestLength)) { bufferPtr in
+            passwordBuffer.withUnsafeBytes { (passwordBufferPtr: UnsafePointer<Int8>) in
+                saltBuffer.withUnsafeBytes { (saltBufferPtr: UnsafePointer<UInt8>) in
+                    _ = COpenSSL.PKCS5_PBKDF2_HMAC(passwordBufferPtr,
+                                                   Int32(passwordBuffer.count),
+                                                   saltBufferPtr,
+                                                   Int32(saltBuffer.count),
+                                                   Int32(iterations),
+                                                   function.evp,
+                                                   Int32(bufferPtr.count),
+                                                   bufferPtr.baseAddress)
+                }
+            }
+        }
+    }
 
 	// MARK: - RSA
 

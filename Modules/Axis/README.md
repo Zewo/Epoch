@@ -4,6 +4,7 @@
 [![License][mit-badge]][mit-url]
 [![Slack][slack-badge]][slack-url]
 [![Travis][travis-badge]][travis-url]
+[![Codecov][codecov-badge]][codecov-url]
 [![Codebeat][codebeat-badge]][codebeat-url]
 
 ## Installation
@@ -41,5 +42,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 [slack-url]: http://slack.zewo.io
 [travis-badge]: https://travis-ci.org/Zewo/Axis.svg?branch=master
 [travis-url]: https://travis-ci.org/Zewo/Axis
-[codebeat-badge]: https://codebeat.co/badges/45712aa0-d540-4b15-b82c-ed594f1fc5a6
+[codecov-badge]: https://codecov.io/gh/Zewo/Axis/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/Zewo/Axis
+[codebeat-badge]: https://codebeat.co/badges/50563cb7-7626-4451-b475-aad03d0a7b9b
 [codebeat-url]: https://codebeat.co/projects/github-com-zewo-axis
