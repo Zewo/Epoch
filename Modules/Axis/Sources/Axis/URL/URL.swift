@@ -8,7 +8,26 @@ public enum URLError : Error {
 
 extension URL {
     public var queryItems: [URLQueryItem] {
+#if os(Linux)
+        //URLComponents.queryItems crashes on Linux.
+        //FIXME: remove that when Foundation will be fixed
+        //https://bugs.swift.org/browse/SR-384
+        guard let queryPairs = query?.components(separatedBy: "&") else { return [] }
+        let items = queryPairs.map { (s) -> URLQueryItem in
+            let pair = s.components(separatedBy: "=")
+            
+            let name = pair[0]
+            let value: String? = pair.count > 1 ? pair[1] : nil
+            
+            return URLQueryItem(name: name, value: value?.removingPercentEncoding)
+        }
+        
+        return items
+
+    
+#else
         return URLComponents(url: self, resolvingAgainstBaseURL: false)?.queryItems ?? []
+#endif
     }
 }
 

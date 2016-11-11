@@ -95,6 +95,20 @@ let messi: MessagePack = try messi.map()
 // and so on...
 ```
 
+## Installation
+
+- Add `Mapper` to your `Package.swift`
+
+```swift
+import PackageDescription
+
+let package = Package(
+    dependencies: [
+        .Package(url: "https://github.com/Zewo/Mapper.git", majorVersion: 0, minor: 14),
+    ]
+)
+```
+
 ## Usage
 
 #### Basics
@@ -862,20 +876,6 @@ let user = try User(from: mapperMap)
 let userMap: MapperMap = try user.map()
 ```
 
-## Installation
-
-- Add `Mapper` to your `Package.swift`
-
-```swift
-import PackageDescription
-
-let package = Package(
-    dependencies: [
-        .Package(url: "https://github.com/Zewo/Mapper.git", majorVersion: 0, minor: 5),
-    ]
-)
-```
-
 ## Support
 
 If you need any help you can join our [Slack](http://slack.zewo.io) and go to the **#help** channel. Or you can create a Github [issue](https://github.com/Zewo/Zewo/issues/new) in our main repository. When stating your issue be sure to add enough details, specify what module is causing the problem and reproduction steps.
@@ -892,7 +892,7 @@ This project is released under the MIT license. See [LICENSE](LICENSE) for detai
 
 [swift-badge]: https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat
 [swift-url]: https://swift.org
-[zewo-badge]: https://img.shields.io/badge/Zewo-0.15-FF7565.svg?style=flat
+[zewo-badge]: https://img.shields.io/badge/Zewo-0.14-FF7565.svg?style=flat
 [zewo-url]: http://zewo.io
 [platform-badge]: https://img.shields.io/badge/Platforms-OS%20X%20--%20Linux-lightgray.svg?style=flat
 [platform-url]: https://swift.org

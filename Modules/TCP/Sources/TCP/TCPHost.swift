@@ -6,7 +6,7 @@ public final class TCPHost : Host {
 
     public init(host: String = "0.0.0.0", port: Int = 8080, backlog: Int = 128, reusePort: Bool = false) throws {
         self.ip = try IP(localAddress: host, port: port)
-        guard let socket = tcplisten(ip.address, Int32(backlog), reusePort ? 1 : 0) else {
+        guard let socket = mill_tcplisten_(ip.address, Int32(backlog), reusePort ? 1 : 0) else {
             throw SystemError.lastOperationError!
         }
         try ensureLastOperationSucceeded()
@@ -14,7 +14,7 @@ public final class TCPHost : Host {
     }
 
     public func accept(deadline: Double) throws -> Stream {
-        guard let acceptSocket = tcpaccept(socket, deadline.int64milliseconds) else {
+        guard let acceptSocket = mill_tcpaccept_(socket, deadline.int64milliseconds) else {
             throw SystemError.lastOperationError!
         }
         try ensureLastOperationSucceeded()
@@ -22,6 +22,6 @@ public final class TCPHost : Host {
     }
     
     deinit {
-        tcpclose(socket)
+        mill_tcpclose_(socket)
     }
 }

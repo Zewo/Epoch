@@ -187,6 +187,7 @@ public class TrieRouteMatcherTests : XCTestCase {
 
         XCTAssert(route("/", expectedResponse: "wild"))
         XCTAssert(route("/a/s/d/f", expectedResponse: "wild"))
+        XCTAssert(route("/hello", expectedResponse: "hello wild"))
         XCTAssert(route("/hello/asdf", expectedResponse: "hello wild"))
         XCTAssert(route("/hello/dan", expectedResponse: "hello dan"))
     }

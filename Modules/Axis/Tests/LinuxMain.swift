@@ -8,4 +8,5 @@ XCTMain([
     testCase(MapConvertibleTests.allTests),
     testCase(MapTests.allTests),
     testCase(StringTests.allTests),
+    testCase(URLTests.allTests),
 ])

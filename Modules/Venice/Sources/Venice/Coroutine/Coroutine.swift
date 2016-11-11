@@ -54,22 +54,22 @@ public func every(_ napDuration: Double, routine: @escaping (_ done: (Void) -> V
 
 /// Sleeps for duration.
 public func nap(for duration: Double) {
-    mill_msleep(duration.fromNow().int64milliseconds, "nap")
+    mill_msleep_(duration.fromNow().int64milliseconds, "nap")
 }
 
 /// Wakes up at deadline.
 public func wake(at deadline: Double) {
-    mill_msleep(deadline.int64milliseconds, "wakeUp")
+    mill_msleep_(deadline.int64milliseconds, "wakeUp")
 }
 
 /// Passes control to other coroutines.
 public var yield: Void {
-    mill_yield("yield")
+    mill_yield_("yield")
 }
 
 /// Fork the current process.
 public func fork() -> PID {
-    return mfork()
+    return mill_mfork_()
 }
 
 /// Get the number of logical CPU cores available. This might return a bigger number than the physical CPU Core number if the CPU supports hyper-threading.

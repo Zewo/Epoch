@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/Zewo/WebSocket
+	branch = master
+	commit = 8274fa2885efc8d3f4736f5bbd47d3c8ee40acb2
+	parent = df57f14c36880b753e79262cb7c00c0550b4e1e0
+	cmdver = 0.3.0
