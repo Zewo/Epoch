@@ -38,21 +38,21 @@ public struct IP {
 
     public init(port: Int = 0, mode: IPMode = .ipV4Prefered) throws {
         try IP.assertValid(port)
-        let address = iplocal(nil, Int32(port), mode.code)
+        let address = mill_iplocal_(nil, Int32(port), mode.code)
         try ensureLastOperationSucceeded()
         self.init(address: address)
     }
 
     public init(localAddress: String, port: Int = 0, mode: IPMode = .ipV4Prefered) throws {
         try IP.assertValid(port)
-        let address = iplocal(localAddress, Int32(port), mode.code)
+        let address = mill_iplocal_(localAddress, Int32(port), mode.code)
         try ensureLastOperationSucceeded()
         self.init(address: address)
     }
 
     public init(remoteAddress: String, port: Int, mode: IPMode = .ipV4Prefered, deadline: Double) throws {
         try IP.assertValid(port)
-        let address = ipremote(remoteAddress, Int32(port), mode.code, deadline.int64milliseconds)
+        let address = mill_ipremote_(remoteAddress, Int32(port), mode.code, deadline.int64milliseconds)
         try ensureLastOperationSucceeded()
         self.init(address: address)
     }
@@ -67,7 +67,7 @@ public struct IP {
 extension IP : CustomStringConvertible {
     public var description: String {
         var buffer = [Int8](repeating: 0, count: 46)
-        ipaddrstr(address, &buffer)
+        mill_ipaddrstr_(address, &buffer)
         return String(cString: buffer)
     }
 }

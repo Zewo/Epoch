@@ -2,18 +2,21 @@ import XCTest
 @testable import Reflection
 
 public class InternalTests : XCTestCase {
+    
     func testShallowMetadata() {
         func testShallowMetadata<T>(type: T.Type, expectedKind: Metadata.Kind) {
             let shallowMetadata = Metadata(type: type)
-            XCTAssert(shallowMetadata.kind == expectedKind)
+            XCTAssert(shallowMetadata.kind == expectedKind, "\(shallowMetadata.kind) does not match expected \(expectedKind)")
             XCTAssert(shallowMetadata.valueWitnessTable.size == sizeof(type))
             XCTAssert(shallowMetadata.valueWitnessTable.stride == strideof(type))
         }
         testShallowMetadata(type: Person.self, expectedKind: .struct)
+        testShallowMetadata(type: Optional<Person>.self, expectedKind: .optional)
         testShallowMetadata(type: (String, Int).self, expectedKind: .tuple)
         testShallowMetadata(type: ((String) -> Int).self, expectedKind: .function)
         testShallowMetadata(type: Any.self, expectedKind: .existential)
         testShallowMetadata(type: String.Type.self, expectedKind: .metatype)
+        testShallowMetadata(type: Any.Type.self, expectedKind: .existentialMetatype)
         testShallowMetadata(type: ReferencePerson.self, expectedKind: .class)
     }
 

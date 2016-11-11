@@ -100,6 +100,30 @@ public struct Hash {
             }
         }
 	}
+    
+    // MARK: - PBKDF2
+    
+    public static func pbkdf2(_ function: Function, password: BufferRepresentable, salt: BufferRepresentable, iterations: Int) throws -> Buffer {
+        initialize()
+        
+        let passwordBuffer = password.buffer
+        let saltBuffer = salt.buffer
+        
+        return Buffer(count: Int(function.digestLength)) { bufferPtr in
+            passwordBuffer.withUnsafeBytes { (passwordBufferPtr: UnsafePointer<Int8>) in
+                saltBuffer.withUnsafeBytes { (saltBufferPtr: UnsafePointer<UInt8>) in
+                    _ = COpenSSL.PKCS5_PBKDF2_HMAC(passwordBufferPtr,
+                                                   Int32(passwordBuffer.count),
+                                                   saltBufferPtr,
+                                                   Int32(saltBuffer.count),
+                                                   Int32(iterations),
+                                                   function.evp,
+                                                   Int32(bufferPtr.count),
+                                                   bufferPtr.baseAddress)
+                }
+            }
+        }
+    }
 
 	// MARK: - RSA
 

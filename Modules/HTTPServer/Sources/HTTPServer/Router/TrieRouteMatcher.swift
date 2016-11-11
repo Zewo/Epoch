@@ -60,7 +60,16 @@ public struct TrieRouteMatcher {
         // if no more components, we hit the end of the path and
         // may have matched something
         guard let component = components.next() else {
-            return head.payload
+            // if we found something, great! return that
+            if let route = head.payload {
+                return route
+            }
+            // last resort: we found nothing, but there _might_ be a wildstar right here
+            if let wildstar = head.children.first(where: { child in child.prefix == "*" }) {
+                return wildstar.payload
+            }
+            // nope, got nothing
+            return nil
         }
 
         // store each possible path (ie both a static and a parameter)
