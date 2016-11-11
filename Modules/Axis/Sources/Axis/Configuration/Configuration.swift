@@ -24,7 +24,7 @@ public struct Configuration {
         while i < arguments.count {
             if arguments[i].has(prefix: "-") {
                 if !hasParameter {
-                    currentParameter = String(Array(arguments[i].characters).suffix(from: 1))
+                    currentParameter = String(arguments[i].unicodeScalars.dropFirst())
                     hasParameter = true
                     i += 1
                 } else {

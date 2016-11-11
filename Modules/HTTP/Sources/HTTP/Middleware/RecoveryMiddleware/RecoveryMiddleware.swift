@@ -16,9 +16,15 @@ public struct RecoveryMiddleware : Middleware {
     }
 
     public static func recover(error: Error) throws -> Response {
-        guard let representable = error as? ResponseRepresentable else {
+        switch error {
+        case let error as ClientError:
+            return Response(status: error.status, body: "\(error.status.statusCode) \(error.status.reasonPhrase)")
+        case let error as ServerError:
+            return Response(status: error.status, body: "\(error.status.statusCode) \(error.status.reasonPhrase)")
+        case let error as ResponseRepresentable:
+            return error.response
+        default:
             throw error
         }
-        return representable.response
     }
 }

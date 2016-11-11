@@ -7,7 +7,7 @@ public final class TCPStream : Stream {
     public private(set) var closed = true
 
     internal init(with socket: tcpsock) throws {
-        let address = tcpaddr(socket)
+        let address = mill_tcpaddr_(socket)
         try ensureLastOperationSucceeded()
         self.ip = IP(address: address)
         self.socket = socket
@@ -20,7 +20,7 @@ public final class TCPStream : Stream {
     }
 
     public func open(deadline: Double) throws {
-        guard let socket = tcpconnect(ip.address, deadline.int64milliseconds) else {
+        guard let socket = mill_tcpconnect_(ip.address, deadline.int64milliseconds) else {
             throw SystemError.lastOperationError!
         }
         try ensureLastOperationSucceeded()
@@ -36,7 +36,7 @@ public final class TCPStream : Stream {
             return
         }
         
-        let bytesWritten = tcpsend(socket, buffer.baseAddress!, buffer.count, deadline.int64milliseconds)
+        let bytesWritten = mill_tcpsend_(socket, buffer.baseAddress!, buffer.count, deadline.int64milliseconds)
         
         guard bytesWritten == buffer.count else {
             try ensureLastOperationSucceeded()
@@ -52,7 +52,7 @@ public final class TCPStream : Stream {
             return UnsafeBufferPointer()
         }
         
-        let bytesRead = tcprecvlh(socket, readPointer, 1, readBuffer.count, deadline.int64milliseconds)
+        let bytesRead = mill_tcprecvlh_(socket, readPointer, 1, readBuffer.count, deadline.int64milliseconds)
         
         if bytesRead == 0 {
             do {
@@ -70,13 +70,13 @@ public final class TCPStream : Stream {
         let socket = try getSocket()
         try ensureStreamIsOpen()
 
-        tcpflush(socket, deadline.int64milliseconds)
+        mill_tcpflush_(socket, deadline.int64milliseconds)
         try ensureLastOperationSucceeded()
     }
 
     public func close() {
         if !closed, let socket = try? getSocket() {
-            tcpclose(socket)
+            mill_tcpclose_(socket)
         }
 
         closed = true
@@ -97,7 +97,7 @@ public final class TCPStream : Stream {
 
     deinit {
         if let socket = socket, !closed {
-            tcpclose(socket)
+            mill_tcpclose_(socket)
         }
     }
 }

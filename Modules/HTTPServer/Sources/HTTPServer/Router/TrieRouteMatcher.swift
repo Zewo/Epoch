@@ -16,7 +16,7 @@ public struct TrieRouteMatcher {
                 if t.prefix == "*" {
                     return 3
                 }
-                if t.prefix?.characters.first == ":" {
+                if t.prefix?.unicodeScalars.first == ":" {
                     return 2
                 }
                 return 1
@@ -60,7 +60,16 @@ public struct TrieRouteMatcher {
         // if no more components, we hit the end of the path and
         // may have matched something
         guard let component = components.next() else {
-            return head.payload
+            // if we found something, great! return that
+            if let route = head.payload {
+                return route
+            }
+            // last resort: we found nothing, but there _might_ be a wildstar right here
+            if let wildstar = head.children.first(where: { child in child.prefix == "*" }) {
+                return wildstar.payload
+            }
+            // nope, got nothing
+            return nil
         }
 
         // store each possible path (ie both a static and a parameter)
@@ -76,8 +85,8 @@ public struct TrieRouteMatcher {
             }
 
             // matched parameter
-            if let prefix = child.prefix, prefix.characters.first == ":" {
-                let param = String(prefix.characters.dropFirst())
+            if let prefix = child.prefix, prefix.unicodeScalars.first == ":" {
+                let param = String(prefix.unicodeScalars.dropFirst())
                 paths.append((node: child, param: param))
                 continue
             }

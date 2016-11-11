@@ -39,7 +39,7 @@ public struct ContentNegotiationMiddleware : Middleware {
     private func serverRespond(to request: Request, chainingTo chain: Responder) throws -> Response {
         var request = request
 
-        if let contentType = request.contentType {
+        if let contentType = request.contentType, !request.body.isEmpty {
             do {
                 let content: Map
 

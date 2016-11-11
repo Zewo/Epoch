@@ -4,12 +4,11 @@ protocol MetadataType : PointerType {
 
 extension MetadataType {
     var valueWitnessTable: ValueWitnessTable {
-        let p = UnsafeRawPointer(pointer).assumingMemoryBound(to: UnsafePointer<Int>.self)
-        return ValueWitnessTable(pointer: p.advanced(by: -1).pointee)
+        return ValueWitnessTable(pointer: UnsafePointer<UnsafePointer<Int>>(pointer).advanced(by: -1).pointee)
     }
 
     var kind: Metadata.Kind {
-        return Metadata.Kind(flag: UnsafeRawPointer(pointer).assumingMemoryBound(to: Int.self).pointee)
+        return Metadata.Kind(flag: UnsafePointer<Int>(pointer).pointee)
     }
 
     init?(type: Any.Type) {

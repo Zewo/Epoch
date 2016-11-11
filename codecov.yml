@@ -26,6 +26,7 @@ ignore:
   - "Modules/UDP/Tests/*"
   - "Modules/Venice/Tests/*"
   - "Modules/HTTPClient/Tests/*"
+  - "Modules/Mapper/Tests/*"
 
 fixes:
   - Modules/::

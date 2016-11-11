@@ -6,6 +6,6 @@
 [subrepo]
 	remote = https://github.com/Zewo/Axis
 	branch = master
-	commit = 715ac260d258db1cb16cf08780eeb669229d764d
-	parent = f4a1e6a541420f3fcec85d6f5aecb917f6cbfe77
+	commit = 5897ad1a33c51959b574c1e72455a5cb7cf3ddb3
+	parent = 0b3b6e8698e1dfac982e9edb6eef5f868198d110
 	cmdver = 0.3.0

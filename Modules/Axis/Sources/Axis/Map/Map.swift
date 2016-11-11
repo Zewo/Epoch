@@ -795,7 +795,7 @@ extension Map : ExpressibleByDictionaryLiteral {
 
 extension Map : CustomStringConvertible {
     public var description: String {
-        let escapeMapping: [Character: String] = [
+        let escapeMapping: [UnicodeScalar: String.UnicodeScalarView] = [
              "\r": "\\r",
              "\n": "\\n",
              "\t": "\\t",
@@ -804,23 +804,22 @@ extension Map : CustomStringConvertible {
 
              "\u{2028}": "\\u2028",
              "\u{2029}": "\\u2029",
-
-             "\r\n": "\\r\\n"
         ]
 
         func escape(_ source: String) -> String {
-            var string = "\""
+            var string: String.UnicodeScalarView = "\""
 
-            for character in source.characters {
-                if let escapedSymbol = escapeMapping[character] {
-                    string.append(escapedSymbol)
+            for scalar in source.unicodeScalars {
+                if let escaped = escapeMapping[scalar] {
+                    string.append(contentsOf: escaped)
                 } else {
-                    string.append(character)
+                    string.append(scalar)
                 }
             }
 
             string.append("\"")
-            return string
+
+            return String(string)
         }
 
         func serialize(map: Map) -> String {

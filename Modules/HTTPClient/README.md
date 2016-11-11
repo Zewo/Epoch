@@ -19,6 +19,40 @@ let package = Package(
 )
 ```
 
+## Usage
+
+### Creating a client
+
+```swift
+let client = try Client(url: "http://httpbin.org")
+```
+
+### Basic GET request
+
+```swift
+let response = try client.get("/get")
+```
+
+### POST request with JSON body
+
+```swift
+let content: Map = [
+    "hello": "world",
+    "numbers": [1, 2, 3, 4, 5]
+]
+let body = try JSONMapSerializer.serialize(content)
+let response = try client.post("/post", body: body)
+```
+
+### Parsing response body
+
+```swift
+// converts response to a common type `Map` from pool of types
+let contentNegotiation = ContentNegotiationMiddleware(mediaTypes: [.json, .urlEncodedForm], mode: .client)
+let response = try client.get("/get", middleware: [contentNegotiation])
+print(response.content)
+```
+
 ## Support
 
 If you need any help you can join our [Slack](http://slack.zewo.io) and go to the **#help** channel. Or you can create a Github [issue](https://github.com/Zewo/Zewo/issues/new) in our main repository. When stating your issue be sure to add enough details, specify what module is causing the problem and reproduction steps.
