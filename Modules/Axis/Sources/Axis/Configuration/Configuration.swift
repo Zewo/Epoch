@@ -18,7 +18,7 @@ public struct Configuration {
 
         var currentParameter = ""
         var hasParameter = false
-        var value: Map = nil
+        var value: Map = .null
         var i = 0
 
         while i < arguments.count {
@@ -30,7 +30,7 @@ public struct Configuration {
                 } else {
                     value = true
                     let indexPath = currentParameter.indexPath()
-                    try parameters.set(value, for: indexPath)
+                    parameters[indexPath] = value
                     hasParameter = false
                 }
                 continue
@@ -38,7 +38,7 @@ public struct Configuration {
             if hasParameter {
                 let value = parse(value: arguments[i])
                 let indexPath = currentParameter.indexPath()
-                try parameters.set(value, for: indexPath)
+                parameters[indexPath] = value
                 hasParameter = false
                 i += 1
             } else {
@@ -48,11 +48,11 @@ public struct Configuration {
 
         if hasParameter {
             let indexPath = currentParameter.indexPath()
-            try parameters.set(true, for: indexPath)
+            parameters[indexPath] = true
         }
 
         if parameters == [:] {
-            return nil
+            return .null
         }
 
         return parameters

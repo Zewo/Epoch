@@ -12,7 +12,7 @@ public class ConfigurationTests : XCTestCase {
 
         arguments = ["app-name"]
         parsed = try Configuration.commandLineArguments(arguments)
-        XCTAssertEqual(parsed, nil)
+        XCTAssertEqual(parsed, .null)
 
         arguments = ["app-name", "-server.log", "-server.host", "127.0.0.1", "-server.port", "8080"]
         parsed = try Configuration.commandLineArguments(arguments)
@@ -50,12 +50,12 @@ public class ConfigurationTests : XCTestCase {
 
     func testParseValues() throws {
         XCTAssertEqual(Configuration.parse(value: ""), "")
-        XCTAssertEqual(Configuration.parse(value: "NULL"), nil)
-        XCTAssertEqual(Configuration.parse(value: "Null"), nil)
-        XCTAssertEqual(Configuration.parse(value: "null"), nil)
-        XCTAssertEqual(Configuration.parse(value: "NIL"), nil)
-        XCTAssertEqual(Configuration.parse(value: "Nil"), nil)
-        XCTAssertEqual(Configuration.parse(value: "nil"), nil)
+        XCTAssertEqual(Configuration.parse(value: "NULL"), .null)
+        XCTAssertEqual(Configuration.parse(value: "Null"), .null)
+        XCTAssertEqual(Configuration.parse(value: "null"), .null)
+        XCTAssertEqual(Configuration.parse(value: "NIL"), .null)
+        XCTAssertEqual(Configuration.parse(value: "Nil"), .null)
+        XCTAssertEqual(Configuration.parse(value: "nil"), .null)
         XCTAssertEqual(Configuration.parse(value: "1964"), 1964)
         XCTAssertEqual(Configuration.parse(value: "4.20"), 4.2)
         XCTAssertEqual(Configuration.parse(value: "TRUE"), true)

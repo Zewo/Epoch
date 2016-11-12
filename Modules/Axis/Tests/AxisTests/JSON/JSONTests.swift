@@ -10,7 +10,7 @@ public class JSONTests : XCTestCase {
                 true,
                 -4.2,
                 -1969,
-                nil,
+                .null,
                 "hey! 😊",
             ],
             "boolean": false,
@@ -21,7 +21,7 @@ public class JSONTests : XCTestCase {
             ],
             "double": 4.2,
             "integer": 1969,
-            "null": nil,
+            "null": .null,
             "string": "yoo! 😎",
         ]
 

@@ -3,7 +3,7 @@ import HTTPClient
 
 // fetches port to serve on from command line arguments
 let arguments = try Configuration.commandLineArguments()
-let port = arguments["port"].int ?? 8080
+let port = arguments["port"]?.int ?? 8080
 
 // logs all incoming requests and responses
 let log = LogMiddleware()

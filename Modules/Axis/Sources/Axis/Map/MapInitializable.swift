@@ -1,7 +1,7 @@
 extension MapInitializable {
     public init(map: Map) throws {
         guard case .dictionary(let dictionary) = map else {
-            throw MapError.cannotInitialize(type: Self.self, from: try type(of: map.get()))
+            throw MapError.cannotInitialize(type: Self.self, from: type(of: map))
         }
         self = try construct { property in
             guard let initializable = property.type as? MapInitializable.Type else {
@@ -29,7 +29,7 @@ extension Map : MapInitializable {
 extension Bool : MapInitializable {
     public init(map: Map) throws {
         guard case .bool(let bool) = map else {
-            throw MapError.cannotInitialize(type: Bool.self, from: try type(of: map.get()))
+            throw MapError.cannotInitialize(type: Bool.self, from: type(of: map))
         }
         self = bool
     }
@@ -38,7 +38,7 @@ extension Bool : MapInitializable {
 extension Double : MapInitializable {
     public init(map: Map) throws {
         guard case .double(let double) = map else {
-            throw MapError.cannotInitialize(type: Double.self, from: try type(of: map.get()))
+            throw MapError.cannotInitialize(type: Double.self, from: type(of: map))
         }
         self = double
     }
@@ -47,7 +47,7 @@ extension Double : MapInitializable {
 extension Int : MapInitializable {
     public init(map: Map) throws {
         guard case .int(let int) = map else {
-            throw MapError.cannotInitialize(type: Int.self, from: try type(of: map.get()))
+            throw MapError.cannotInitialize(type: Int.self, from: type(of: map))
         }
         self = int
     }
@@ -56,7 +56,7 @@ extension Int : MapInitializable {
 extension String : MapInitializable {
     public init(map: Map) throws {
         guard case .string(let string) = map else {
-            throw MapError.cannotInitialize(type: String.self, from: try type(of: map.get()))
+            throw MapError.cannotInitialize(type: String.self, from: type(of: map))
         }
         self = string
     }
@@ -65,7 +65,7 @@ extension String : MapInitializable {
 extension Buffer : MapInitializable {
     public init(map: Map) throws {
         guard case .buffer(let buffer) = map else {
-            throw MapError.cannotInitialize(type: Buffer.self, from: try type(of: map.get()))
+            throw MapError.cannotInitialize(type: Buffer.self, from: type(of: map))
         }
         self = buffer
     }
@@ -87,7 +87,7 @@ extension Optional : MapInitializable {
 extension Array : MapInitializable {
     public init(map: Map) throws {
         guard case .array(let array) = map else {
-            throw MapError.cannotInitialize(type: Array.self, from: try type(of: map.get()))
+            throw MapError.cannotInitialize(type: Array.self, from: type(of: map))
         }
         guard let initializable = Element.self as? MapInitializable.Type else {
             throw MapError.notMapInitializable(Element.self)
@@ -116,7 +116,7 @@ extension String : MapDictionaryKeyInitializable {
 extension Dictionary : MapInitializable {
     public init(map: Map) throws {
         guard case .dictionary(let dictionary) = map else {
-            throw MapError.cannotInitialize(type: Dictionary.self, from: try type(of: map.get()))
+            throw MapError.cannotInitialize(type: Dictionary.self, from: type(of: map))
         }
         guard let keyInitializable = Key.self as? MapDictionaryKeyInitializable.Type else {
             throw MapError.notMapDictionaryKeyInitializable(type(of: self))
