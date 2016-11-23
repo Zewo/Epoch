@@ -459,6 +459,34 @@ public class MapTests : XCTestCase {
         XCTAssertEqual(try dictionaryOfNull.asDictionary(), ["foo": .null])
     }
 
+    func testOptional() {
+        let map: Map? = true
+
+        XCTAssertNotNil(map.bool)
+        XCTAssertNil(map.double)
+        XCTAssertNil(map.int)
+        XCTAssertNil(map.string)
+        XCTAssertNil(map.buffer)
+        XCTAssertNil(map.array)
+        XCTAssertNil(map.dictionary)
+
+        XCTAssertTrue(map.isBool)
+        XCTAssertFalse(map.isDouble)
+        XCTAssertFalse(map.isInt)
+        XCTAssertFalse(map.isString)
+        XCTAssertFalse(map.isBuffer)
+        XCTAssertFalse(map.isArray)
+        XCTAssertFalse(map.isDictionary)
+
+        XCTAssert(try map.asBool())
+        XCTAssertThrowsError(try map.asDouble())
+        XCTAssertThrowsError(try map.asInt())
+        XCTAssertThrowsError(try map.asString())
+        XCTAssertThrowsError(try map.asBuffer())
+        XCTAssertThrowsError(try map.asArray())
+        XCTAssertThrowsError(try map.asDictionary())
+    }
+
     func testConversion() {
         let null: Map = .null
         XCTAssertEqual(try null.asInferred(converting: true), false)
