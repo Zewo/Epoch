@@ -129,7 +129,7 @@ extension Server {
     }
 
     public static func log(error: Error) -> Void {
-        print("Error: \(error)")
+        print("Zewo/HTTPServer error: \(error)")
     }
 
     public func printHeader() {
