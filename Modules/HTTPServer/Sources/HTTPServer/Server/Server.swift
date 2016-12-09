@@ -113,6 +113,7 @@ extension Server {
                 try serializer.serialize(response, deadline: .never)
 
                 if let error = unrecoveredError {
+                    stream.close()
                     throw error
                 }
             }
