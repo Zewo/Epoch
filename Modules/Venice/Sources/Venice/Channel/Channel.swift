@@ -1,84 +1,190 @@
-import CLibvenice
+import CLibdill
 
-public struct ChannelGenerator<T> : IteratorProtocol {
-    internal let channel: ReceivingChannel<T>
+public struct ChannelIterator<T> : IteratorProtocol {
+    let channel: Channel<T>
 
-    public mutating func next() -> T? {
-        return channel.receive()
+    public mutating func next() -> ChannelResult<T>? {
+        return try? channel.receiveResult()
     }
 }
 
-public final class Channel<T> : Sequence {
-    private let channel: chan
-    public var closed: Bool = false
-    private var buffer: [T] = []
-    public let bufferSize: Int
-    
-    public convenience init() {
-        self.init(bufferSize: 0)
+public final class Channel<T> : Handle, Sequence {
+    static var length: Int {
+        return MemoryLayout<ChannelResult<T>>.stride
     }
 
-    public init(bufferSize: Int) {
-        self.bufferSize = bufferSize
-        self.channel = mill_chmake_(bufferSize, "Channel init")
-    }
+    var buffer: [ChannelResult<T>] = []
 
-    deinit {
-        mill_chclose_(channel, "Channel deinit")
+//    public init() throws {
+//        let result = chmake(Channel.length)
+//
+//        guard result != -1 else {
+//            switch errno {
+//            case ECANCELED:
+//                throw VeniceError.canceled
+//            case ENOMEM:
+//                throw VeniceError.outOfMemory
+//            default:
+//                throw VeniceError.unexpected
+//            }
+//        }
+//
+//        super.init(handle: result)
+//    }
+
+    public init() throws {
+        let result = chmake(0)
+
+        guard result != -1 else {
+            switch errno {
+            case ECANCELED:
+                throw VeniceError.canceled
+            case ENOMEM:
+                throw VeniceError.outOfMemory
+            default:
+                throw VeniceError.unexpected
+            }
+        }
+
+        super.init(handle: result)
     }
 
     /// Reference that can only send values.
-    public lazy var sendingChannel: SendingChannel<T> = SendingChannel(self)
+    public lazy var sending: SendingChannel<T> = SendingChannel(self)
 
     /// Reference that can only receive values.
-    public lazy var receivingChannel: ReceivingChannel<T> = ReceivingChannel(self)
+    public lazy var receiving: ReceivingChannel<T> = ReceivingChannel(self)
 
     /// Creates a generator.
-    public func makeIterator() -> ChannelGenerator<T> {
-        return ChannelGenerator(channel: receivingChannel)
+    public func makeIterator() -> ChannelIterator<T> {
+        return ChannelIterator(channel: self)
     }
 
-    /// Closes the channel. When a channel is closed it cannot receive values anymore.
-    public func close() {
-        guard !closed else { return }
+    /// Mark the channel as done. When a channel is marked as done it cannot receive or send values anymore.
+    public func done() throws {
+        let result = chdone(handle)
 
-        closed = true
-        mill_chdone_(channel, "Channel close")
+        guard result == 0 else {
+            switch errno {
+            case EBADF:
+                throw VeniceError.invalidHandle
+            case EPIPE:
+                throw VeniceError.channelIsDone
+            default:
+                throw VeniceError.unexpected
+            }
+        }
     }
 
     /// Send a value to the channel.
-    public func send(_ value: T) {
-        if !closed {
-            buffer.append(value)
-            mill_chs_(channel, "Channel send")
-        }
+    public func send(_ value: T, deadline: Deadline = .never) throws {
+        try send(.value(value), deadline: deadline)
     }
 
-    internal func send(_ value: T, clause: UnsafeMutableRawPointer, index: Int) {
-        if !closed {
-            buffer.append(value)
-            mill_choose_out_(clause, channel, Int32(index))
-        }
+    /// Send an error to the channel.
+    public func send(_ error: Error, deadline: Deadline = .never) throws {
+        try send(.error(error), deadline: deadline)
     }
 
-    /// Receives a value from the channel.
+//    public func send(_ channelResult: inout ChannelResult<T>, deadline: Deadline = .never) throws {
+//        let result = chsend(handle, nil, 0, deadline)
+//
+//        guard result == 0 else {
+//            switch errno {
+//            case EBADF:
+//                throw VeniceError.invalidHandle
+//            case ECANCELED:
+//                throw VeniceError.canceled
+//            case EPIPE:
+//                throw VeniceError.channelIsDone
+//            case ETIMEDOUT:
+//                throw VeniceError.timeout
+//            default:
+//                throw VeniceError.unexpected
+//            }
+//        }
+//    }
+
+    /// Receive a value from channel.
     @discardableResult
-    public func receive() -> T? {
-        if closed && buffer.isEmpty {
-            return nil
+    public func receive(deadline: Deadline = .never) throws -> T {
+        switch try receiveResult(deadline: deadline) {
+        case .value(let value):
+            return value
+        case .error(let error):
+            throw error
         }
-        mill_chr_(channel, "Channel receive")
-        return getValueFromBuffer()
     }
 
-    internal func registerReceive(_ clause: UnsafeMutableRawPointer, index: Int) {
-        mill_choose_in_(clause, channel, Int32(index))
+//    /// Receive a result from channel.
+//    @discardableResult
+//    public func receiveResult(deadline: Deadline = .never) throws -> ChannelResult<T> {
+//        var channelResult = ChannelResult<T>.error(VeniceError.unexpected)
+//
+//        let result = withUnsafeMutablePointer(to: &channelResult) { value in
+//            chrecv(handle, value, Channel.length, deadline)
+//        }
+//
+//        guard result == 0 else {
+//            switch errno {
+//            case EBADF:
+//                throw VeniceError.invalidHandle
+//            case ECANCELED:
+//                throw VeniceError.canceled
+//            case EPIPE:
+//                throw VeniceError.channelIsDone
+//            case ETIMEDOUT:
+//                throw VeniceError.timeout
+//            default:
+//                throw VeniceError.unexpected
+//            }
+//        }
+//
+//        return channelResult
+//    }
+
+    public func send(_ channelResult: ChannelResult<T>, deadline: Deadline = .never) throws {
+        buffer.append(channelResult)
+        let result = chsend(handle, nil, 0, deadline)
+
+        guard result == 0 else {
+            _ = buffer.popLast()
+
+            switch errno {
+            case EBADF:
+                throw VeniceError.invalidHandle
+            case ECANCELED:
+                throw VeniceError.canceled
+            case EPIPE:
+                throw VeniceError.channelIsDone
+            case ETIMEDOUT:
+                throw VeniceError.timeout
+            default:
+                throw VeniceError.unexpected
+            }
+        }
     }
 
-    internal func getValueFromBuffer() -> T? {
-        if closed && buffer.isEmpty {
-            return nil
+    /// Receive a result from channel.
+    @discardableResult
+    public func receiveResult(deadline: Deadline = .never) throws -> ChannelResult<T> {
+        let result = chrecv(handle, nil, 0, deadline)
+
+        guard result == 0 else {
+            switch errno {
+            case EBADF:
+                throw VeniceError.invalidHandle
+            case ECANCELED:
+                throw VeniceError.canceled
+            case EPIPE:
+                throw VeniceError.channelIsDone
+            case ETIMEDOUT:
+                throw VeniceError.timeout
+            default:
+                throw VeniceError.unexpected
+            }
         }
+
         return buffer.removeFirst()
     }
 }

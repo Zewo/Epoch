@@ -1,28 +1,26 @@
-public final class ReceivingChannel<T> : Sequence {
+public final class ReceivingChannel<T> : Handle, Sequence {
     private let channel: Channel<T>
 
-    internal init(_ channel: Channel<T>) {
+    init(_ channel: Channel<T>) {
         self.channel = channel
+        super.init(handle: channel.handle)
+    }
+    
+    public func makeIterator() -> ChannelIterator<T> {
+        return ChannelIterator(channel: channel)
     }
 
     @discardableResult
-    public func receive() -> T? {
-        return channel.receive()
+    public func receive(deadline: Deadline = .never) throws -> T {
+        return try channel.receive(deadline: deadline)
     }
 
-    public func makeIterator() -> ChannelGenerator<T> {
-        return ChannelGenerator(channel: self)
+    @discardableResult
+    public func receiveResult(deadline: Deadline = .never) throws -> ChannelResult<T> {
+        return try channel.receiveResult(deadline: deadline)
     }
 
-    public func close() {
-        channel.close()
-    }
-
-    internal func registerReceive(_ clause: UnsafeMutableRawPointer, index: Int) {
-        return channel.registerReceive(clause, index: index)
-    }
-
-    internal func getValueFromBuffer() -> T? {
-        return channel.getValueFromBuffer()
+    public func done() throws {
+        try channel.done()
     }
 }
