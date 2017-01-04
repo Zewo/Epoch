@@ -72,7 +72,7 @@ public class PublicTests : XCTestCase {
         }
         let flags: Flags = try construct(dictionary: [
             "x": false,
-            "y": nil as Optional<Bool>,
+            "y": Optional<Bool>.none as Any,
             "z": (true, false)
         ] as [String : Any])
         XCTAssert(!flags.x)
@@ -91,7 +91,7 @@ public class PublicTests : XCTestCase {
         let object: Object = try construct(dictionary: [
            "flag": true,
            "pair": (UInt8(1), UInt8(2)),
-           "float": Optional(Float(89.0)),
+           "float": Optional(Float(89.0)) as Any,
            "integer": 123,
            "string": "Hello, world"
         ] as [String : Any])
