@@ -136,6 +136,24 @@ public class POSIXTests : XCTestCase {
             }
         }
     }
+    
+    func testSignalDelivery() {
+        Signal.delegate = TestSignalDelegate()
+        Signal.setTrap(signal: .usr1, action: .handle)
+        Signal.killPid(signal: .usr1)
+        XCTAssertEqual((Signal.delegate as! TestSignalDelegate).received, true, "Failed to receive a signal")
+    }
+}
+
+struct TestSignalDelegate : SignalHandlerDelegate {
+    var received = false
+    
+    mutating func handleSignal(signal: SignalType?) {
+        guard let signal = signal else {
+            return
+        }
+        self.received = signal == .usr1
+    }
 }
 
 extension POSIXTests {

@@ -12,6 +12,8 @@
     import Darwin.C
 #endif
 
+import CPOSIX
+
 /// This enumaration declares all signals according to header file signal.h,
 /// exposing them to swift
 /// - seealso: sys/signal.h on Darwin platforms
@@ -81,17 +83,17 @@ public enum SignalType : Int32 {
 }
 
 /// Defines the kind of action to take when a signal is delivered
-public enum SignalAction {
+public enum SignalAction : Int32 {
     /// Ignores the signal. Does nothing.
-    case ignore
+    case ignore = 0
     /// Use a default handler
-    case useDefault
+    case useDefault = 1
     /// Let the delegate handle the signal.
-    case handle
+    case handle = 2
 }
 
 public protocol SignalHandlerDelegate {
-    func handleSignal(signal: SignalType?)
+    mutating func handleSignal(signal: SignalType?)
 }
 
 /// This class encapsulates all necessary functionality to handle signals sent by a given operating system.
@@ -110,19 +112,18 @@ public struct Signal {
     ///     - signal: Signal to add treatment to
     ///     - action: What to do when the signal is delivered.
     static func setTrap(signal: SignalType, action: SignalAction) {
-        var actionStr = sigaction()
-        
-        switch action {
-        case .ignore:
-            actionStr.__sigaction_u.__sa_handler = SIG_IGN
-        case .useDefault:
-            actionStr.__sigaction_u.__sa_handler = SIG_DFL
-        case .handle:
-            actionStr.__sigaction_u.__sa_handler = { (signal) in
-                Signal.handleSignal(signal: signal)
-            }
+        CPOSIXInstallSignalHandler(signal.rawValue, action.rawValue) { (signal) in
+            Signal.handleSignal(signal: signal)
         }
-        sigaction(signal.rawValue, &actionStr, nil)
+    }
+    
+    /// Sends a signal to a given process
+    ///
+    /// - parameters:
+    ///     - pid: The pid to send the signal to. Defaults to current process
+    ///     - signal: What signal to send.
+    static func killPid(pid: pid_t = getpid(), signal: SignalType) {
+        kill(pid, signal.rawValue)
     }
     
     /// Signal handler. Wrapps a call to the delegate, if available.
