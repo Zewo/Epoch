@@ -844,8 +844,7 @@ extension MapTests {
            ("testIndexPath", testIndexPath),
            ("testMapInitializable", testMapInitializable),
            ("testMapRepresentable", testMapRepresentable),
-           ("testEnumMapInitializable", testEnumMapInitializable),
-           ("testEnumMapRepresentable", testEnumMapRepresentable),
+           ("testMapperWithEnumInStruct", testMapperWithEnumInStruct),
         ]
     }
 }
