@@ -800,6 +800,37 @@ public class MapTests : XCTestCase {
         let fuuDictionaryB: [String: Baz] = [:]
         XCTAssertEqual(try fuuDictionaryB.asMap(), [:])
     }
+
+    
+    func testMapperWithEnumInStruct() throws {
+        enum MyEnum: String {
+            case one
+        }
+        
+        struct SomeStruct: InMappable, OutMappable {
+            let oneValue: MyEnum
+            
+            enum MappingKeys : String, IndexPathElement {
+                case oneValue
+            }
+            
+            init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+                self.oneValue = try mapper.map(from: .oneValue)
+            }
+            
+            func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+                try mapper.map(self.oneValue, to: .oneValue)
+            }
+            
+        }
+        
+        let str = "{\"oneValue\":\"one\"}"
+        let map = try JSONMapParser.parse(str)
+        let someStruct = try SomeStruct(from: map)
+        
+        XCTAssertTrue(someStruct.oneValue == .one)
+    }
+
     
 }
 
@@ -813,6 +844,8 @@ extension MapTests {
            ("testIndexPath", testIndexPath),
            ("testMapInitializable", testMapInitializable),
            ("testMapRepresentable", testMapRepresentable),
+           ("testEnumMapInitializable", testEnumMapInitializable),
+           ("testEnumMapRepresentable", testEnumMapRepresentable),
         ]
     }
 }
