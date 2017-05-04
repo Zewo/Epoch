@@ -143,6 +143,137 @@ public class POSIXTests : XCTestCase {
         Signal.killPid(signal: .usr1)
         XCTAssertEqual((Signal.delegate as! TestSignalDelegate).received, true, "Failed to receive a signal")
     }
+
+    func testSignalDelivery() throws {
+        var signalHandled = false
+        try Signal.trap(signal: .usr1, action: .handle) { signal in
+            signalHandled = true
+        }
+        try Signal.killPid(signal: .usr1)
+        XCTAssert(signalHandled, "Signal was not handled. Failed!")
+    }
+    
+    func testSignalTypeEnum() {
+        for sig in 1...31 {
+            let signal = SignalType(rawValue: Int32(sig))
+            XCTAssertEqual(signal.rawValue, Int32(sig), "Invalid signal type")
+        }
+    }
+    
+    func testSignalWrongTrapCombinations() throws {
+        do {
+            try Signal.trap(signal: .kill, action: .ignore)
+        } catch SignalError.cannotHandle(signal: let signalType) {
+            XCTAssertEqual(signalType, .kill, "Invalid raised exception")
+        }
+        do {
+            try Signal.trap(signal: .usr1, action: .handle)
+        } catch SignalError.invalidTrapCombination {
+            // Ok!
+        }
+    }
+    
+    func testSignalSendInvalidSignal() throws {
+        do {
+            try Signal.killPid(signal: .unknown)
+        } catch SignalError.invalidSignal {
+            // Ok!
+        }
+    }
+    
+    func testSignalErrorHashes() {
+        let a = SignalError.cannotHandle(signal: .kill)
+        let b = SignalError.cannotHandle(signal: .kill)
+        let c = SignalError.cannotHandle(signal: .stop)
+        XCTAssertEqual(a, b, "Should be equal")
+        XCTAssertNotEqual(a, c, "Should not be equal")
+        XCTAssertNotEqual(b, c, "Should not be equal")
+        let d = SignalError.invalidTrapCombination
+        let e = SignalError.invalidTrapCombination
+        let f = SignalError.invalidSignal
+        XCTAssertEqual(d, e, "Should be equal")
+        XCTAssertNotEqual(d, f, "Should not be equal")
+        XCTAssertNotEqual(e, f, "Should not be equal")
+    }
+    
+    func testSignalHandlingFromClass() {
+        let signalHandler = SignalHandlerClass()
+        do {
+            try Signal.trap(signal: .usr1, action: .handle, handler: signalHandler.handleSignal(signal:))
+            try Signal.killPid(signal: .usr1)
+        } catch {
+            XCTFail("Failed to trap/kill")
+        }
+        XCTAssertTrue(signalHandler.signalHandled, "Signal not handled")
+    }
+    
+    func testSignalTrapMultiple() {
+        var num = 0
+        do {
+            try Signal.trap(for: .usr1, .usr2) { (signal) in
+                num += 1
+            }
+            try Signal.killPid(signal: .usr1)
+            try Signal.killPid(signal: .usr2)
+        } catch {
+            XCTFail("Raised an unexpected exception")
+        }
+        XCTAssertEqual(num, 2, "Failed to catch signals")
+    }
+    
+    func testSignalIgnoreMultiple() {
+        do {
+            try Signal.ignore(these: .usr1, .usr2)
+            try Signal.killPid(signal: .usr1)
+            try Signal.killPid(signal: .usr2)
+        } catch {
+            XCTFail("Raised an unexpected exception")
+        }
+    }
+    
+    func testSignalDefaultMultiple() {
+        do {
+            try Signal.trap(for: .chld, .cont) { (signal) in
+                XCTFail("Handler cannot be called!")
+            }
+            try Signal.useDefault(for: .chld, .cont)
+            try Signal.killPid(signal: .chld)
+        } catch {
+            XCTFail("Raised an unexpected exception")
+        }
+    }
+    
+    func testSignalFailingTrapList() {
+        var raised = false
+        do {
+            try Signal.trap(for: .cont, .chld, .kill, .unknown, .stop) { (signal) in
+                print("Trapped!")
+            }
+        } catch {
+            raised = true
+        }
+        XCTAssertTrue(raised, "Expected exception")
+    }
+    
+    func testSignalFailingIgnoreList() {
+        var raised = false
+        do {
+            try Signal.ignore(these: .cont, .chld, .kill, .unknown, .stop)
+        } catch {
+            raised = true
+        }
+        XCTAssertTrue(raised, "Expected exception")
+    }
+    
+    func testSignalFailingDefaultList() {
+        var raised = false
+        do {
+            try Signal.useDefault(for: .cont, .chld, .kill, .unknown, .stop)
+        } catch {
+            raised = true
+        }
+        XCTAssertTrue(raised, "Expected exception")
+    }
 }
 
 struct TestSignalDelegate : SignalHandlerDelegate {
@@ -162,6 +293,23 @@ extension POSIXTests {
             ("testCreation", testCreation),
             ("testDescription", testDescription),
             ("testLastOperationError", testLastOperationError),
+            ("testSignalDelivery", testSignalDelivery),
+            ("testSignalTypeEnum", testSignalTypeEnum),
+            ("testSignalWrongTrapCombinations", testSignalWrongTrapCombinations),
+            ("testSignalSendInvalidSignal", testSignalSendInvalidSignal),
+            ("testSignalErrorHashes", testSignalErrorHashes),
+            ("testSignalHandlingFromClass", testSignalHandlingFromClass),
+            ("testSignalTrapMultiple", testSignalTrapMultiple),
+            ("testSignalIgnoreMultiple", testSignalIgnoreMultiple),
+            ("testSignalDefaultMultiple", testSignalDefaultMultiple),
         ]
+    }
+}
+
+class SignalHandlerClass {
+    var signalHandled = false
+    
+    func handleSignal(signal: SignalType) {
+            signalHandled = true
     }
 }
