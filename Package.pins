@@ -1,0 +1,18 @@
+{
+  "autoPin": true,
+  "pins": [
+    {
+      "package": "CLibdill",
+      "reason": null,
+      "repositoryURL": "https://github.com/Zewo/CLibdill.git",
+      "version": "1.0.2"
+    },
+    {
+      "package": "Venice",
+      "reason": null,
+      "repositoryURL": "https://github.com/formbound/Venice.git",
+      "version": "0.2.0"
+    }
+  ],
+  "version": 1
+}
