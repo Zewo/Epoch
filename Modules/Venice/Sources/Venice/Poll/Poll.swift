@@ -1,32 +1,33 @@
-import CLibvenice
+import CLibdill
 
-public enum PollError : Error {
-    case timeout
-    case failure
-}
-
-public struct PollEvent : OptionSet {
-    public let rawValue: Int
-
-    public init(rawValue: Int) {
-        self.rawValue = rawValue
-    }
-
-    public static let read  = PollEvent(rawValue: Int(FDW_IN))
-    public static let write = PollEvent(rawValue: Int(FDW_OUT))
+public enum PollEvent {
+    case read
+    case write
 }
 
 /// Polls file descriptor for events
-public func poll(_ fileDescriptor: FileDescriptor, events: PollEvent, deadline: Double) throws -> PollEvent {
-    let event = mill_fdwait_(fileDescriptor, Int32(events.rawValue), deadline.int64milliseconds, "pollFileDescriptor")
+public func poll(_ fileDescriptor: FileDescriptor, event: PollEvent, deadline: Deadline) throws {
+    let result: Int32
 
-    if event == 0 {
-        throw PollError.timeout
+    switch event {
+    case .read:
+        result = fdin(fileDescriptor, deadline)
+    case .write:
+        result = fdout(fileDescriptor, deadline)
     }
 
-    if event == FDW_ERR {
-        throw PollError.failure
+    guard result == 0 else {
+        switch errno {
+        case EBADF:
+            throw VeniceError.invalidFileDescriptor
+        case ECANCELED:
+            throw VeniceError.canceled
+        case EEXIST:
+            throw VeniceError.fileDescriptorBlockedInAnotherCoroutine
+        case ETIMEDOUT:
+            throw VeniceError.timeout
+        default:
+            throw VeniceError.unexpected
+        }
     }
-
-    return PollEvent(rawValue: Int(event))
 }

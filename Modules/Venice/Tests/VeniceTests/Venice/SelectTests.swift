@@ -2,454 +2,467 @@ import XCTest
 @testable import Venice
 
 public class SelectTests : XCTestCase {
-    func testNonBlockingReceiver() {
-        let channel = Channel<Int>()
-        co {
-            channel.send(555)
-        }
-        sel { when in
-            when.receive(from: channel) { value in
-                XCTAssert(value == 555)
-            }
-        }
-    }
+    func testNonBlockingReceiver() throws {
+        let channel = try Channel<Int>()
 
-    func testBlockingReceiver() {
-        let channel = Channel<Int>()
-        co {
-            yield
-            channel.send(666)
+        let c = try coroutine {
+            try channel.send(555)
         }
-        sel { when in
-            when.receive(from: channel) { value in
-                XCTAssert(value == 666)
-            }
-        }
-    }
 
-    func testNonBlockingSender() {
-        let channel = Channel<Int>()
-        co {
-            let value = channel.receive()
-            XCTAssert(value == 777)
-        }
-        sel { when in
-            when.send(777, to: channel) {}
-        }
-    }
+        try select { when in
+            when.receive(from: channel) { result in
+                XCTAssert(result.succeeded)
 
-    func testBlockingSender() {
-        let channel = Channel<Int>()
-        co {
-            yield
-            XCTAssert(channel.receive() == 888)
-        }
-        sel { when in
-            when.send(888, to: channel) {}
-        }
-    }
-
-    func testTwoChannels() {
-        let channel1 = Channel<Int>()
-        let channel2 = Channel<Int>()
-        co {
-            channel1.send(555)
-        }
-        sel { when in
-            when.receive(from: channel1) { value in
-                XCTAssert(value == 555)
-            }
-            when.receive(from: channel2) { value in
-                XCTAssert(false)
-            }
-        }
-        co {
-            yield
-            channel2.send(666)
-        }
-        sel { when in
-            when.receive(from: channel1) { value in
-                XCTAssert(false)
-            }
-            when.receive(from: channel2) { value in
-                XCTAssert(value == 666)
-            }
-        }
-    }
-
-    func testReceiveRandomChannelSelection() {
-        let channel1 = Channel<Int>()
-        let channel2 = Channel<Int>()
-        co {
-            while true {
-                channel1.send(111)
-                yield
-            }
-        }
-        co {
-            while true {
-                channel2.send(222)
-                yield
-            }
-        }
-        var first = 0
-        var second = 0
-        for _ in 0 ..< 100 {
-            sel { when in
-                when.receive(from: channel1) { value in
-                    XCTAssert(value == 111)
-                    first += 1
-                }
-                when.receive(from: channel2) { value in
-                    XCTAssert(value == 222)
-                    second += 1
-                }
-            }
-            yield
-        }
-        XCTAssert(first > 1 && second > 1)
-    }
-
-    func testSendRandomChannelSelection() {
-        let channel = Channel<Int>()
-        co {
-            while true {
-                sel { when in
-                    when.send(666, to: channel) {}
-                    when.send(777, to: channel) {}
+                result.success { value in
+                    XCTAssertEqual(value, 555)
                 }
             }
         }
-        var first = 0
-        var second = 0
-        for _ in 0 ..< 100 {
-            let value = channel.receive()
-            if value == 666 {
-                first += 1
-            } else if value == 777 {
-                second += 1
-            } else {
-                XCTAssert(false)
-            }
 
-        }
-        XCTAssert(first > 1 && second > 1)
+        try c.close()
     }
 
-    func testOtherwise() {
-        let channel = Channel<Int>()
-        var test = 0
-        sel { when in
-            when.receive(from: channel) { value in
-                XCTAssert(false)
-            }
-            when.otherwise {
-                test = 1
+    func testBlockingReceiver() throws {
+        let channel = try Channel<Int>()
+
+        let c = try coroutine {
+            try yield()
+            try channel.send(666)
+        }
+
+        try select { when in
+            when.receive(from: channel) { result in
+                XCTAssert(result.succeeded)
+
+                result.success { value in
+                    XCTAssertEqual(value, 666)
+                }
             }
         }
-        XCTAssert(test == 1)
-        test = 0
-        sel { when in
-            when.otherwise {
-                test = 1
-            }
-        }
-        XCTAssert(test == 1)
+
+        try c.close()
     }
 
-    func testTwoSimultaneousSenders() {
-        let channel = Channel<Int>()
-        co {
-            channel.send(888)
+    func testNonBlockingSender() throws {
+        let channel = try Channel<Int>()
+
+        let c = try coroutine {
+            XCTAssertEqual(try channel.receive(), 777)
         }
-        co {
-            channel.send(999)
+
+        var called = false
+
+        try select { when in
+            when.send(777, to: channel) { result in
+                XCTAssert(result.succeeded)
+                called = true
+            }
         }
+
+        XCTAssert(called)
+
+        try c.close()
+    }
+
+    func testBlockingSender() throws {
+        let channel = try Channel<Int>()
+
+        let c = try coroutine {
+            try yield()
+            XCTAssertEqual(try channel.receive(), 888)
+        }
+
+        var called = false
+
+        try select { when in
+            when.send(888, to: channel) { result in
+                XCTAssert(result.succeeded)
+                called = true
+            }
+        }
+
+        XCTAssert(called)
+
+        try c.close()
+    }
+
+    func testTwoChannels() throws {
+        let channel1 = try Channel<Int>()
+        let channel2 = try Channel<Int>()
+
+        let c1 = try coroutine {
+            try channel1.send(555)
+        }
+
+        try select { when in
+            when.receive(from: channel1) { result in
+                XCTAssert(result.succeeded)
+
+                result.success { value in
+                    XCTAssertEqual(value, 555)
+                }
+            }
+
+            when.receive(from: channel2) { _ in
+                XCTFail()
+            }
+        }
+
+        let c2 = try coroutine {
+            try yield()
+            try channel2.send(666)
+        }
+
+        try select { when in
+            when.receive(from: channel1) { _ in
+                XCTFail()
+            }
+
+            when.receive(from: channel2) { result in
+                XCTAssert(result.succeeded)
+
+                result.success { value in
+                    XCTAssertEqual(value, 666)
+                }
+            }
+        }
+
+        try c1.close()
+        try c2.close()
+    }
+
+    func testTimeoutImediately() throws {
+        let channel = try Channel<Int>()
+        var called = false
+
+        try select { when in
+            when.receive(from: channel) { _ in
+                XCTFail()
+            }
+
+            when.timeout(deadline: .immediately) {
+                called = true
+            }
+        }
+
+        XCTAssert(called)
+        called = false
+
+        try select { when in
+            when.timeout(deadline: .immediately) {
+                called = true
+            }
+        }
+
+        XCTAssert(called)
+    }
+
+    func testTwoSimultaneousSenders() throws {
+        let channel = try Channel<Int>()
+
+        let c1 = try coroutine {
+            try channel.send(888)
+        }
+
+        let c2 =  try coroutine {
+            try channel.send(999)
+        }
+
         var value = 0
-        sel { when in
-            when.receive(from: channel) { v in
-                value = v
+
+        try select { when in
+            when.receive(from: channel) { result in
+                XCTAssert(result.succeeded)
+
+                result.success { v in
+                    value = v
+                }
             }
         }
-        XCTAssert(value == 888)
+
+        XCTAssertEqual(value, 888)
         value = 0
-        sel { when in
-            when.receive(from: channel) { v in
-                value = v
-            }
-        }
-        XCTAssert(value == 999)
-    }
 
-    func testTwoSimultaneousReceivers() {
-        let channel = Channel<Int>()
-        co {
-            XCTAssert(channel.receive() == 333)
-        }
-        co {
-            XCTAssert(channel.receive() == 444)
-        }
-        sel { when in
-            when.send(333, to: channel) {}
-        }
-        sel { when in
-            when.send(444, to: channel) {}
-        }
-    }
-
-    func testSelectWithSelect() {
-        let channel = Channel<Int>()
-        co {
-            sel { when in
-                when.send(111, to: channel) {}
-            }
-        }
-        sel { when in
-            when.receive(from: channel) { value in
-                XCTAssert(value == 111)
-            }
-        }
-    }
-
-    func testSelectWithBufferedChannels() {
-        let channel = Channel<Int>(bufferSize: 1)
-        sel { when in
-            when.send(999, to: channel) {}
-        }
-        sel { when in
-            when.receive(from: channel) { value in
-                XCTAssert(value == 999)
-            }
-        }
-    }
-
-    func testReceiveSelectFromClosedChannel() {
-        let channel = Channel<Int>()
-        channel.close()
-        sel { when in
-            when.receive(from: channel) { value in
-                XCTAssert(false)
-            }
-        }
-    }
-
-    func testRandomReceiveSelectionWhenNothingImmediatelyAvailable() {
-        let channel = Channel<Int>()
-        co {
-            while true {
-                nap(for: 1.millisecond)
-                channel.send(333)
-            }
-        }
-        var first = 0
-        var second = 0
-        var third = 0
-        for _ in 0 ..< 100 {
-            sel { when in
-                when.receive(from: channel) { value in
-                    first += 1
-                }
-                when.receive(from: channel) { value in
-                    second += 1
-                }
-                when.receive(from: channel) { value in
-                    third += 1
-                }
-            }
-        }
-        XCTAssert(first > 1 && second > 1 && third > 1)
-    }
-
-    func testRandomSendSelectionWhenNothingImmediatelyAvailable() {
-        let channel = Channel<Int>()
-        co {
-            while true {
-                sel { when in
-                    when.send(1, to: channel) {}
-                    when.send(2, to: channel) {}
-                    when.send(3, to: channel) {}
-                }
-            }
-        }
-        var first = 0
-        var second = 0
-        var third = 0
-        for _ in 0 ..< 100 {
-            nap(for: 1.millisecond)
-            let value = channel.receive()!
-            switch value {
-            case 1: first += 1
-            case 2: second += 1
-            case 3: third += 1
-            default: XCTAssert(false)
-            }
-
-        }
-        XCTAssert(first > 1 && second > 1 && third > 1)
-    }
-
-    func testReceivingFromSendingChannel() {
-        let channel = Channel<Int>()
-        co {
-            channel.send(555)
-        }
-        sel { when in
-            when.receive(from: channel.receivingChannel) { value in
-                XCTAssert(value == 555)
-            }
-        }
-    }
-
-    func testReceivingFromFallibleChannel() {
-        let channel = FallibleChannel<Int>()
-        co {
-            channel.send(555)
-        }
-        sel { when in
+        try select { when in
             when.receive(from: channel) { result in
-                var value = 0
+                XCTAssert(result.succeeded)
+
                 result.success { v in
                     value = v
                 }
-                XCTAssert(value == 555)
             }
         }
+
+        XCTAssertEqual(value, 999)
+        try c1.close()
+        try c2.close()
     }
 
-    func testReceivingErrorFromFallibleChannel() {
-        let channel = FallibleChannel<Int>()
-        co {
-            channel.send(SomeError())
+    func testTwoSimultaneousReceivers() throws {
+        let channel = try Channel<Int>()
+
+        let c1 = try coroutine {
+            XCTAssertEqual(try channel.receive(), 333)
         }
-        sel { when in
-            when.receive(from: channel) { result in
-                var error: Error? = nil
-                result.failure { e in
-                    error = e
+
+        let c2 = try coroutine {
+            XCTAssertEqual(try channel.receive(), 444)
+        }
+
+        var called = false
+
+        try select { when in
+            when.send(333, to: channel) { _ in
+                called = true
+            }
+        }
+
+        XCTAssert(called)
+        called = false
+
+        try select { when in
+            when.send(444, to: channel) { _ in
+                called = true
+            }
+        }
+
+        XCTAssert(called)
+        try c1.close()
+        try c2.close()
+    }
+
+    func testSelectWithSelect() throws {
+        let channel = try Channel<Int>()
+        var called = false
+
+        let c = try coroutine {
+            try select { when in
+                when.send(111, to: channel) { result in
+                    XCTAssert(result.succeeded)
+                    called = true
                 }
-                XCTAssert(error is SomeError)
+            }
+        }
+
+        try select { when in
+            when.receive(from: channel) { result in
+                XCTAssert(result.succeeded)
+
+                result.success { value in
+                    XCTAssertEqual(value, 111)
+                }
+            }
+        }
+
+        try yield()
+        XCTAssert(called)
+        try c.close()
+    }
+
+    func testReceiveSelectFromDoneChannel() throws {
+        let channel = try Channel<Int>()
+
+        try channel.done()
+
+        try select { when in
+            when.receive(from: channel) { result in
+                XCTAssert(result.failed)
+
+                result.failure { error in
+                    XCTAssertEqual(error as? VeniceError, .channelIsDone)
+                }
             }
         }
     }
 
-    func testReceivingFromFallibleSendingChannel() {
-        let channel = FallibleChannel<Int>()
-        co {
-            channel.send(555)
+    func testReceivingFromReceivingChannel() throws {
+        let channel = try Channel<Int>()
+
+        let c = try coroutine {
+            try channel.send(555)
         }
-        sel { when in
-            when.receive(from: channel.receivingChannel) { result in
-                var value = 0
+
+        var value = 0
+
+        try select { when in
+            when.receive(from: channel.receiving) { result in
+                XCTAssert(result.succeeded)
+
                 result.success { v in
                     value = v
                 }
-                XCTAssert(value == 555)
             }
         }
+
+        XCTAssert(value == 555)
+        try c.close()
     }
 
-    func testReceivingErrorFromFallibleSendingChannel() {
-        let channel = FallibleChannel<Int>()
-        co {
-            channel.send(SomeError())
+    func testReceivingErrorFromChannel() throws {
+        let channel = try Channel<Int>()
+
+        let c = try coroutine {
+            try channel.send(VeniceError.unexpected)
         }
-        sel { when in
-            when.receive(from: channel.receivingChannel) { result in
-                var error: Error? = nil
+
+        var error: Error?
+
+        try select { when in
+            when.receive(from: channel) { result in
+                XCTAssert(result.failed)
+
                 result.failure { e in
                     error = e
                 }
-                XCTAssert(error is SomeError)
             }
         }
+
+        XCTAssertEqual(error as? VeniceError, .unexpected)
+        try c.close()
     }
 
-    func testSendingToReceivingChannel() {
-        let channel = Channel<Int>()
-        co {
-            let value = channel.receive()
-            XCTAssert(value == 777)
-        }
-        sel { when in
-            when.send(777, to: channel.sendingChannel) {}
-        }
-    }
+    func testReceivingErrorFromReceivingChannel() throws {
+        let channel = try Channel<Int>()
 
-    func testSendingToFallibleChannel() {
-        let channel = FallibleChannel<Int>()
-        co {
-            let value = try! channel.receive()
-            XCTAssert(value == 777)
+        let c = try coroutine {
+            try channel.send(VeniceError.unexpected)
         }
-        sel { when in
-            when.send(777, to: channel) {}
-        }
-    }
 
-    func testThrowingErrorIntoFallibleChannel() {
-        let channel = FallibleChannel<Int>()
-        co {
-            self.assert(channel: channel, catchesErrorOfType: SomeError.self)
-        }
-        sel { when in
-            when.send(SomeError(), to: channel) {}
-        }
-    }
+        var error: Error?
 
-    func testSendingToFallibleReceivingChannel() {
-        let channel = FallibleChannel<Int>()
-        co {
-            let value = try! channel.receive()
-            XCTAssert(value == 777)
-        }
-        sel { when in
-            when.send(777, to: channel.sendingChannel) {}
-        }
-    }
+        try select { when in
+            when.receive(from: channel.receiving) { result in
+                XCTAssert(result.failed)
 
-    func testThrowingErrorIntoFallibleReceivingChannel() {
-        let channel = FallibleChannel<Int>()
-        co {
-            self.assert(channel: channel, catchesErrorOfType: SomeError.self)
-        }
-        sel { when in
-            when.send(SomeError(), to: channel.sendingChannel) {}
-        }
-    }
-
-    func testTimeout() {
-        var timedout = false
-        sel { when in
-            when.timeout(10.millisecond.fromNow()) {
-                timedout = true
+                result.failure { e in
+                    error = e
+                }
             }
         }
-        XCTAssert(timedout)
+
+        XCTAssertEqual(error as? VeniceError, .unexpected)
+        try c.close()
     }
 
-    func testForSelect() {
-        let channel = Channel<Int>()
-        after(10.milliseconds) {
-            channel.send(444)
+    func testSendingToSendingChannel() throws {
+        let channel = try Channel<Int>()
+
+        let c = try coroutine {
+            XCTAssertEqual(try channel.receive(), 777)
         }
-        after(20.milliseconds) {
-            channel.send(444)
+
+        var called = false
+
+        try select { when in
+            when.send(777, to: channel.sending) { result in
+                XCTAssert(result.succeeded)
+                called = true
+            }
         }
+
+        XCTAssert(called)
+        try c.close()
+    }
+
+    func testSendingErrorToChannel() throws {
+        let channel = try Channel<Int>()
+
+        let c = try coroutine {
+            do {
+                try channel.receive()
+                XCTFail()
+            } catch {
+                XCTAssertEqual(error as? VeniceError, .unexpected)
+            }
+        }
+
+        var called = false
+
+        try select { when in
+            when.send(VeniceError.unexpected, to: channel) { result in
+                XCTAssert(result.succeeded)
+                called = true
+            }
+        }
+
+        XCTAssert(called)
+        try c.close()
+    }
+
+
+    func testSendingErrorToSendingChannel() throws {
+        let channel = try Channel<Int>()
+
+        let c = try coroutine {
+            do {
+                try channel.receive()
+                XCTFail()
+            } catch {
+                XCTAssertEqual(error as? VeniceError, .unexpected)
+            }
+        }
+
+        var called = false
+
+        try select { when in
+            when.send(VeniceError.unexpected, to: channel.sending) { result in
+                XCTAssert(result.succeeded)
+                called = true
+            }
+        }
+
+        XCTAssert(called)
+        try c.close()
+    }
+
+    func testTimeout() throws {
+        var called = false
+
+        try select { when in
+            when.timeout(deadline: 10.milliseconds.fromNow()) {
+                called = true
+            }
+        }
+
+        XCTAssert(called)
+    }
+
+    func testForSelect() throws {
+        let channel = try Channel<Int>()
+
+        let c1 = try after(10.milliseconds) { _ in
+            try channel.send(444)
+        }
+
+        let c2 = try after(20.milliseconds) { _ in
+            try channel.send(444)
+        }
+        
         var count = 0
-        forSel { when, done in
-            when.receive(from: channel) { value in
-                XCTAssert(value == 444)
+
+        try forSelect { when, done in
+            when.receive(from: channel) { result in
+                XCTAssert(result.succeeded)
+
+                result.success { value in
+                    XCTAssert(value == 444)
+                }
+
                 count += 1
+
                 if count == 2 {
                     done()
                 }
             }
         }
+
+        try c1.close()
+        try c2.close()
     }
 }
 
 extension SelectTests {
-    func assert<T, E>(channel: FallibleChannel<T>, catchesErrorOfType type: E.Type) {
+    func assert<T, E>(channel: Channel<T>, catchesErrorOfType type: E.Type) {
         var thrown = false
         do {
             try channel.receive()
@@ -459,7 +472,7 @@ extension SelectTests {
         XCTAssert(thrown)
     }
 
-    func assert<T, E>(channel: FallibleReceivingChannel<T>, catchesErrorOfType type: E.Type) {
+    func assert<T, E>(channel: ReceivingChannel<T>, catchesErrorOfType type: E.Type) {
         var thrown = false
         do {
             try channel.receive()
@@ -474,32 +487,32 @@ extension SelectTests {
     public static var allTests: [(String, (SelectTests) -> () throws -> Void)] {
         return [
             ("testNonBlockingReceiver", testNonBlockingReceiver),
-            ("testBlockingReceiver", testBlockingReceiver),
-            ("testNonBlockingSender", testNonBlockingSender),
-            ("testBlockingSender", testBlockingSender),
-            ("testTwoChannels", testTwoChannels),
-            ("testReceiveRandomChannelSelection", testReceiveRandomChannelSelection),
-            ("testSendRandomChannelSelection", testSendRandomChannelSelection),
-            ("testOtherwise", testOtherwise),
-            ("testTwoSimultaneousSenders", testTwoSimultaneousSenders),
-            ("testTwoSimultaneousReceivers", testTwoSimultaneousReceivers),
-            ("testSelectWithSelect", testSelectWithSelect),
-            ("testSelectWithBufferedChannels", testSelectWithBufferedChannels),
-            ("testReceiveSelectFromClosedChannel", testReceiveSelectFromClosedChannel),
-            ("testRandomReceiveSelectionWhenNothingImmediatelyAvailable", testRandomReceiveSelectionWhenNothingImmediatelyAvailable),
-            ("testRandomSendSelectionWhenNothingImmediatelyAvailable", testRandomSendSelectionWhenNothingImmediatelyAvailable),
-            ("testReceivingFromSendingChannel", testReceivingFromSendingChannel),
-            ("testReceivingFromFallibleChannel", testReceivingFromFallibleChannel),
-            ("testReceivingErrorFromFallibleChannel", testReceivingErrorFromFallibleChannel),
-            ("testReceivingFromFallibleSendingChannel", testReceivingFromFallibleSendingChannel),
-            ("testReceivingErrorFromFallibleSendingChannel", testReceivingErrorFromFallibleSendingChannel),
-            ("testSendingToReceivingChannel", testSendingToReceivingChannel),
-            ("testSendingToFallibleChannel", testSendingToFallibleChannel),
-            ("testThrowingErrorIntoFallibleChannel", testThrowingErrorIntoFallibleChannel),
-            ("testSendingToFallibleReceivingChannel", testSendingToFallibleReceivingChannel),
-            ("testThrowingErrorIntoFallibleReceivingChannel", testThrowingErrorIntoFallibleReceivingChannel),
-            ("testTimeout", testTimeout),
-            ("testForSelect", testForSelect),
+//            ("testBlockingReceiver", testBlockingReceiver),
+//            ("testNonBlockingSender", testNonBlockingSender),
+//            ("testBlockingSender", testBlockingSender),
+//            ("testTwoChannels", testTwoChannels),
+//            ("testReceiveRandomChannelSelection", testReceiveRandomChannelSelection),
+//            ("testSendRandomChannelSelection", testSendRandomChannelSelection),
+//            ("testOtherwise", testOtherwise),
+//            ("testTwoSimultaneousSenders", testTwoSimultaneousSenders),
+//            ("testTwoSimultaneousReceivers", testTwoSimultaneousReceivers),
+//            ("testSelectWithSelect", testSelectWithSelect),
+//            ("testSelectWithBufferedChannels", testSelectWithBufferedChannels),
+//            ("testReceiveSelectFromClosedChannel", testReceiveSelectFromClosedChannel),
+//            ("testRandomReceiveSelectionWhenNothingImmediatelyAvailable", testRandomReceiveSelectionWhenNothingImmediatelyAvailable),
+//            ("testRandomSendSelectionWhenNothingImmediatelyAvailable", testRandomSendSelectionWhenNothingImmediatelyAvailable),
+//            ("testReceivingFromSendingChannel", testReceivingFromSendingChannel),
+//            ("testReceivingFromFallibleChannel", testReceivingFromFallibleChannel),
+//            ("testReceivingErrorFromFallibleChannel", testReceivingErrorFromFallibleChannel),
+//            ("testReceivingFromFallibleSendingChannel", testReceivingFromFallibleSendingChannel),
+//            ("testReceivingErrorFromFallibleSendingChannel", testReceivingErrorFromFallibleSendingChannel),
+//            ("testSendingToReceivingChannel", testSendingToReceivingChannel),
+//            ("testSendingToFallibleChannel", testSendingToFallibleChannel),
+//            ("testThrowingErrorIntoFallibleChannel", testThrowingErrorIntoFallibleChannel),
+//            ("testSendingToFallibleReceivingChannel", testSendingToFallibleReceivingChannel),
+//            ("testThrowingErrorIntoFallibleReceivingChannel", testThrowingErrorIntoFallibleReceivingChannel),
+//            ("testTimeout", testTimeout),
+//            ("testForSelect", testForSelect),
         ]
     }
 }

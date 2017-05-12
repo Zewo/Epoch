@@ -1,82 +1,89 @@
-import CLibvenice
+import CLibdill
+import Foundation
 
-public typealias PID = pid_t
+public typealias Coroutine = Handle
 
-/// Runs the expression in a lightweight coroutine.
-public func coroutine(_ routine: @escaping (Void) -> Void) {
-    var _routine = routine
-    CLibvenice.co(&_routine, { routinePointer in
-        routinePointer!.assumingMemoryBound(to: ((Void) -> Void).self).pointee()
-    }, "co")
-}
+///// Runs the expression in a lightweight coroutine.
+@discardableResult
+public func coroutine(file: String = #file, line: Int = #line, _ routine: @escaping (Void) throws -> Void) throws -> Coroutine {
+    var routine = routine
 
-/// Runs the expression in a lightweight coroutine.
-public func coroutine(_ routine: @autoclosure @escaping  (Void) -> Void) {
-    var _routine: (Void) -> Void = routine
-    CLibvenice.co(&_routine, { routinePointer in
-        routinePointer!.assumingMemoryBound(to: ((Void) -> Void).self).pointee()
-    }, "co")
-}
+    let result = co(nil, 0, &routine, file, Int32(line)) { pointer in
+        do {
+            try pointer!.assumingMemoryBound(to: ((Void) throws -> Void).self).pointee()
+        } catch {
+            print(error)
 
-/// Runs the expression in a lightweight coroutine.
-public func co(_ routine: @escaping (Void) -> Void) {
-    coroutine(routine)
-}
-
-/// Runs the expression in a lightweight coroutine.
-public func co(_ routine: @autoclosure @escaping (Void) -> Void) {
-    var _routine: (Void) -> Void = routine
-    CLibvenice.co(&_routine, { routinePointer in
-        routinePointer!.assumingMemoryBound(to: ((Void) -> Void).self).pointee()
-    }, "co")
-}
-
-/// Runs the expression in a lightweight coroutine after the given duration.
-public func after(_ napDuration: Double, routine: @escaping (Void) -> Void) {
-    co {
-        nap(for: napDuration)
-        routine()
-    }
-}
-
-/// Runs the expression in a lightweight coroutine periodically. Call done() to leave the loop.
-public func every(_ napDuration: Double, routine: @escaping (_ done: (Void) -> Void) -> Void) {
-    co {
-        var done = false
-        while !done {
-            nap(for: napDuration)
-            routine {
-                done = true
+            for symbol in Thread.callStackSymbols {
+                print(symbol)
             }
+        }
+    }
+
+    guard result != -1 else {
+        switch errno {
+        case ECANCELED:
+            throw VeniceError.canceled
+        case ENOMEM:
+            throw VeniceError.outOfMemory
+        default:
+            throw VeniceError.unexpected
+        }
+    }
+
+    return Coroutine(handle: result)
+}
+
+/// Sleeps for duration.
+public func nap(for duration: Duration) throws {
+    try wakeUp(duration.fromNow())
+}
+
+/// Wakes up at deadline.
+public func wakeUp(_ deadline: Deadline) throws {
+    let result = msleep(deadline)
+
+    guard result == 0 else {
+        switch errno {
+        case ECANCELED:
+            throw VeniceError.canceled
+        default:
+            throw VeniceError.unexpected
         }
     }
 }
 
-/// Sleeps for duration.
-public func nap(for duration: Double) {
-    mill_msleep_(duration.fromNow().int64milliseconds, "nap")
-}
+/// Runs the expression in a lightweight coroutine after the given duration.
+public func after(_ duration: Duration, routine: @escaping (ChannelResult<Void>) throws -> Void) throws -> Coroutine {
+    return try coroutine {
+        let result: ChannelResult<Void>
 
-/// Wakes up at deadline.
-public func wake(at deadline: Double) {
-    mill_msleep_(deadline.int64milliseconds, "wakeUp")
+        do {
+            try nap(for: duration)
+            result = .value()
+        } catch {
+            result = .error(error)
+        }
+
+        try routine(result)
+    }
 }
 
 /// Passes control to other coroutines.
-public var yield: Void {
-    mill_yield_("yield")
+public func yield() throws {
+    let result = CLibdill.yield()
+
+    guard result == 0 else {
+        switch errno {
+        case ECANCELED:
+            throw VeniceError.canceled
+        default:
+            throw VeniceError.unexpected
+        }
+    }
 }
 
-/// Fork the current process.
-public func fork() -> PID {
-    return mill_mfork_()
-}
-
-/// Get the number of logical CPU cores available. This might return a bigger number than the physical CPU Core number if the CPU supports hyper-threading.
-public var logicalCPUCount: Int {
-    return Int(mill_number_of_cores())
-}
-
-public func dump() {
-    goredump()
+/// Clean the file descriptor.
+public func clean(fileDescriptor: FileDescriptor) {
+    fdclean(fileDescriptor)
 }

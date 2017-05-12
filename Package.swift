@@ -24,7 +24,7 @@ let package = Package(
         Target(name: "ExampleApplication", dependencies: ["HTTPServer", "HTTPClient"]),
     ],
     dependencies: [
-        .Package(url: "https://github.com/Zewo/CLibvenice.git", majorVersion: 0, minor: 15),
+        .Package(url: "https://github.com/Zewo/CLibdill.git", majorVersion: 1),
         .Package(url: "https://github.com/Zewo/COpenSSL", majorVersion: 0, minor: 14),
         .Package(url: "https://github.com/Zewo/CPOSIX.git", majorVersion: 0, minor: 14),
         .Package(url: "https://github.com/Zewo/CHTTPParser.git", majorVersion: 0, minor: 14),

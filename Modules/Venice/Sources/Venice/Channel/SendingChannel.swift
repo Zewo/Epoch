@@ -1,19 +1,24 @@
-public final class SendingChannel<T> {
+public final class SendingChannel<T> : Handle {
     private let channel: Channel<T>
 
-    internal init(_ channel: Channel<T>) {
+    init(_ channel: Channel<T>) {
         self.channel = channel
+        super.init(handle: channel.handle)
     }
 
-    public func send(_ value: T) {
-        return channel.send(value)
+    public func send(_ value: T, deadline: Deadline = .never) throws {
+        try channel.send(value, deadline: deadline)
     }
 
-    internal func send(_ value: T, clause: UnsafeMutableRawPointer, index: Int) {
-        return channel.send(value, clause: clause, index: index)
+    public func send(_ error: Error, deadline: Deadline = .never) throws {
+        try channel.send(error, deadline: deadline)
     }
 
-    public var closed: Bool {
-        return channel.closed
+    public func send(_ result: ChannelResult<T>, deadline: Deadline = .never) throws {
+        try channel.send(result, deadline: deadline)
+    }
+    
+    public func done() throws {
+        try channel.done()
     }
 }
