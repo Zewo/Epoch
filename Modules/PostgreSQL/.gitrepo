@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/Zewo/PostgreSQL
+	branch = master
+	commit = a3dbab5f63e834d111fa0ec5f6a33b5797abcfa8
+	parent = a2a30b205268b82f6ec0c031597a5cb5fccb369c
+	cmdver = 0.3.0

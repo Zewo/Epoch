@@ -20,8 +20,10 @@ let package = Package(
         Target(name: "WebSocket", dependencies: ["Axis"]),
         Target(name: "WebSocketServer", dependencies: ["WebSocket", "HTTP"]),
         Target(name: "WebSocketClient", dependencies: ["WebSocket", "HTTPClient"]),
+        Target(name: "PostgreSQL", dependencies: ["SQL"]),
+        Target(name: "SQL", dependencies: ["Axis"]),
 
-        Target(name: "ExampleApplication", dependencies: ["HTTPServer", "HTTPClient"]),
+        Target(name: "ExampleApplication", dependencies: ["HTTPServer", "HTTPClient", "PostgreSQL"]),
     ],
     dependencies: [
         .Package(url: "https://github.com/Zewo/CLibvenice.git", majorVersion: 0, minor: 15),
@@ -29,5 +31,6 @@ let package = Package(
         .Package(url: "https://github.com/Zewo/CPOSIX.git", majorVersion: 0, minor: 14),
         .Package(url: "https://github.com/Zewo/CHTTPParser.git", majorVersion: 0, minor: 14),
         .Package(url: "https://github.com/Zewo/CYAJL.git", majorVersion: 0, minor: 14),
+        .Package(url: "https://github.com/Zewo/CLibpq.git", majorVersion: 0),
     ]
 )

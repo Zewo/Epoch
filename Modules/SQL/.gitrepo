@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/Zewo/SQL
+	branch = master
+	commit = 517846f9f1536adc6edd7596c1b9e886ea44bb69
+	parent = 4d60c3fa4f4ef2111c9d528beec764de87e78342
+	cmdver = 0.3.0
