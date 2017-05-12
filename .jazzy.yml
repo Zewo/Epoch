@@ -1,0 +1,8 @@
+clean: true
+author: Zewo
+author_url: http://zewo.io
+github_url: https://github.com/Zewo/Zewo
+swift_version: 3.1
+xcodebuild_arguments:
+  - -scheme
+  - Zewo

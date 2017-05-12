@@ -6,7 +6,7 @@ There are many ways to contribute to Open Source projects, you can help by:
 
 ### Writing code
 
-Check out how our [development workflow](Docs/WORKFLOW.md) works.
+Always fun!
 
 ### Finding and reporting bugs
 
@@ -31,12 +31,6 @@ Each block represents a single file in the project. The size of the block repres
 ### Documentation improvements
 
 We host our documentation at [docs.zewo.io](http://docs.zewo.io). If you have a better way to express an idea or if you see a typo for example, you can send a PR at [Zewo/Docs](https://github.com/Zewo/Docs).
-
-### Reference improvements
-
-Besides the documentation we also provide an API reference, which is located at [reference.zewo.io](http://reference.zewo.io). Our goal is to reach 100% coverage on the API reference. You can check the current coverage on the top left corner in the reference page.
-
-![Reference Coverage](http://i67.tinypic.com/331zot3.png)
 
 ### Reviewing Pull Requests
 

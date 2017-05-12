@@ -12,24 +12,14 @@ coverage:
         url: "secret:NnVfkTAF7NSxRk1AAGU13WKLgty/kCIY3mpKlUy5NpqlYdEiYxz/VbEelmj5aIm2I6roJJZY4KbICMO9GlbkwG+i19hJBKF1oo9Z3ZR3M0ICwJ9hUrPVZ4cg1pCKKUjZ4mi/nELOwxdYazhNCgNGx1huu0QTHB5059rYmEr5xWw="
         attachments: "sunburst, diff"
 
-ignore:
-  - "Modules/Axis/Tests/*"
-  - "Modules/File/Tests/*"
-  - "Modules/HTTP/Tests/*"
-  - "Modules/HTTPFile/Tests/*"
-  - "Modules/HTTPServer/Tests/*"
-  - "Modules/IP/Tests/*"
-  - "Modules/OpenSSL/Tests/*"
-  - "Modules/POSIX/Tests/*"
-  - "Modules/Reflection/Tests/*"
-  - "Modules/TCP/Tests/*"
-  - "Modules/UDP/Tests/*"
-  - "Modules/Venice/Tests/*"
-  - "Modules/HTTPClient/Tests/*"
-  - "Modules/Mapper/Tests/*"
+  ignore:
+    - "Tests/.*"
+    - "CDNS/.*"
+    - "CHTTPParser/.*"
+    - "CYAJL/.*"
 
-fixes:
-  - Modules/::
+  fixes:
+    - "Sources/::"
 
 comment:
   layout: "header, sunburst, diff, changes, uncovered, suggestions"

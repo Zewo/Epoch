@@ -16,8 +16,6 @@ if [[ $(uname) == "Linux" ]]; then
 fi
 
 if [[ $(uname) == "Darwin" ]]; then
-    rvm get head
-    rvm install 2.2.3
     gem install xcpretty
     brew outdated "pkg-config" || brew upgrade "pkg-config"
 fi

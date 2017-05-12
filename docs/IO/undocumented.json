@@ -1,0 +1,299 @@
+{
+  "warnings": [
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/DNS.swift",
+      "line": 5,
+      "symbol": "DNSError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/DNS.swift",
+      "line": 6,
+      "symbol": "DNSError.unableToResolveAddress",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/DNS.swift",
+      "line": 29,
+      "symbol": "Address.init(address:port:mode:deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/Host.swift",
+      "line": 4,
+      "symbol": "Host",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/Host.swift",
+      "line": 5,
+      "symbol": "Host.accept(deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": null,
+      "symbol": "IP",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": null,
+      "symbol": "IPError",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 4,
+      "symbol": "IPError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 5,
+      "symbol": "IPError.invalidPort",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 16,
+      "symbol": "IPMode",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 17,
+      "symbol": "IPMode.ipv4",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 18,
+      "symbol": "IPMode.ipv6",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 19,
+      "symbol": "IPMode.ipv4Prefered",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 20,
+      "symbol": "IPMode.ipv6Prefered",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 23,
+      "symbol": "IP",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 24,
+      "symbol": "IP.address",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 26,
+      "symbol": "IP.port",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 30,
+      "symbol": "IP.family",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 34,
+      "symbol": "IP.init(address:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 38,
+      "symbol": "IP.init(port:mode:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/IP.swift",
+      "line": 55,
+      "symbol": "IP.init(address:port:mode:deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPHost.swift",
+      "line": 5,
+      "symbol": "TCPError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPHost.swift",
+      "line": 6,
+      "symbol": "TCPError.failedToCreateSocket",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPHost.swift",
+      "line": 7,
+      "symbol": "TCPError.failedToConnectSocket",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPHost.swift",
+      "line": 8,
+      "symbol": "TCPError.failedToBindSocket",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPHost.swift",
+      "line": 9,
+      "symbol": "TCPError.failedToListen",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPHost.swift",
+      "line": 10,
+      "symbol": "TCPError.failedToGetSocketAddress",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPHost.swift",
+      "line": 11,
+      "symbol": "TCPError.invalidFileDescriptor",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPHost.swift",
+      "line": 14,
+      "symbol": "TCPHost",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPHost.swift",
+      "line": 16,
+      "symbol": "TCPHost.ip",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPHost.swift",
+      "line": 18,
+      "symbol": "TCPHost.init(socket:ip:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPHost.swift",
+      "line": 23,
+      "symbol": "TCPHost.init(ip:backlog:reusePort:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPHost.swift",
+      "line": 59,
+      "symbol": "TCPHost.init(host:port:backlog:reusePort:deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPHost.swift",
+      "line": 70,
+      "symbol": "TCPHost.accept(deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPStream.swift",
+      "line": 11,
+      "symbol": "TCPStream",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPStream.swift",
+      "line": 23,
+      "symbol": "TCPStream.ip",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPStream.swift",
+      "line": 31,
+      "symbol": "TCPStream.init(host:port:deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPStream.swift",
+      "line": 41,
+      "symbol": "TCPStream.open(deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPStream.swift",
+      "line": 69,
+      "symbol": "TCPStream.read(into:deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPStream.swift",
+      "line": 101,
+      "symbol": "TCPStream.write(_:deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPStream.swift",
+      "line": 141,
+      "symbol": "TCPStream.flush(deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/IO/TCPStream.swift",
+      "line": 178,
+      "symbol": "TCPStream.close()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo"
+}

@@ -1,0 +1,957 @@
+{
+  "warnings": [
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": null,
+      "symbol": "Address",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 19,
+      "symbol": "AddressFamily",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 20,
+      "symbol": "AddressFamily.ipv4",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 21,
+      "symbol": "AddressFamily.ipv6",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 44,
+      "symbol": "Address",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 80,
+      "symbol": "Address.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 117,
+      "symbol": "Address.init(family:port:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 135,
+      "symbol": "Address.init(family:address:port:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 152,
+      "symbol": "Address.family",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 160,
+      "symbol": "Address.length",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 164,
+      "symbol": "Address.port",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 177,
+      "symbol": "Address.fromAddressPointer(body:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 185,
+      "symbol": "Address.fromIPv4Pointer(body:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 193,
+      "symbol": "Address.fromIPv6Pointer(body:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Internet.swift",
+      "line": 201,
+      "symbol": "Address.withAddressPointer(body:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 27,
+      "symbol": "SocketType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 28,
+      "symbol": "SocketType.stream",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 47,
+      "symbol": "socket(family:type:protocol:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 59,
+      "symbol": "bind(socket:address:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 70,
+      "symbol": "listen(socket:backlog:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 78,
+      "symbol": "accept(socket:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 92,
+      "symbol": "connect(socket:address:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 107,
+      "symbol": "SendFlags",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 114,
+      "symbol": "SendFlags.none",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 118,
+      "symbol": "SendFlags.noSignal",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 122,
+      "symbol": "send(socket:buffer:flags:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 146,
+      "symbol": "ReceiveFlags",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 153,
+      "symbol": "ReceiveFlags.none",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 157,
+      "symbol": "ReceiveFlags.noSignal",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 161,
+      "symbol": "receive(socket:buffer:flags:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 179,
+      "symbol": "getAddress(socket:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 190,
+      "symbol": "checkError(socket:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 205,
+      "symbol": "setReusePort(socket:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 221,
+      "symbol": "setReuseAddress(socket:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/Socket.swift",
+      "line": 238,
+      "symbol": "setNoSignalOnBrokenPipe(socket:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": null,
+      "symbol": "SystemError",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": null,
+      "symbol": "SystemError",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": null,
+      "symbol": "SystemError",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": null,
+      "symbol": "SystemError",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": null,
+      "symbol": "SystemError",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 7,
+      "symbol": "SystemError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 8,
+      "symbol": "SystemError.success",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 10,
+      "symbol": "SystemError.operationNotPermitted",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 11,
+      "symbol": "SystemError.noSuchFileOrDirectory",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 12,
+      "symbol": "SystemError.noSuchProcess",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 13,
+      "symbol": "SystemError.interruptedSystemCall",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 14,
+      "symbol": "SystemError.inputOutputError",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 15,
+      "symbol": "SystemError.deviceNotConfigured",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 16,
+      "symbol": "SystemError.argumentListTooLong",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 17,
+      "symbol": "SystemError.executableFormatError",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 18,
+      "symbol": "SystemError.badFileDescriptor",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 19,
+      "symbol": "SystemError.noChildProcesses",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 20,
+      "symbol": "SystemError.resourceDeadlockAvoided",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 21,
+      "symbol": "SystemError.cannotAllocateMemory",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 22,
+      "symbol": "SystemError.permissionDenied",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 23,
+      "symbol": "SystemError.badAddress",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 25,
+      "symbol": "SystemError.blockDeviceRequired",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 27,
+      "symbol": "SystemError.deviceOrResourceBusy",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 28,
+      "symbol": "SystemError.fileExists",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 29,
+      "symbol": "SystemError.crossDeviceLink",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 30,
+      "symbol": "SystemError.operationNotSupportedByDevice",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 31,
+      "symbol": "SystemError.notADirectory",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 32,
+      "symbol": "SystemError.isADirectory",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 33,
+      "symbol": "SystemError.invalidArgument",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 34,
+      "symbol": "SystemError.tooManyOpenFilesInSystem",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 35,
+      "symbol": "SystemError.tooManyOpenFiles",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 36,
+      "symbol": "SystemError.inappropriateInputOutputControlForDevice",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 37,
+      "symbol": "SystemError.textFileBusy",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 38,
+      "symbol": "SystemError.fileTooLarge",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 39,
+      "symbol": "SystemError.noSpaceLeftOnDevice",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 40,
+      "symbol": "SystemError.illegalSeek",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 41,
+      "symbol": "SystemError.readOnlyFileSystem",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 42,
+      "symbol": "SystemError.tooManyLinks",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 43,
+      "symbol": "SystemError.brokenPipe",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 46,
+      "symbol": "SystemError.numericalArgumentOutOfDomain",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 47,
+      "symbol": "SystemError.resultTooLarge",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 50,
+      "symbol": "SystemError.resourceTemporarilyUnavailable",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 51,
+      "symbol": "SystemError.operationWouldBlock",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 52,
+      "symbol": "SystemError.operationNowInProgress",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 53,
+      "symbol": "SystemError.operationAlreadyInProgress",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 56,
+      "symbol": "SystemError.socketOperationOnNonSocket",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 57,
+      "symbol": "SystemError.destinationAddressRequired",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 58,
+      "symbol": "SystemError.messageTooLong",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 59,
+      "symbol": "SystemError.protocolWrongTypeForSocket",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 60,
+      "symbol": "SystemError.protocolNotAvailable",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 61,
+      "symbol": "SystemError.protocolNotSupported",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 63,
+      "symbol": "SystemError.socketTypeNotSupported",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 65,
+      "symbol": "SystemError.operationNotSupported",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 67,
+      "symbol": "SystemError.protocolFamilyNotSupported",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 69,
+      "symbol": "SystemError.addressFamilyNotSupportedByProtocolFamily",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 70,
+      "symbol": "SystemError.addressAlreadyInUse",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 71,
+      "symbol": "SystemError.cannotAssignRequestedAddress",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 74,
+      "symbol": "SystemError.networkIsDown",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 75,
+      "symbol": "SystemError.networkIsUnreachable",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 76,
+      "symbol": "SystemError.networkDroppedConnectionOnReset",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 77,
+      "symbol": "SystemError.softwareCausedConnectionAbort",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 78,
+      "symbol": "SystemError.connectionResetByPeer",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 79,
+      "symbol": "SystemError.noBufferSpaceAvailable",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 80,
+      "symbol": "SystemError.socketIsAlreadyConnected",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 81,
+      "symbol": "SystemError.socketIsNotConnected",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 83,
+      "symbol": "SystemError.cannotSendAfterSocketShutdown",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 84,
+      "symbol": "SystemError.tooManyReferences",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 86,
+      "symbol": "SystemError.operationTimedOut",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 87,
+      "symbol": "SystemError.connectionRefused",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 89,
+      "symbol": "SystemError.tooManyLevelsOfSymbolicLinks",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 90,
+      "symbol": "SystemError.fileNameTooLong",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 92,
+      "symbol": "SystemError.hostIsDown",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 94,
+      "symbol": "SystemError.noRouteToHost",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 95,
+      "symbol": "SystemError.directoryNotEmpty",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 98,
+      "symbol": "SystemError.tooManyUsers",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 100,
+      "symbol": "SystemError.diskQuotaExceeded",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 103,
+      "symbol": "SystemError.staleFileHandle",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 104,
+      "symbol": "SystemError.objectIsRemote",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 106,
+      "symbol": "SystemError.noLocksAvailable",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 107,
+      "symbol": "SystemError.functionNotImplemented",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 109,
+      "symbol": "SystemError.valueTooLargeForDefinedDataType",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 111,
+      "symbol": "SystemError.operationCanceled",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 113,
+      "symbol": "SystemError.identifierRemoved",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 114,
+      "symbol": "SystemError.noMessageOfDesiredType",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 115,
+      "symbol": "SystemError.illegalByteSequence",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 117,
+      "symbol": "SystemError.badMessage",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 118,
+      "symbol": "SystemError.multihopAttempted",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 119,
+      "symbol": "SystemError.noDataAvailable",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 120,
+      "symbol": "SystemError.linkHasBeenSevered",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 121,
+      "symbol": "SystemError.outOfStreamsResources",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 122,
+      "symbol": "SystemError.deviceNotAStream",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 123,
+      "symbol": "SystemError.protocolError",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 124,
+      "symbol": "SystemError.timerExpired",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 126,
+      "symbol": "SystemError.stateNotRecoverable",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 127,
+      "symbol": "SystemError.previousOwnerDied",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 129,
+      "symbol": "SystemError.other",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 133,
+      "symbol": "SystemError.init(errorNumber:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 261,
+      "symbol": "SystemError.errorNumber",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 391,
+      "symbol": "==(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 396,
+      "symbol": "SystemError.description(for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/POSIX/SystemError.swift",
+      "line": 408,
+      "symbol": "SystemError.lastOperationError",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo"
+}

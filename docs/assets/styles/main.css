@@ -1,0 +1,214 @@
+body {
+	font-family: 'Open Sans', sans-serif;
+	padding-top: 5rem;
+}
+
+.logo-small {
+	float: left;
+	margin-right: 1.5rem;
+}
+
+.logo-small-caption {
+	float: right;
+	font-weight: 300;
+}
+
+.hero {
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#634451+0,2c2d3d+100 */
+	background: #634451; /* Old browsers */
+	background: -moz-radial-gradient(top, ellipse cover,  #634451 0%, #2c2d3d 100%); /* FF3.6-15 */
+	background: -webkit-radial-gradient(top, ellipse cover,  #634451 0%,#2c2d3d 100%); /* Chrome10-25,Safari5.1-6 */
+	background: radial-gradient(ellipse at top,  #634451 0%,#2c2d3d 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#634451', endColorstr='#2c2d3d',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.hero-caption {
+	right: 15%;
+	left: 15%;
+	padding: 3rem 1rem;
+	text-align: center;
+}
+
+.hero-caption-break {
+	display: none;
+}
+
+.hero h1 {
+	color: #FFFFFF;
+	font-size: 2.5rem;
+	padding: 3rem 0 1rem 0;
+	font-weight: 300;
+}
+
+.hero h2 {
+	color: #FFFFFF;
+	font-size: 2.5rem;
+	font-weight: 300;
+}
+
+.hero h3 {
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 1.5rem;
+	font-weight: 300;
+	line-height: 2rem;
+}
+
+.github-button {
+	height: 80px;
+	margin-top: 2rem;
+}
+
+.featurette {
+	width: 100%;
+	text-align: center;
+	padding: 2rem 0;
+    margin: 0;
+}
+
+.featurette.alt {
+	background: #FAFAFA;
+}
+
+.featurette h2 {
+	font-weight: 300;
+	line-height: 1;
+	letter-spacing: -.05rem;
+	color: #2B2D3E;
+}
+
+.featurette h3 {
+	color: #676872;
+	font-weight: 300;
+	font-size: 1.5rem;
+}
+
+.featurette p {
+	margin-top: 25px;
+}
+
+.featurette-image {
+	width: 100%;
+	max-width: 300px;
+	max-height: 200px;
+	margin-bottom: 2rem;
+}
+
+.navbar {
+	height: 5rem;
+	padding-top: 20px;
+	border-radius: 0;
+}
+
+#navbar-header .navbar-nav .nav-link:focus, #navbar-header .navbar-nav .nav-link:hover {
+	color: rgba(255, 255, 255, .75);
+}
+
+#navbar-header .navbar-nav .nav-link {
+	color: rgba(255, 255, 255, .5);
+}
+
+.navbar-dark {
+	background-color: #252632;
+	color: white;
+}
+
+.footer {
+	text-align: center;
+	padding: 2.5rem 0;
+}
+
+.footer a {
+	color: rgba(255, 255, 255, .5);
+}
+
+.footer a:focus, .footer a:hover {
+	color: rgba(255, 255, 255, .75);
+	text-decoration: none;
+}
+
+.snippet-row {
+	margin-top: 2rem;
+}
+
+.carousel-indicators {
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    left: 0;
+    right: 0;
+    position: relative;
+}
+
+.carousel-indicators li {
+    width: 120px;
+    height: auto;
+	text-indent: 0;
+    border-radius: 3px;
+	padding: 0.25rem;
+	border-bottom: 1px solid #F1F0F5;
+}
+
+.carousel-indicators li.active {
+    width: 120px;
+    height: auto;
+	border-bottom: 1px solid black;
+	border-radius: 0;
+}
+
+.hljs {
+	width: 100%;
+	height: 100%;
+	text-align: left;
+	tab-size: 4;
+	font-size: 10px;
+	background: #FCFCFD;
+	border: 1px solid #F1F0F5;
+	padding: 1rem;
+}
+
+.hljs [data-toggle="tooltip"] {
+	outline: 1px solid #388BFF;
+	outline-offset: 0px;
+}
+
+@media (min-width: 48em) {
+
+	.hero-caption {
+		padding: 10rem 0;
+	}
+
+	.hero h1 {
+		font-size: 3.25rem;
+	}
+
+	.featurette {
+		padding: 5rem 0;
+		text-align: left;
+	}
+
+	.featurette-image.center-block {
+		margin: 0;
+	}
+
+	.featurette.alt .center-block {
+		margin-left: auto;
+	}
+
+	.hljs {
+		font-size: 12px;
+	}
+
+}
+
+@media (min-width: 62em) {
+
+	.hero-caption-break {
+		display: block;
+	}
+
+	.featurette {
+		padding: 10rem 1rem;
+	}
+
+}
