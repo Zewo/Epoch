@@ -28,19 +28,21 @@ final class RequestBodyStream : ReadableStream {
             return UnsafeRawBufferPointer(start: nil, count: 0)
         }
         
-        if bodyBuffer.isEmpty && !complete {
+        if bodyBuffer.isEmpty {
+            guard !complete else {
+                return UnsafeRawBufferPointer(start: nil, count: 0)
+            }
+            
             try parser.read(deadline: deadline)
-        } else if bodyBuffer.isEmpty && complete {
-            close()
+        }
+        
+        guard let bodyBaseAddress = bodyBuffer.baseAddress else {
+            return UnsafeRawBufferPointer(start: nil, count: 0)
         }
         
         let bytesRead = min(bodyBuffer.count, buffer.count)
-        memcpy(baseAddress, bodyBuffer.baseAddress, bytesRead)
-        
-        bodyBuffer = UnsafeRawBufferPointer(
-            start: bodyBuffer.baseAddress?.advanced(by: bytesRead),
-            count: bodyBuffer.count - bytesRead
-        )
+        memcpy(baseAddress, bodyBaseAddress, bytesRead)
+        bodyBuffer = bodyBuffer.suffix(bytesRead)
         
         return UnsafeRawBufferPointer(start: baseAddress, count: bytesRead)
     }
