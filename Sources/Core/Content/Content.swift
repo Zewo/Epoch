@@ -296,23 +296,6 @@ extension Content : ExpressibleByStringLiteral {
     }
 }
 
-extension Content : ExpressibleByStringInterpolation {
-    public init<T>(stringInterpolationSegment segment: T) {
-        self = .string(String(describing: segment))
-    }
-    
-    public init(stringInterpolation segments: Content...) {
-        var string = ""
-        
-        for segment in segments {
-            let segmentString: String = (try? segment.get()) ?? ""
-            string.append(segmentString)
-        }
-        
-        self = .string(string)
-    }
-}
-
 extension Content : ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: Content...) {
         self = .array(elements)

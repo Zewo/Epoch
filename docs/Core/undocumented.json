@@ -1,0 +1,1517 @@
+{
+  "warnings": [
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": null,
+      "symbol": "Content",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": null,
+      "symbol": "Content",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": null,
+      "symbol": "Content",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": null,
+      "symbol": "Content",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": null,
+      "symbol": "Content",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": null,
+      "symbol": "Content",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": null,
+      "symbol": "Content",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": null,
+      "symbol": "Content",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": null,
+      "symbol": "Content",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": null,
+      "symbol": "Content",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": null,
+      "symbol": "Content",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": null,
+      "symbol": "Content",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": null,
+      "symbol": "NoContent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 3,
+      "symbol": "ContentError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 4,
+      "symbol": "ContentError.cannotInitialize",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 5,
+      "symbol": "ContentError.cannotGet",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 6,
+      "symbol": "ContentError.outOfBounds",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 7,
+      "symbol": "ContentError.valueNotFound",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 10,
+      "symbol": "ContentInitializable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 11,
+      "symbol": "ContentInitializable.init(content:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 14,
+      "symbol": "ContentRepresentable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 15,
+      "symbol": "ContentRepresentable.content",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 18,
+      "symbol": "ContentConvertible",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 21,
+      "symbol": "Int.content",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 25,
+      "symbol": "Int.init(content:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 35,
+      "symbol": "Bool.content",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 39,
+      "symbol": "Bool.init(content:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 49,
+      "symbol": "String.content",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 53,
+      "symbol": "String.init(content:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 63,
+      "symbol": "Double.content",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 67,
+      "symbol": "Double.init(content:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 77,
+      "symbol": "Content.content",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 81,
+      "symbol": "Content.init(content:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 86,
+      "symbol": "NoContent",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 87,
+      "symbol": "NoContent.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 91,
+      "symbol": "NoContent.init(content:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 93,
+      "symbol": "NoContent.content",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 98,
+      "symbol": "Content",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 99,
+      "symbol": "Content.null",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 100,
+      "symbol": "Content.bool",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 101,
+      "symbol": "Content.double",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 102,
+      "symbol": "Content.int",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 103,
+      "symbol": "Content.string",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 104,
+      "symbol": "Content.data",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 105,
+      "symbol": "Content.array",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 106,
+      "symbol": "Content.dictionary",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 110,
+      "symbol": "Content.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 114,
+      "symbol": "Content.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 122,
+      "symbol": "Content.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 130,
+      "symbol": "Content.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 144,
+      "symbol": "Content.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 159,
+      "symbol": "IndexPathComponentValue",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 160,
+      "symbol": "IndexPathComponentValue.index",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 161,
+      "symbol": "IndexPathComponentValue.key",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 166,
+      "symbol": "IndexPathComponent.indexPathComponent",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 170,
+      "symbol": "Int.indexPathComponent",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 176,
+      "symbol": "String.indexPathComponent",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 182,
+      "symbol": "Content.get(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 187,
+      "symbol": "Content.get(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/Content.swift",
+      "line": 247,
+      "symbol": "==(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentParser.swift",
+      "line": null,
+      "symbol": "ContentParser",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentParser.swift",
+      "line": 3,
+      "symbol": "ContentParserError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentParser.swift",
+      "line": 4,
+      "symbol": "ContentParserError.invalidInput",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentParser.swift",
+      "line": 7,
+      "symbol": "ContentParser",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentParser.swift",
+      "line": 8,
+      "symbol": "ContentParser.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentParser.swift",
+      "line": 9,
+      "symbol": "ContentParser.parse(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentParser.swift",
+      "line": 13,
+      "symbol": "ContentParser.finish()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentParser.swift",
+      "line": 23,
+      "symbol": "ContentParser.parse(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentParser.swift",
+      "line": 33,
+      "symbol": "ContentParser.parse(_:bufferSize:deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentSerializer.swift",
+      "line": null,
+      "symbol": "ContentSerializer",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentSerializer.swift",
+      "line": 3,
+      "symbol": "ContentSerializerError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentSerializer.swift",
+      "line": 4,
+      "symbol": "ContentSerializerError.invalidInput",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentSerializer.swift",
+      "line": 7,
+      "symbol": "ContentSerializer",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentSerializer.swift",
+      "line": 8,
+      "symbol": "ContentSerializer.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentSerializer.swift",
+      "line": 9,
+      "symbol": "ContentSerializer.serialize(_:bufferSize:body:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentSerializer.swift",
+      "line": 13,
+      "symbol": "ContentSerializer.serialize(_:stream:bufferSize:deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentType.swift",
+      "line": null,
+      "symbol": "ContentType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentType.swift",
+      "line": 1,
+      "symbol": "ContentType",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentType.swift",
+      "line": 2,
+      "symbol": "ContentType.mediaType",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentType.swift",
+      "line": 3,
+      "symbol": "ContentType.parser",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentType.swift",
+      "line": 4,
+      "symbol": "ContentType.serializer",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Content/ContentType.swift",
+      "line": 6,
+      "symbol": "ContentType.init(mediaType:parser:serializer:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONContentType.swift",
+      "line": 2,
+      "symbol": "ContentType.json",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 9,
+      "symbol": "JSONMapParserOptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 11,
+      "symbol": "JSONMapParserOptions.allowComments",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 12,
+      "symbol": "JSONMapParserOptions.dontValidateStrings",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 13,
+      "symbol": "JSONMapParserOptions.allowTrailingGarbage",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 14,
+      "symbol": "JSONMapParserOptions.allowMultipleValues",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 15,
+      "symbol": "JSONMapParserOptions.allowPartialValues",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 22,
+      "symbol": "JSONMapParserError",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 30,
+      "symbol": "JSONParser",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 31,
+      "symbol": "JSONParser.parse(_:options:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 37,
+      "symbol": "JSONParser.options",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 49,
+      "symbol": "JSONParser.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 53,
+      "symbol": "JSONParser.init(options:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 78,
+      "symbol": "JSONParser.parse(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONParser.swift",
+      "line": 137,
+      "symbol": "JSONParser.finish()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONSerializer.swift",
+      "line": 10,
+      "symbol": "JSONSerializerError",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONSerializer.swift",
+      "line": 18,
+      "symbol": "JSONSerializer",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONSerializer.swift",
+      "line": 25,
+      "symbol": "JSONSerializer.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONSerializer.swift",
+      "line": 29,
+      "symbol": "JSONSerializer.init(ordering:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/JSON/JSONSerializer.swift",
+      "line": 38,
+      "symbol": "JSONSerializer.serialize(_:bufferSize:body:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": null,
+      "symbol": "Logger",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 7,
+      "symbol": "LogAppender",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 8,
+      "symbol": "LogAppender.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 9,
+      "symbol": "LogAppender.levels",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 10,
+      "symbol": "LogAppender.append(event:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 13,
+      "symbol": "Logger",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 14,
+      "symbol": "Logger.Level",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 21,
+      "symbol": "Logger.Level.trace",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 22,
+      "symbol": "Logger.Level.debug",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 23,
+      "symbol": "Logger.Level.info",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 24,
+      "symbol": "Logger.Level.warning",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 25,
+      "symbol": "Logger.Level.error",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 26,
+      "symbol": "Logger.Level.fatal",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 27,
+      "symbol": "Logger.Level.all",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 30,
+      "symbol": "Logger.Event",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 31,
+      "symbol": "Logger.Event.locationInfo",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 32,
+      "symbol": "Logger.Event.timestamp",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 33,
+      "symbol": "Logger.Event.level",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 34,
+      "symbol": "Logger.Event.logger",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 35,
+      "symbol": "Logger.Event.message",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 36,
+      "symbol": "Logger.Event.error",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 39,
+      "symbol": "Logger.LocationInfo",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 40,
+      "symbol": "Logger.LocationInfo.file",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 41,
+      "symbol": "Logger.LocationInfo.line",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 42,
+      "symbol": "Logger.LocationInfo.column",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 43,
+      "symbol": "Logger.LocationInfo.function",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 45,
+      "symbol": "Logger.LocationInfo.init(file:line:column:function:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 58,
+      "symbol": "Logger.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 59,
+      "symbol": "Logger.appenders",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 61,
+      "symbol": "Logger.init(name:appenders:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 66,
+      "symbol": "Logger.log(level:item:error:locationInfo:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 81,
+      "symbol": "Logger.log(level:item:error:file:function:line:column:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 103,
+      "symbol": "Logger.trace(_:error:file:function:line:column:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 122,
+      "symbol": "Logger.trace(_:error:locationInfo:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 135,
+      "symbol": "Logger.debug(_:error:file:function:line:column:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 154,
+      "symbol": "Logger.debug(_:error:locationInfo:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 167,
+      "symbol": "Logger.info(_:error:file:function:line:column:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 186,
+      "symbol": "Logger.info(_:error:locationInfo:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 199,
+      "symbol": "Logger.warning(_:error:file:function:line:column:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 218,
+      "symbol": "Logger.warning(_:error:locationInfo:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 231,
+      "symbol": "Logger.error(_:error:file:function:line:column:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 250,
+      "symbol": "Logger.error(_:error:locationInfo:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 263,
+      "symbol": "Logger.fatal(_:error:file:function:line:column:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/Logger.swift",
+      "line": 282,
+      "symbol": "Logger.fatal(_:error:locationInfo:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/StandardOutputAppender.swift",
+      "line": 1,
+      "symbol": "StandardOutputAppender",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/StandardOutputAppender.swift",
+      "line": 2,
+      "symbol": "StandardOutputAppender.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/StandardOutputAppender.swift",
+      "line": 3,
+      "symbol": "StandardOutputAppender.levels",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/StandardOutputAppender.swift",
+      "line": 5,
+      "symbol": "StandardOutputAppender.init(name:levels:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Logger/StandardOutputAppender.swift",
+      "line": 10,
+      "symbol": "StandardOutputAppender.append(event:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": null,
+      "symbol": "MediaType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": null,
+      "symbol": "MediaType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": null,
+      "symbol": "MediaType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": 7,
+      "symbol": "MediaType",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": 8,
+      "symbol": "MediaType.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": 9,
+      "symbol": "MediaType.subtype",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": 10,
+      "symbol": "MediaType.parameters",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": 12,
+      "symbol": "MediaType.init(type:subtype:parameters:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": 28,
+      "symbol": "MediaType.init(string:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": 60,
+      "symbol": "MediaType.matches(other:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": 78,
+      "symbol": "Collection.matches(other:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": 101,
+      "symbol": "MediaType.json",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": 102,
+      "symbol": "MediaType.plainText",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/MediaType/MediaType.swift",
+      "line": 637,
+      "symbol": "mediaType(forFileExtension:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": null,
+      "symbol": "NoParameters",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": null,
+      "symbol": "ParameterKey",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 5,
+      "symbol": "ParameterError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 6,
+      "symbol": "ParameterError.parameterNotFound",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 7,
+      "symbol": "ParameterError.cannotExpress",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 10,
+      "symbol": "ParametersError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 11,
+      "symbol": "ParametersError.cannotInitialize",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 14,
+      "symbol": "ParameterKey",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 15,
+      "symbol": "ParameterKey.key",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 17,
+      "symbol": "ParameterKey.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 36,
+      "symbol": "ExpressibleByParameterString",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 37,
+      "symbol": "ExpressibleByParameterString.init(parameter:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 41,
+      "symbol": "String.init(parameter:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 47,
+      "symbol": "Int.init(parameter:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 57,
+      "symbol": "UUID.init(parameter:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 67,
+      "symbol": "Double.init(parameter:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 77,
+      "symbol": "Float.init(parameter:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 87,
+      "symbol": "Bool.init(parameter:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 99,
+      "symbol": "ParametersInitializable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 100,
+      "symbol": "ParametersInitializable.init(parameters:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 103,
+      "symbol": "NoParameters",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 104,
+      "symbol": "NoParameters.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 108,
+      "symbol": "NoParameters.init(parameters:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 111,
+      "symbol": "Parameters",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 114,
+      "symbol": "Parameters.init(parameters:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 118,
+      "symbol": "Parameters.set(_:for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Parameters/Parameters.swift",
+      "line": 122,
+      "symbol": "Parameters.get(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Stream/Stream.swift",
+      "line": null,
+      "symbol": "WritableStream",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Stream/Stream.swift",
+      "line": 4,
+      "symbol": "UnsafeRawBufferPointerRepresentable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Stream/Stream.swift",
+      "line": 55,
+      "symbol": "ReadableStream",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Stream/Stream.swift",
+      "line": 56,
+      "symbol": "ReadableStream.open(deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Stream/Stream.swift",
+      "line": 57,
+      "symbol": "ReadableStream.close()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Stream/Stream.swift",
+      "line": 59,
+      "symbol": "ReadableStream.read(into:deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Stream/Stream.swift",
+      "line": 65,
+      "symbol": "WritableStream",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Stream/Stream.swift",
+      "line": 66,
+      "symbol": "WritableStream.open(deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Stream/Stream.swift",
+      "line": 67,
+      "symbol": "WritableStream.close()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Stream/Stream.swift",
+      "line": 69,
+      "symbol": "WritableStream.write(_:deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Stream/Stream.swift",
+      "line": 70,
+      "symbol": "WritableStream.flush(deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/Stream/Stream.swift",
+      "line": 74,
+      "symbol": "WritableStream.write(_:deadline:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/URI/URI.swift",
+      "line": 16,
+      "symbol": "URI.scheme",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/URI/URI.swift",
+      "line": 17,
+      "symbol": "URI.userInfo",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/URI/URI.swift",
+      "line": 18,
+      "symbol": "URI.host",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/URI/URI.swift",
+      "line": 19,
+      "symbol": "URI.port",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/URI/URI.swift",
+      "line": 20,
+      "symbol": "URI.path",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/URI/URI.swift",
+      "line": 21,
+      "symbol": "URI.query",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/URI/URI.swift",
+      "line": 22,
+      "symbol": "URI.fragment",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/URI/URI.swift",
+      "line": 24,
+      "symbol": "URI.init(scheme:userInfo:host:port:path:query:fragment:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/URI/URI.swift",
+      "line": 42,
+      "symbol": "URI.UserInfo",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/URI/URI.swift",
+      "line": 43,
+      "symbol": "URI.UserInfo.username",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/URI/URI.swift",
+      "line": 44,
+      "symbol": "URI.UserInfo.password",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo/Sources/Core/URI/URI.swift",
+      "line": 46,
+      "symbol": "URI.UserInfo.init(username:password:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Volumes/Macintosh HD 2/Development/GitHub/Zewo/Zewo"
+}

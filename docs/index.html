@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Open source libraries for modern and blazing fast server software.">
+        <meta name="author" content="Zewo">
+        <meta property="og:title" content="Zewo" />
+        <meta property="og:description" content="Open source libraries for modern and blazing fast server software." />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://www.zewo.io/" />
+	<meta property="og:image" content="http://www.zewo.io/assets/images/logo-dark-large.png" />
+	<meta property="og:image:width" content="400" />
+	<meta property="og:image:height" content="400" />
+	<meta property="fb:app_id" content="679956515480783" />
+        <link rel="icon" href="favicon.ico">
+        <title>Zewo</title>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.1.1/css/tether.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/xcode.min.css">
+        <link rel="stylesheet" type="text/css" href="assets/styles/main.css">
+        <script>
+	/**
+	* Function that tracks a click on an outbound link in Analytics
+	* This function takes a valid URL string as an argument, and uses that URL string
+	* as the event label. Setting the transport method to 'beacon' lets the hit be sent
+	* using 'navigator.sendBeacon' in browser that support it.
+	*/
+	var trackOutboundLink = function(url) {
+	  if (ga.q) {
+	    // Google Analytics is blocked
+	    document.location = url;
+	  } else {
+	    ga('send', 'event', 'outbound', 'click', name, {
+	      'transport': 'beacon',
+	      'hitCallback': function(){document.location = url;}
+	   });
+	  }
+	}
+	</script>
+    </head>
+    <body>
+    	<script>
+	  window.fbAsyncInit = function() {
+	    FB.init({
+	      appId      : '679956515480783',
+	      xfbml      : true,
+	      version    : 'v2.5'
+	    });
+	  };
+
+	  (function(d, s, id){
+	     var js, fjs = d.getElementsByTagName(s)[0];
+	     if (d.getElementById(id)) {return;}
+	     js = d.createElement(s); js.id = id;
+	     js.src = "//connect.facebook.net/en_US/sdk.js";
+	     fjs.parentNode.insertBefore(js, fjs);
+	   }(document, 'script', 'facebook-jssdk'));
+	</script>
+        <div class="pos-f-t">
+            <nav class="navbar navbar-static-top navbar-dark">
+                <div class="container">
+                    <a class="navbar-brand" href="/">
+                        <img class="logo-small" src="assets/images/logo-small.png" srcset="assets/images/logo-small.png 1x, assets/images/logo-small@2x.png 2x, assets/images/logo-small@3x.png 3x" alt="Logo">
+                        <div class="logo-small-caption">Zewo</div>
+                    </a>
+                    <div class="pull-xs-right">
+                        <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header">
+                            &#9776;
+                        </button>
+                        <div class="hidden-xs-down">
+                            <ul class="nav navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="https://github.com/Zewo/Zewo" onclick="trackOutboundLink('https://github.com/Zewo/Zewo', 'github'); return false;"><i class="fa fa-github"></i> GitHub</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="http://docs.zewo.io" onclick="trackOutboundLink('http://docs.zewo.io', 'docs'); return false;"><i class="fa fa-book"></i> Docs</a>
+                                </li>
+                                <li class="nav-item">
+									<a class="nav-link" href="https://blog.zewo.io" onclick="trackOutboundLink('https://blog.zewo.io', 'blog'); return false;"><i class="fa fa-pencil"></i> Blog</a>
+								</li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="http://slack.zewo.io" onclick="trackOutboundLink('http://slack.zewo.io', 'slack'); return false;"><i class="fa fa-slack"></i> Slack</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="https://twitter.com/zewo_io" onclick="trackOutboundLink('https://twitter.com/zewo_io', 'twitter'); return false;"><i class="fa fa-twitter"></i> Twitter</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="mailto:hello@zewo.io" onclick="trackOutboundLink('mailto:hello@zewo.io', 'email'); return false;"><i class="fa fa-envelope"></i> Contact</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="collapse" id="navbar-header">
+                <div class="container-fluid bg-inverse p-a-1">
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://github.com/Zewo/Zewo" onclick="trackOutboundLink('https://github.com/Zewo/Zewo', 'github-mobile'); return false;"><i class="fa fa-github"></i> Github</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://docs.zewo.io" onclick="trackOutboundLink('http://docs.zewo.io', 'docs-mobile'); return false;"><i class="fa fa-book"></i> Docs</a>
+                        </li>
+                        <li class="nav-item">
+							<a class="nav-link" href="https://blog.zewo.io" onclick="trackOutboundLink('https://blog.zewo.io', 'blog-mobile'); return false;"><i class="fa fa-pencil"></i> Blog</a>
+						</li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://slack.zewo.io" onclick="trackOutboundLink('http://slack.zewo.io', 'slack-mobile'); return false;"><i class="fa fa-slack"></i> Slack</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://twitter.com/zewo_io" onclick="trackOutboundLink('https://twitter.com/zewo_io', 'twitter-mobile'); return false;"><i class="fa fa-twitter"></i> Twitter</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="mailto:hello@zewo.io" onclick="trackOutboundLink('mailto:hello@zewo.io', 'email-mobile'); return false;"><i class="fa fa-envelope"></i> Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="hero">
+            <div class="hero-caption container">
+                <img id="logo-large" src="assets/images/logo-large.png" srcset="assets/images/logo-large.png 1x, assets/images/logo-large@2x.png 2x, assets/images/logo-large@3x.png 3x" alt="Logo">
+                <h2>Zewo</h2>
+                <h1>Build server software in Swift</h1>
+                <h3>Zewo is a set of open source libraries that help you build <br class="hero-caption-break">modern and blazing fast server software.</h3>
+                <a href="https://github.com/Zewo/Zewo" onclick="trackOutboundLink('https://github.com/Zewo/Zewo', 'github-cta-1'); return false;">
+                    <img class="github-button" src="assets/images/get-started-on-github.svg" alt="Github">
+                </a>
+            </div>
+        </div>
+        <div class="marketing">
+            <div class="row featurette">
+                <div class="container">
+                    <div class="col-md-4">
+                        <img class="featurette-image center-block" src="assets/images/feature-linux.svg" alt="Linux ready">
+                    </div>
+                    <div class="col-md-8">
+                        <h2>Linux ready</h2>
+                        <h3>Compiled Swift, running on your Linux distribution.</h3>
+                        <p>As Swift is open source and capable of running on Linux, you can easily deploy Zewo on AWS, DigitalOcean, or any of your other favorite cloud infrastructure provider.</p>
+                    </div>
+                    <!--
+                    <div class="col-md-12 snippet-row">
+                        <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+                            <ol class="carousel-indicators">
+                                <li data-target="#myCarousel" data-slide-to="0" class="active">HTTP Server</li>
+                                <li data-target="#myCarousel" data-slide-to="1">Router</li>
+                                <li data-target="#myCarousel" data-slide-to="2">Middleware</li>
+                            </ol>
+                            <div class="carousel-inner" role="listbox">
+                                <div class="carousel-item active" style="padding: 1rem;">
+                                    <div style="text-align: center; padding-bottom: 1rem;">
+                                        Zewo provides fast and reliable HTTP/HTTPS servers. Our servers are crafted with the same battle-tested HTTP parser used by nginx/node.js, so you can be sure we'll take good care of your requests. TLS/SSL is handled by OpenSSL, which is the most popular SSL implementation powering only about 2/3 of all webservers around the world.
+                                    </div>
+                                    <pre><code class="hljs swift">import HTTPServer
+import HTTPSServer
+
+let hello = Responder { request in
+    return Response(body: "hello world")
+}
+
+try Server(
+    <span data-toggle="tooltip" title="With reusePort enabled you can run as many process instances as you like, all listening on the same address/port combination.">reusePort</span>: true,
+    port: 80,
+    responder: hello
+).<span data-toggle="tooltip" title="If you want to run more than one server listening on different ports on the same process, just start one of them in the background.">startInBackground()</span>
+
+try Server(
+    reusePort: true,
+    port: 443,
+    certificate: "cert.pem",
+    privateKey: "key.pem",
+    <span data-toggle="tooltip" title="A responder is simply a type that receives an HTTP request and returns an HTTP response. Router will probably be the responder you'll use the most here.">responder</span>: hello
+).start()</code></pre>
+                                </div>
+                                <div class="carousel-item" style="padding: 1rem;">
+                                    <div style="text-align: center; padding-bottom: 1rem;">
+										You'll probably want to use a router to organize your web application. Luckily, we have an excellent Router module for that.
+                                    </div>
+                                    <pre><code class="hljs swift">import HTTPServer
+import Router
+import <span data-toggle="tooltip" title="You can add functionality to the Router through extensions defined in another module.">ResourcefulRoute</span>
+
+let v1 = Router("/v1") { route in
+    route.post("/users", CreateUserResponder())
+}
+
+let app = Router(<span data-toggle="tooltip" title="Router is flexible and allows you to supply your own route matcher if you please.">matcher</span>: TrieRouteMatcher.self) { route in
+    route.get("/hello") { _ in
+        return Response(body: "hello world")
+    }
+
+    route.get("/hello/<span data-toggle="tooltip" title="Define path parameters using ':parameterName' syntax.">:name</span>") { request in
+    	let name = request.<span data-toggle="tooltip" title="Access path parameters through the pathParameters property.">pathParameters</span>["name"]!
+        return Response(body: "hello \(name)")
+    }
+
+    route.<span data-toggle="tooltip" title="You can compose routers within routers. This allows you to better organize and reuse your code.">compose</span>("/api", v1)
+    route.<span data-toggle="tooltip" title="Through extensions you could add opinionated functions like resource that creates all routes needed for a resource.">resources</span>("/videos", VideoResources())
+    route.<span data-toggle="tooltip" title="Fallback lets you serve static files from a chosen directory, for example.">fallback</span> = FileResponder(path: "public")
+}
+
+try Server(app).start()</code></pre>
+                                </div>
+                                <div class="carousel-item" style="padding: 1rem;">
+                                    <div style="text-align: center; padding-bottom: 1rem;">
+										Middleware allows you to reuse code for common tasks and make your life a lot easier.
+                                    </div>
+                                    <pre><code class="hljs swift">import <span data-toggle="tooltip" title="We provide an umbrella package that contains the most important Zewo modules.">Zewo</span>
+
+let logger = LoggerMiddleware(log: Log())
+let contentNegotiator = ContentNegotiationMiddleware(mediaTypes: JSONMediaType(), URLEncodedFormMediaType())
+let userMapper = ContentMapperMiddleware(mappingTo: User.self)
+
+let app = Router(middleware: contentNegotiator) { route in
+    route.post("/users", middleware: userMapper) { request in
+        guard let user = request.<span data-toggle="tooltip" title="You can define type-safe computed properties to requests through extensions.">user</span> else {
+            return Response(status: .BadRequest)
+        }
+        let id = User.save(user)
+        return Response(content: id)
+    }
+}
+
+try Server(<span data-toggle="tooltip" title="Middleware are applied to responders. So almost all places that take a responder can also take middleware. Server, router, routes, etc.">middleware</span>: logger, responder: app).start()</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    !-->
+                </div>
+            </div>
+            <div class="row featurette alt">
+                <div class="container">
+                    <div class="col-md-4 col-md-push-8">
+                        <img class="featurette-image center-block" src="assets/images/feature-concurrency.svg" alt="Concurrency with Venice">
+                    </div>
+                    <div class="col-md-7 col-md-pull-3">
+                        <h2>Go-style concurrency</h2>
+                        <h3>Concurrent programming without callbacks</h3>
+                        <p>
+                            What many have come to love with the <a href="https://golang.org" target="_blank">Go</a> programming language is its concurrency model. Go uses <a href="https://en.wikipedia.org/wiki/Communicating_sequential_processes" target="_blank">CSP</a> (Communicating Sequential Processes), which Zewo brings to Swift using <a href="http://libmill.org" target="_blank">libmill</a>. Say goodbye to callback hell, and meet your new favourite way of building concurrent software!
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row featurette">
+                <div class="container">
+                    <div class="col-md-4">
+                        <img class="featurette-image center-block" src="assets/images/feature-docker.svg" alt="Docker support">
+                    </div>
+                    <div class="col-md-8">
+                        <h2>Ship your code safely</h2>
+                        <h3>Containers for each version</h3>
+                        <p>Swift is a living language that improves at a fast rate. Zewo provides you with utilities, such as Docker images for each release, so you can deploy your code safely.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row featurette alt">
+                <div class="container">
+                    <div class="col-md-4 col-md-push-8">
+						<img class="featurette-image center-block" src="assets/images/feature-platform.svg" alt="Platform">
+  					</div>
+  					<div class="col-md-7 col-md-pull-3">
+ 						<h2>Zewo is a platform</h2>
+ 						<h3>Build the next generation web framework with Zewo</h3>
+ 						<p>Thanks to Zewo’s modularity, you can pick and choose what you want to use for your own framework - whether it be Venice for concurrency, the HTTP Server, the included Trie-based router matcher for your Router, or one of our many other components.</p>
+ 					</div>
+ 				</div>
+ 			</div>
+ 			<div class="row featurette">
+ 				<div class="container">
+					<div class="col-md-4">
+ 						<img class="featurette-image center-block" src="assets/images/feature-mit.svg" alt="MIT Licensed">
+ 					</div>
+ 					<div class="col-md-8">
+                        <h2>MIT Licensed</h2>
+                        <h3>Contribute to everyone, without reservation.</h3>
+                        <p>The entire Zewo code base is licensed under <a href="https://opensource.org/licenses/MIT" target="_blank">MIT</a>. By contributing to Zewo you are contributing to an open and engaged community of brilliant Swift programmers. Join us on <a href="http://slack.zewo.io" target="_blank">Slack</a> to get to know us!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <footer class="footer navbar-dark">
+            <p>&copy; 2017 Zewo</p>
+        </footer>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.1.1/js/tether.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/languages/swift.min.js"></script>
+        <script src="https://v4-alpha.getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+        <script>
+            $('.hljs').each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
+
+            $('[data-toggle="tooltip"]').tooltip({
+                placement: "right"
+            });
+        </script>
+        <script type="text/javascript">
+	  var _mfq = _mfq || [];
+	  (function() {
+	    var mf = document.createElement("script");
+	    mf.type = "text/javascript"; mf.async = true;
+	    mf.src = "//cdn.mouseflow.com/projects/e7a386d3-cabb-491e-ae5a-37c76ad80cfd.js";
+	    document.getElementsByTagName("head")[0].appendChild(mf);
+	  })();
+	</script>
+        <script>
+  			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ 			 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  			ga('create', 'UA-74502049-1', 'auto');
+  			ga('send', 'pageview');
+  			setTimeout(function(){ga('send','event','engagement','30 seconds')}, 30000);
+		</script>
+    </body>
+</html>

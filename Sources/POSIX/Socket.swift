@@ -48,7 +48,7 @@ public func socket(
     family: AddressFamily,
     type: SocketType,
     `protocol`: Int32
-) throws -> FileDescriptor {
+) throws -> Int32 {
     let fileDescriptor = socket(family.rawValue, Int32(type.rawValue), `protocol`)
     switch fileDescriptor {
     case -1: throw SystemError.lastOperationError
@@ -56,7 +56,7 @@ public func socket(
     }
 }
 
-public func bind(socket: FileDescriptor, address: Address) throws {
+public func bind(socket: Int32, address: Address) throws {
     var address = address
     let result = address.withAddressPointer {
         bind(socket, $0, socklen_t(address.length))
@@ -67,7 +67,7 @@ public func bind(socket: FileDescriptor, address: Address) throws {
     }
 }
 
-public func listen(socket: FileDescriptor, backlog: Int) throws {
+public func listen(socket: Int32, backlog: Int) throws {
     let result = listen(socket, Int32(backlog))
 
     guard result == 0 else {
@@ -75,7 +75,7 @@ public func listen(socket: FileDescriptor, backlog: Int) throws {
     }
 }
 
-public func accept(socket: FileDescriptor) throws -> (FileDescriptor, Address) {
+public func accept(socket: Int32) throws -> (Int32, Address) {
     var address = Address()
     var length = socklen_t(MemoryLayout<sockaddr>.size)
     let acceptSocket = address.withAddressPointer { pointer in
@@ -89,7 +89,7 @@ public func accept(socket: FileDescriptor) throws -> (FileDescriptor, Address) {
     return (acceptSocket, address)
 }
 
-public func connect(socket: FileDescriptor, address: Address) throws {
+public func connect(socket: Int32, address: Address) throws {
     var address = address
     let length = socklen_t(MemoryLayout<sockaddr>.size)
 
@@ -120,7 +120,7 @@ public struct SendFlags: OptionSet {
 }
 
 public func send(
-    socket: FileDescriptor,
+    socket: Int32,
     buffer: UnsafeRawBufferPointer,
     flags: SendFlags = .none
 ) throws -> Int {
@@ -131,6 +131,10 @@ public func send(
          ECONNRESET. Let's paper over it like this. */
         if errno == EPIPE {
             errno = ECONNRESET
+        }
+        
+        if errno == EAGAIN {
+            errno = EWOULDBLOCK
         }
         
         throw SystemError.lastOperationError
@@ -155,12 +159,16 @@ public struct ReceiveFlags: OptionSet {
 }
 
 public func receive(
-    socket: FileDescriptor,
+    socket: Int32,
     buffer: UnsafeMutableRawBufferPointer,
     flags: ReceiveFlags = .none
 ) throws -> Int {
     let result = recv(socket, buffer.baseAddress, buffer.count, flags.rawValue)
 
+    if errno == EAGAIN {
+        errno = EWOULDBLOCK
+    }
+    
     guard result != -1 else {
         throw SystemError.lastOperationError
     }
@@ -168,7 +176,7 @@ public func receive(
     return result
 }
 
-public func getAddress(socket: FileDescriptor) throws -> Address {
+public func getAddress(socket: Int32) throws -> Address {
     return try Address.fromAddressPointer {
         var length = socklen_t(MemoryLayout<sockaddr>.size)
         let result = getsockname(socket, $0, &length)
@@ -179,7 +187,7 @@ public func getAddress(socket: FileDescriptor) throws -> Address {
     }
 }
 
-public func checkError(socket: FileDescriptor) throws {
+public func checkError(socket: Int32) throws {
     var error: Int32 = 0
     var errorSize = socklen_t(MemoryLayout<Int32>.size)
 
@@ -194,7 +202,7 @@ public func checkError(socket: FileDescriptor) throws {
     }
 }
 
-public func setReusePort(socket: FileDescriptor) throws {
+public func setReusePort(socket: Int32) throws {
     var option: Int32 = 1
     
     let result = setsockopt(
@@ -210,7 +218,7 @@ public func setReusePort(socket: FileDescriptor) throws {
     }
 }
 
-public func setReuseAddress(socket: FileDescriptor) throws {
+public func setReuseAddress(socket: Int32) throws {
     var option: Int32 = 1
     
     let result = setsockopt(
@@ -227,7 +235,7 @@ public func setReuseAddress(socket: FileDescriptor) throws {
 }
 
 #if os(macOS)
-    public func setNoSignalOnBrokenPipe(socket: FileDescriptor) throws {
+    public func setNoSignalOnBrokenPipe(socket: Int32) throws {
         var option: Int32 = 1
         
         let result = setsockopt(

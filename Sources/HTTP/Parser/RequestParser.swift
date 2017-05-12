@@ -53,6 +53,89 @@ extension Method {
     }
 }
 
+extension URI {
+    init?(buffer: UnsafeRawBufferPointer, isConnect: Bool) {
+        let uri = parse_uri(
+            buffer.baseAddress?.assumingMemoryBound(to: Int8.self),
+            buffer.count,
+            isConnect ? 1 : 0
+        )
+        
+        if uri.error == 1 {
+            return nil
+        }
+        
+        if uri.field_set & 1 != 0 {
+            scheme = URI.substring(buffer: buffer, start: uri.scheme_start, end: uri.scheme_end)
+        } else {
+            scheme = nil
+        }
+        
+        if uri.field_set & 2 != 0 {
+            host = URI.substring(buffer: buffer, start: uri.host_start, end: uri.host_end)
+        } else {
+            host = nil
+        }
+        
+        if uri.field_set & 4 != 0 {
+            port = Int(uri.port)
+        } else {
+            port = nil
+        }
+        
+        if uri.field_set & 8 != 0 {
+            path = URI.substring(buffer: buffer, start: uri.path_start, end: uri.path_end)
+        } else {
+            path = nil
+        }
+        
+        if uri.field_set & 16 != 0 {
+            query = URI.substring(buffer: buffer, start: uri.query_start, end: uri.query_end)
+        } else {
+            query = nil
+        }
+        
+        if uri.field_set & 32 != 0 {
+            fragment = URI.substring(buffer: buffer, start: uri.fragment_start, end: uri.fragment_end)
+        } else {
+            fragment = nil
+        }
+        
+        if uri.field_set & 64 != 0 {
+            let userInfoString = URI.substring(buffer: buffer, start: uri.user_info_start, end: uri.user_info_end)
+            userInfo = URI.userInfo(userInfoString)
+        } else {
+            userInfo = nil
+        }
+    }
+    
+    @inline(__always)
+    private static func substring(buffer: UnsafeRawBufferPointer, start: UInt16, end: UInt16) -> String {
+        let bytes = [UInt8](buffer[Int(start) ..< Int(end)]) + [0]
+        
+        return bytes.withUnsafeBufferPointer { (pointer: UnsafeBufferPointer<UInt8>) -> String in
+            return String(cString: pointer.baseAddress!)
+        }
+    }
+    
+    @inline(__always)
+    private static func userInfo(_ string: String?) -> URI.UserInfo? {
+        guard let string = string else {
+            return nil
+        }
+        
+        let components = string.components(separatedBy: ":")
+        
+        if components.count == 2 {
+            return URI.UserInfo(
+                username: components[0],
+                password: components[1]
+            )
+        }
+        
+        return nil
+    }
+}
 
 public final class RequestParser {
     fileprivate enum State: Int {
@@ -87,12 +170,12 @@ public final class RequestParser {
         }
     }
     
-    fileprivate let stream: ReadableStream
+    private let stream: ReadableStream
     private let bufferSize: Int
     private let buffer: UnsafeMutableRawBufferPointer
     
-    public var parser: http_parser
-    public var parserSettings: http_parser_settings
+    private var parser: http_parser
+    private var parserSettings: http_parser_settings
     
     private var state: State = .ready
     private var context = Context()
@@ -133,7 +216,7 @@ public final class RequestParser {
         buffer.deallocate()
     }
     
-    public func parse(timeout: Venice.TimeInterval, _ body: @escaping (Request) throws -> Void) throws {
+    public func parse(timeout: Duration, body: @escaping (Request) throws -> Void) throws {
         self.body = body
         
         while true {

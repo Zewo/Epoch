@@ -7,7 +7,7 @@
 import Core
 import Venice
 
-public final class RequestBodyStream : ReadableStream {
+final class RequestBodyStream : ReadableStream {
     var complete = false
     var bodyBuffer = UnsafeRawBufferPointer(start: nil, count: 0)
     
@@ -17,10 +17,10 @@ public final class RequestBodyStream : ReadableStream {
         self.parser = parser
     }
     
-    public func open(deadline: Deadline) throws {}
-    public func close() {}
+    func open(deadline: Deadline) throws {}
+    func close() {}
     
-    public func read(
+    func read(
         into buffer: UnsafeMutableRawBufferPointer,
         deadline: Deadline
     ) throws -> UnsafeRawBufferPointer {

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Server Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/Server" class="dashAnchor"></a>
+    <a title="Server Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">HTTP Docs</a> (10% documented)</p>
+        <p class="header-right"><a href="https://github.com/Zewo/Zewo"><img src="../img/gh.png"/>View on GitHub</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">HTTP Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        Server Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/Request.html">Request</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RequestParser.html">RequestParser</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Response.html">Response</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ResponseSerializer.html">ResponseSerializer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Router.html">Router</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Server.html">Server</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/Body.html">Body</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Method.html">Method</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ResponseBodyStreamError.html">ResponseBodyStreamError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ResponseSerializerError.html">ResponseSerializerError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/RouterError.html">RouterError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Status.html">Status</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/Content.html">Content</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/NoContent.html">NoContent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/ParameterError.html">ParameterError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Parameters.html">Parameters</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/ParametersError.html">ParametersError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/RequestParserError.html">RequestParserError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Set.html">Set</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F4HTTPoi2eeFTOS_6MethodS0__Sb">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F4HTTPoi2eeFTOVS_16AttributedCookie10ExpirationS1__Sb">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F4HTTPoi2eeFTVS_16AttributedCookieS0__Sb">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F4HTTPoi2eeFTVS_6CookieS0__Sb">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F4HTTPoi2eeFTVS_7HeadersS0__Sb">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F4HTTPoi2eeFTVS_7VersionS0__Sb">==(_:_:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/Message.html">Message</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ResponseRepresentable.html">ResponseRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/Route.html">Route</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structs</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AttributedCookie.html">AttributedCookie</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AttributedCookie/Expiration.html">– Expiration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Cookie.html">Cookie</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/HeaderField.html">HeaderField</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Headers.html">Headers</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Version.html">Version</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>Server</h1>
+            <p>Undocumented</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC4HTTP6Server10bufferSizeSi"></a>
+                    <a name="//apple_ref/swift/Property/bufferSize" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC4HTTP6Server10bufferSizeSi">bufferSize</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Server buffer size</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">bufferSize</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC4HTTP6Server12parseTimeoutV6Venice8Duration"></a>
+                    <a name="//apple_ref/swift/Property/parseTimeout" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC4HTTP6Server12parseTimeoutV6Venice8Duration">parseTimeout</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parse timeout</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">parseTimeout</span><span class="p">:</span> <span class="kt">Duration</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC4HTTP6Server16serializeTimeoutV6Venice8Duration"></a>
+                    <a name="//apple_ref/swift/Property/serializeTimeout" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC4HTTP6Server16serializeTimeoutV6Venice8Duration">serializeTimeout</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Serialization timeout</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">serializeTimeout</span><span class="p">:</span> <span class="kt">Duration</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC4HTTP6ServercFT10bufferSizeSi12parseTimeoutV6Venice8Duration16serializeTimeoutS2_12logAppendersGSaP4Core11LogAppender___S0_"></a>
+                    <a name="//apple_ref/swift/Method/init(bufferSize:parseTimeout:serializeTimeout:logAppenders:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC4HTTP6ServercFT10bufferSizeSi12parseTimeoutV6Venice8Duration16serializeTimeoutS2_12logAppendersGSaP4Core11LogAppender___S0_">init(bufferSize:parseTimeout:serializeTimeout:logAppenders:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a new HTTP server</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span>
+        <span class="nv">bufferSize</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">,</span>
+        <span class="nv">parseTimeout</span><span class="p">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">5</span><span class="o">.</span><span class="n">minutes</span><span class="p">,</span>
+        <span class="nv">serializeTimeout</span><span class="p">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">5</span><span class="o">.</span><span class="n">minutes</span><span class="p">,</span>
+        <span class="nv">logAppenders</span><span class="p">:</span> <span class="p">[</span><span class="kt">LogAppender</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">defaultAppender</span><span class="p">]</span>
+    <span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC4HTTP6Server5startFzT4hostSS4portSi7backlogSi9reusePortSb8deadlineV6Venice8Deadline6headerSS4fileSS8functionSS4lineSi6columnSi7respondFCS_7RequestCS_8Response_T_"></a>
+                    <a name="//apple_ref/swift/Method/start(host:port:backlog:reusePort:deadline:header:file:function:line:column:respond:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC4HTTP6Server5startFzT4hostSS4portSi7backlogSi9reusePortSb8deadlineV6Venice8Deadline6headerSS4fileSS8functionSS4lineSi6columnSi7respondFCS_7RequestCS_8Response_T_">start(host:port:backlog:reusePort:deadline:header:file:function:line:column:respond:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Start server</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">start</span><span class="p">(</span>
+        <span class="nv">host</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">"0.0.0.0"</span><span class="p">,</span>
+        <span class="nv">port</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">8080</span><span class="p">,</span>
+        <span class="nv">backlog</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2048</span><span class="p">,</span>
+        <span class="nv">reusePort</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="nv">deadline</span><span class="p">:</span> <span class="kt">Deadline</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="n">minute</span><span class="o">.</span><span class="nf">fromNow</span><span class="p">(),</span>
+        <span class="nv">header</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="n">defaultHeader</span><span class="p">,</span>
+        <span class="nv">file</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="err">#</span><span class="n">file</span><span class="p">,</span>
+        <span class="nv">function</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="err">#</span><span class="n">function</span><span class="p">,</span>
+        <span class="nv">line</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="err">#</span><span class="n">line</span><span class="p">,</span>
+        <span class="nv">column</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="err">#</span><span class="n">column</span><span class="p">,</span>
+        <span class="nv">respond</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">Respond</span>
+    <span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC4HTTP6Server5startFzT4hostP2IO4Host_7respondFCS_7RequestCS_8Response_T_"></a>
+                    <a name="//apple_ref/swift/Method/start(host:respond:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC4HTTP6Server5startFzT4hostP2IO4Host_7respondFCS_7RequestCS_8Response_T_">start(host:respond:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Start server</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">start</span><span class="p">(</span><span class="nv">host</span><span class="p">:</span> <span class="kt">Host</span><span class="p">,</span> <span class="nv">respond</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">Respond</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC4HTTP6Server4stopFzT_T_"></a>
+                    <a name="//apple_ref/swift/Method/stop()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC4HTTP6Server4stopFzT_T_">stop()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Stop server</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">stop</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2017 <a class="link" href="http://zewo.io" target="_blank" rel="external">Zewo</a>. All rights reserved. (Last updated: 2017-05-11)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

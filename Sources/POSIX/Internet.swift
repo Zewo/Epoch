@@ -16,11 +16,11 @@ private func withUnsafeMutablePointer<S, T, Result>(
     }
 }
 
-public enum AddressFamily: RawRepresentable {
+public enum AddressFamily {
     case ipv4
     case ipv6
 
-    public init?(rawValue: Int32) {
+    init?(rawValue: Int32) {
         switch rawValue {
         case AF_INET:
             self = .ipv4
@@ -31,10 +31,12 @@ public enum AddressFamily: RawRepresentable {
         }
     }
 
-    public var rawValue: Int32 {
+    var rawValue: Int32 {
         switch self {
-        case .ipv4: return AF_INET
-        case .ipv6: return AF_INET6
+        case .ipv4:
+            return AF_INET
+        case .ipv6:
+            return AF_INET6
         }
     }
 }

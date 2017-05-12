@@ -20,7 +20,7 @@ public final class ResponseSerializer {
         buffer.deallocate()
     }
 
-    public func serialize(_ response: Response, timeout: TimeInterval) throws {
+    public func serialize(_ response: Response, timeout: Duration) throws {
         let deadline = timeout.fromNow()
         
         try writeHeaders(for: response, deadline: deadline)

@@ -1,0 +1,2339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SystemError Enum Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Enum/SystemError" class="dashAnchor"></a>
+    <a title="SystemError Enum Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">POSIX Docs</a> (8% documented)</p>
+        <p class="header-right"><a href="https://github.com/Zewo/Zewo"><img src="../img/gh.png"/>View on GitHub</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">POSIX Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        SystemError Enum Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/AddressFamily.html">AddressFamily</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SocketType.html">SocketType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SocketType.html">SocketType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SystemError.html">SystemError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIXoi2eeFTOS_11SystemErrorS0__Sb">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX6acceptFzT6socketVs5Int32_TS0_VS_7Address_">accept(socket:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX4bindFzT6socketVs5Int327addressVS_7Address_T_">bind(socket:address:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX10checkErrorFzT6socketVs5Int32_T_">checkError(socket:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX5closeFzT14fileDescriptorVs5Int32_T_">close(fileDescriptor:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX7connectFzT6socketVs5Int327addressVS_7Address_T_">connect(socket:address:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX10getAddressFzT6socketVs5Int32_VS_7Address">getAddress(socket:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/htonl(_:)">htonl(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX5htonlFVs6UInt32S0_">htonl(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/htons(_:)">htons(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX5htonsFVs6UInt16S0_">htons(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX6listenFzT6socketVs5Int327backlogSi_T_">listen(socket:backlog:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX7receiveFzT6socketVs5Int326bufferVs29UnsafeMutableRawBufferPointer5flagsVS_12ReceiveFlags_Si">receive(socket:buffer:flags:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX4sendFzT6socketVs5Int326bufferVs22UnsafeRawBufferPointer5flagsVS_9SendFlags_Si">send(socket:buffer:flags:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX23setNoSignalOnBrokenPipeFzT6socketVs5Int32_T_">setNoSignalOnBrokenPipe(socket:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX14setNonBlockingFzT14fileDescriptorVs5Int32_T_">setNonBlocking(fileDescriptor:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX15setReuseAddressFzT6socketVs5Int32_T_">setReuseAddress(socket:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX12setReusePortFzT6socketVs5Int32_T_">setReusePort(socket:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX6socketFzT6familyOS_13AddressFamily4typeOS_10SocketType8protocolVs5Int32_S2_">socket(family:type:protocol:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F5POSIX11statusflagsFzT14fileDescriptorVs5Int32_S0_">statusflags(fileDescriptor:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structs</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/Address.html">Address</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ReceiveFlags.html">ReceiveFlags</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SendFlags.html">SendFlags</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>SystemError</h1>
+            <p>Undocumented</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError7successFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/success" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError7successFMS0_S0_">success</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError21operationNotPermittedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/operationNotPermitted" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError21operationNotPermittedFMS0_S0_">operationNotPermitted</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError21noSuchFileOrDirectoryFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/noSuchFileOrDirectory" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError21noSuchFileOrDirectoryFMS0_S0_">noSuchFileOrDirectory</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError13noSuchProcessFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/noSuchProcess" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError13noSuchProcessFMS0_S0_">noSuchProcess</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError21interruptedSystemCallFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/interruptedSystemCall" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError21interruptedSystemCallFMS0_S0_">interruptedSystemCall</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError16inputOutputErrorFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/inputOutputError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError16inputOutputErrorFMS0_S0_">inputOutputError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError19deviceNotConfiguredFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/deviceNotConfigured" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError19deviceNotConfiguredFMS0_S0_">deviceNotConfigured</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError19argumentListTooLongFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/argumentListTooLong" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError19argumentListTooLongFMS0_S0_">argumentListTooLong</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError21executableFormatErrorFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/executableFormatError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError21executableFormatErrorFMS0_S0_">executableFormatError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError17badFileDescriptorFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/badFileDescriptor" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError17badFileDescriptorFMS0_S0_">badFileDescriptor</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError16noChildProcessesFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/noChildProcesses" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError16noChildProcessesFMS0_S0_">noChildProcesses</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError23resourceDeadlockAvoidedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/resourceDeadlockAvoided" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError23resourceDeadlockAvoidedFMS0_S0_">resourceDeadlockAvoided</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError20cannotAllocateMemoryFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/cannotAllocateMemory" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError20cannotAllocateMemoryFMS0_S0_">cannotAllocateMemory</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError16permissionDeniedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/permissionDenied" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError16permissionDeniedFMS0_S0_">permissionDenied</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError10badAddressFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/badAddress" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError10badAddressFMS0_S0_">badAddress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError19blockDeviceRequiredFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/blockDeviceRequired" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError19blockDeviceRequiredFMS0_S0_">blockDeviceRequired</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError20deviceOrResourceBusyFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/deviceOrResourceBusy" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError20deviceOrResourceBusyFMS0_S0_">deviceOrResourceBusy</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError10fileExistsFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/fileExists" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError10fileExistsFMS0_S0_">fileExists</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError15crossDeviceLinkFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/crossDeviceLink" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError15crossDeviceLinkFMS0_S0_">crossDeviceLink</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError29operationNotSupportedByDeviceFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/operationNotSupportedByDevice" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError29operationNotSupportedByDeviceFMS0_S0_">operationNotSupportedByDevice</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError13notADirectoryFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/notADirectory" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError13notADirectoryFMS0_S0_">notADirectory</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError12isADirectoryFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/isADirectory" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError12isADirectoryFMS0_S0_">isADirectory</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError15invalidArgumentFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/invalidArgument" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError15invalidArgumentFMS0_S0_">invalidArgument</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError24tooManyOpenFilesInSystemFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/tooManyOpenFilesInSystem" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError24tooManyOpenFilesInSystemFMS0_S0_">tooManyOpenFilesInSystem</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError16tooManyOpenFilesFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/tooManyOpenFiles" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError16tooManyOpenFilesFMS0_S0_">tooManyOpenFiles</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError40inappropriateInputOutputControlForDeviceFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/inappropriateInputOutputControlForDevice" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError40inappropriateInputOutputControlForDeviceFMS0_S0_">inappropriateInputOutputControlForDevice</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError12textFileBusyFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/textFileBusy" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError12textFileBusyFMS0_S0_">textFileBusy</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError12fileTooLargeFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/fileTooLarge" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError12fileTooLargeFMS0_S0_">fileTooLarge</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError19noSpaceLeftOnDeviceFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/noSpaceLeftOnDevice" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError19noSpaceLeftOnDeviceFMS0_S0_">noSpaceLeftOnDevice</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError11illegalSeekFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/illegalSeek" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError11illegalSeekFMS0_S0_">illegalSeek</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError18readOnlyFileSystemFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/readOnlyFileSystem" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError18readOnlyFileSystemFMS0_S0_">readOnlyFileSystem</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError12tooManyLinksFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/tooManyLinks" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError12tooManyLinksFMS0_S0_">tooManyLinks</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError10brokenPipeFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/brokenPipe" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError10brokenPipeFMS0_S0_">brokenPipe</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError28numericalArgumentOutOfDomainFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/numericalArgumentOutOfDomain" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError28numericalArgumentOutOfDomainFMS0_S0_">numericalArgumentOutOfDomain</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError14resultTooLargeFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/resultTooLarge" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError14resultTooLargeFMS0_S0_">resultTooLarge</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError30resourceTemporarilyUnavailableFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/resourceTemporarilyUnavailable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError30resourceTemporarilyUnavailableFMS0_S0_">resourceTemporarilyUnavailable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError19operationWouldBlockFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/operationWouldBlock" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError19operationWouldBlockFMS0_S0_">operationWouldBlock</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError22operationNowInProgressFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/operationNowInProgress" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError22operationNowInProgressFMS0_S0_">operationNowInProgress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError26operationAlreadyInProgressFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/operationAlreadyInProgress" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError26operationAlreadyInProgressFMS0_S0_">operationAlreadyInProgress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError26socketOperationOnNonSocketFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/socketOperationOnNonSocket" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError26socketOperationOnNonSocketFMS0_S0_">socketOperationOnNonSocket</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError26destinationAddressRequiredFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/destinationAddressRequired" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError26destinationAddressRequiredFMS0_S0_">destinationAddressRequired</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError14messageTooLongFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/messageTooLong" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError14messageTooLongFMS0_S0_">messageTooLong</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError26protocolWrongTypeForSocketFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/protocolWrongTypeForSocket" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError26protocolWrongTypeForSocketFMS0_S0_">protocolWrongTypeForSocket</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError20protocolNotAvailableFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/protocolNotAvailable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError20protocolNotAvailableFMS0_S0_">protocolNotAvailable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError20protocolNotSupportedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/protocolNotSupported" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError20protocolNotSupportedFMS0_S0_">protocolNotSupported</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError22socketTypeNotSupportedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/socketTypeNotSupported" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError22socketTypeNotSupportedFMS0_S0_">socketTypeNotSupported</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError21operationNotSupportedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/operationNotSupported" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError21operationNotSupportedFMS0_S0_">operationNotSupported</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError26protocolFamilyNotSupportedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/protocolFamilyNotSupported" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError26protocolFamilyNotSupportedFMS0_S0_">protocolFamilyNotSupported</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError41addressFamilyNotSupportedByProtocolFamilyFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/addressFamilyNotSupportedByProtocolFamily" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError41addressFamilyNotSupportedByProtocolFamilyFMS0_S0_">addressFamilyNotSupportedByProtocolFamily</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError19addressAlreadyInUseFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/addressAlreadyInUse" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError19addressAlreadyInUseFMS0_S0_">addressAlreadyInUse</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError28cannotAssignRequestedAddressFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/cannotAssignRequestedAddress" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError28cannotAssignRequestedAddressFMS0_S0_">cannotAssignRequestedAddress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError13networkIsDownFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/networkIsDown" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError13networkIsDownFMS0_S0_">networkIsDown</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError20networkIsUnreachableFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/networkIsUnreachable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError20networkIsUnreachableFMS0_S0_">networkIsUnreachable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError31networkDroppedConnectionOnResetFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/networkDroppedConnectionOnReset" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError31networkDroppedConnectionOnResetFMS0_S0_">networkDroppedConnectionOnReset</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError29softwareCausedConnectionAbortFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/softwareCausedConnectionAbort" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError29softwareCausedConnectionAbortFMS0_S0_">softwareCausedConnectionAbort</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError21connectionResetByPeerFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/connectionResetByPeer" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError21connectionResetByPeerFMS0_S0_">connectionResetByPeer</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError22noBufferSpaceAvailableFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/noBufferSpaceAvailable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError22noBufferSpaceAvailableFMS0_S0_">noBufferSpaceAvailable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError24socketIsAlreadyConnectedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/socketIsAlreadyConnected" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError24socketIsAlreadyConnectedFMS0_S0_">socketIsAlreadyConnected</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError20socketIsNotConnectedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/socketIsNotConnected" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError20socketIsNotConnectedFMS0_S0_">socketIsNotConnected</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError29cannotSendAfterSocketShutdownFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/cannotSendAfterSocketShutdown" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError29cannotSendAfterSocketShutdownFMS0_S0_">cannotSendAfterSocketShutdown</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError17tooManyReferencesFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/tooManyReferences" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError17tooManyReferencesFMS0_S0_">tooManyReferences</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError17operationTimedOutFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/operationTimedOut" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError17operationTimedOutFMS0_S0_">operationTimedOut</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError17connectionRefusedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/connectionRefused" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError17connectionRefusedFMS0_S0_">connectionRefused</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError28tooManyLevelsOfSymbolicLinksFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/tooManyLevelsOfSymbolicLinks" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError28tooManyLevelsOfSymbolicLinksFMS0_S0_">tooManyLevelsOfSymbolicLinks</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError15fileNameTooLongFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/fileNameTooLong" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError15fileNameTooLongFMS0_S0_">fileNameTooLong</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError10hostIsDownFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/hostIsDown" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError10hostIsDownFMS0_S0_">hostIsDown</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError13noRouteToHostFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/noRouteToHost" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError13noRouteToHostFMS0_S0_">noRouteToHost</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError17directoryNotEmptyFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/directoryNotEmpty" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError17directoryNotEmptyFMS0_S0_">directoryNotEmpty</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError12tooManyUsersFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/tooManyUsers" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError12tooManyUsersFMS0_S0_">tooManyUsers</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError17diskQuotaExceededFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/diskQuotaExceeded" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError17diskQuotaExceededFMS0_S0_">diskQuotaExceeded</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError15staleFileHandleFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/staleFileHandle" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError15staleFileHandleFMS0_S0_">staleFileHandle</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError14objectIsRemoteFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/objectIsRemote" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError14objectIsRemoteFMS0_S0_">objectIsRemote</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError16noLocksAvailableFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/noLocksAvailable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError16noLocksAvailableFMS0_S0_">noLocksAvailable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError22functionNotImplementedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/functionNotImplemented" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError22functionNotImplementedFMS0_S0_">functionNotImplemented</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError31valueTooLargeForDefinedDataTypeFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/valueTooLargeForDefinedDataType" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError31valueTooLargeForDefinedDataTypeFMS0_S0_">valueTooLargeForDefinedDataType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError17operationCanceledFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/operationCanceled" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError17operationCanceledFMS0_S0_">operationCanceled</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError17identifierRemovedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/identifierRemoved" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError17identifierRemovedFMS0_S0_">identifierRemoved</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError22noMessageOfDesiredTypeFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/noMessageOfDesiredType" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError22noMessageOfDesiredTypeFMS0_S0_">noMessageOfDesiredType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError19illegalByteSequenceFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/illegalByteSequence" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError19illegalByteSequenceFMS0_S0_">illegalByteSequence</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError10badMessageFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/badMessage" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError10badMessageFMS0_S0_">badMessage</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError17multihopAttemptedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/multihopAttempted" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError17multihopAttemptedFMS0_S0_">multihopAttempted</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError15noDataAvailableFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/noDataAvailable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError15noDataAvailableFMS0_S0_">noDataAvailable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError18linkHasBeenSeveredFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/linkHasBeenSevered" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError18linkHasBeenSeveredFMS0_S0_">linkHasBeenSevered</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError21outOfStreamsResourcesFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/outOfStreamsResources" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError21outOfStreamsResourcesFMS0_S0_">outOfStreamsResources</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError16deviceNotAStreamFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/deviceNotAStream" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError16deviceNotAStreamFMS0_S0_">deviceNotAStream</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError13protocolErrorFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/protocolError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError13protocolErrorFMS0_S0_">protocolError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError12timerExpiredFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/timerExpired" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError12timerExpiredFMS0_S0_">timerExpired</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError19stateNotRecoverableFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/stateNotRecoverable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError19stateNotRecoverableFMS0_S0_">stateNotRecoverable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError17previousOwnerDiedFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/previousOwnerDied" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError17previousOwnerDiedFMS0_S0_">previousOwnerDied</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemError5otherFMS0_FT11errorNumberVs5Int32_S0_"></a>
+                    <a name="//apple_ref/swift/Element/other" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemError5otherFMS0_FT11errorNumberVs5Int32_S0_">other</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO5POSIX11SystemErrorcFT11errorNumberVs5Int32_S0_"></a>
+                    <a name="//apple_ref/swift/Method/init(errorNumber:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO5POSIX11SystemErrorcFT11errorNumberVs5Int32_S0_">init(errorNumber:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vO5POSIX11SystemError11errorNumberVs5Int32"></a>
+                    <a name="//apple_ref/swift/Property/errorNumber" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vO5POSIX11SystemError11errorNumberVs5Int32">errorNumber</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZFO5POSIX11SystemError11descriptionFT3forVs5Int32_SS"></a>
+                    <a name="//apple_ref/swift/Method/description(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFO5POSIX11SystemError11descriptionFT3forVs5Int32_SS">description(for:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vPs23CustomStringConvertible11descriptionSS"></a>
+                    <a name="//apple_ref/swift/Property/description" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vPs23CustomStringConvertible11descriptionSS">description</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZvO5POSIX11SystemError18lastOperationErrorS0_"></a>
+                    <a name="//apple_ref/swift/Variable/lastOperationError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZvO5POSIX11SystemError18lastOperationErrorS0_">lastOperationError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2017 <a class="link" href="http://zewo.io" target="_blank" rel="external">Zewo</a>. All rights reserved. (Last updated: 2017-05-11)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

@@ -2471,7 +2471,7 @@ struct parsed_uri parse_uri(const char *buf, size_t buflen, int is_connect) {
     int rc = http_parser_parse_url(buf, buflen, is_connect, &u);
     
     if (rc) {
-        struct parsed_uri uri = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,};
+        struct parsed_uri uri = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
         return uri;
     }
     

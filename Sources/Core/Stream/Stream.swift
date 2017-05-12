@@ -2,17 +2,29 @@ import Venice
 import Foundation
 
 public protocol UnsafeRawBufferPointerRepresentable {
-    /// Access the buffer in the data.
+    /// Invokes the given closure on the contents represented as a buffer.
     ///
-    /// - warning: The buffer pointer argument should not be stored and used outside of the lifetime of the call to the closure.
+    /// The `withUnsafeBytes(body:)` method ensures that the buffer's lifetime extends
+    /// through the execution of `body`. The buffer argument to `body` is only
+    /// valid for the lifetime of the closure. Do not escape it from the closure
+    /// for later use.
+    ///
+    /// - Parameter body: A closure that takes a buffer as its sole argument.
+    ///   If the closure has a return value, it is used as the return value of 
+    ///   the `withUnsafeBytes(body:)` method.
+    ///   The buffer argument is valid only for the duration of the closure's
+    ///   execution.
+    /// - Parameter buffer: A buffer representing the contents of the underlying type.
+    /// - Returns: The return value of the `body` closure, if any.
+    /// - Throws: Errors thrown from the `body` closure, if any.
     func withUnsafeBytes<ResultType>(
-        _ body: (UnsafeRawBufferPointer) throws -> ResultType
+        body: (_ buffer: UnsafeRawBufferPointer) throws -> ResultType
     ) rethrows -> ResultType
 }
 
 extension String : UnsafeRawBufferPointerRepresentable {
     public func withUnsafeBytes<ResultType>(
-        _ body: (UnsafeRawBufferPointer) throws -> ResultType
+        body: (_ buffer: UnsafeRawBufferPointer) throws -> ResultType
     ) rethrows -> ResultType {
         return try withCString { unsafePointer in
             let unsafeRawBufferPointer = UnsafeRawBufferPointer(
@@ -27,7 +39,7 @@ extension String : UnsafeRawBufferPointerRepresentable {
 
 extension Data : UnsafeRawBufferPointerRepresentable {
     public func withUnsafeBytes<ResultType>(
-        _ body: (UnsafeRawBufferPointer) throws -> ResultType
+        body: (_ buffer: UnsafeRawBufferPointer) throws -> ResultType
     ) rethrows -> ResultType {
         return try withUnsafeBytes { (unsafePointer: UnsafePointer<UInt8>) in
             let unsafeRawBufferPointer = UnsafeRawBufferPointer(

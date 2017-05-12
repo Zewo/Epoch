@@ -1,34 +1,38 @@
 import POSIX
 import Core
-import Networking
+import IO
 import Venice
 
 public typealias Respond = (Request) -> Response
 
-public struct Server {
+public final class Server {
     /// Server buffer size
     public let bufferSize: Int
     
     /// Parse timeout
-    public let parseTimeout: TimeInterval
+    public let parseTimeout: Duration
     
     /// Serialization timeout
-    public let serializeTimeout: TimeInterval
+    public let serializeTimeout: Duration
     
     private let logger: Logger
-    private let coroutineGroup = CoroutineGroup()
+    private let group = Coroutine.Group()
 
     /// Creates a new HTTP server
     public init(
         bufferSize: Int = 4096,
-        parseTimeout: TimeInterval = 5.minutes,
-        serializeTimeout: TimeInterval = 5.minutes,
+        parseTimeout: Duration = 5.minutes,
+        serializeTimeout: Duration = 5.minutes,
         logAppenders: [LogAppender] = [defaultAppender]
     ) {
         self.bufferSize = bufferSize
         self.parseTimeout = parseTimeout
         self.serializeTimeout = serializeTimeout
         self.logger = Logger(name: "HTTP server", appenders: logAppenders)
+    }
+    
+    deinit {
+        try? group.cancel()
     }
 
     /// Start server
@@ -75,8 +79,8 @@ public struct Server {
                 try accept(host, respond: respond)
             } catch SystemError.tooManyOpenFiles {
                 let waitDuration = 10.seconds
-                logger.info("Too many open files. Retrying in \(waitDuration / 1000) seconds.")
-                try wakeUp(waitDuration.fromNow())
+                logger.info("Too many open files. Retrying in 10 seconds.")
+                try Coroutine.wakeUp(waitDuration.fromNow())
                 continue
             } catch VeniceError.canceledCoroutine {
                 break
@@ -87,7 +91,7 @@ public struct Server {
     /// Stop server
     public func stop() throws {
         self.logger.info("Stopping HTTP server.")
-        try coroutineGroup.cancel()
+        try group.cancel()
     }
     
     private static var defaultAppender: LogAppender {
@@ -117,7 +121,7 @@ public struct Server {
     private func accept(_ host: Host, respond: @escaping Respond) throws {
         let stream = try host.accept(deadline: .never)
         
-        try coroutineGroup.addCoroutine {
+        try group.addCoroutine {
             do {
                 try self.process(stream, respond: respond)
             } catch SystemError.brokenPipe {
