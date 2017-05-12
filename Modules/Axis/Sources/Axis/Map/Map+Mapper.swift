@@ -12,7 +12,7 @@ extension Map : InMap {
     }
     
     public func get<T>() -> T? {
-        return self.get()
+        return try? self.get()
     }
     
 }
