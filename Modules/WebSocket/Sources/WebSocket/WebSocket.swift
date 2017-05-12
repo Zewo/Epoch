@@ -85,19 +85,19 @@ public final class WebSocket {
         return closeEventEmitter.addListener(listen: listen)
     }
 
-    public func send(_ string: String) throws {
-        try send(.text, data: Buffer(string))
+    public func send(_ string: String, _ writeDeadline: Double = 5.seconds.fromNow(), _ flushDeadline: Double = 5.seconds.fromNow()) throws {
+        try send(.text, data: Buffer(string), writeDeadline, flushDeadline)
     }
 
-    public func send(_ data: Buffer) throws {
-        try send(.binary, data: data)
+    public func send(_ data: Buffer, _ writeDeadline: Double = 5.seconds.fromNow(), _ flushDeadline: Double = 5.seconds.fromNow()) throws {
+        try send(.binary, data: data, writeDeadline, flushDeadline)
     }
 
-    public func send(_ convertible: BufferConvertible) throws {
-        try send(.binary, data: convertible.buffer)
+    public func send(_ convertible: BufferConvertible, _ writeDeadline: Double = 5.seconds.fromNow(), _ flushDeadline: Double = 5.seconds.fromNow()) throws {
+        try send(.binary, data: convertible.buffer, writeDeadline, flushDeadline)
     }
 
-    public func close(_ code: CloseCode = .normal, reason: String? = nil) throws {
+    public func close(_ code: CloseCode = .normal, reason: String? = nil, _ writeDeadline: Double = 5.seconds.fromNow(), _ flushDeadline: Double = 5.seconds.fromNow()) throws {
         if closeState == .serverClose {
             return
         }
@@ -116,27 +116,27 @@ public final class WebSocket {
             stream.close()
         }
 
-        try send(.close, data: data)
+        try send(.close, data: data, writeDeadline, flushDeadline)
 
         if closeState == .clientClose {
             stream.close()
         }
     }
 
-    public func ping(_ data: Buffer = Buffer()) throws {
-        try send(.ping, data: data)
+    public func ping(_ data: Buffer = Buffer(), _ writeDeadline: Double = 5.seconds.fromNow(), _ flushDeadline: Double = 5.seconds.fromNow()) throws {
+        try send(.ping, data: data, writeDeadline, flushDeadline)
     }
 
-    public func ping(_ convertible: BufferConvertible) throws {
-        try send(.ping, data: convertible.buffer)
+    public func ping(_ convertible: BufferConvertible, _ writeDeadline: Double = 5.seconds.fromNow(), _ flushDeadline: Double = 5.seconds.fromNow()) throws {
+        try send(.ping, data: convertible.buffer, writeDeadline, flushDeadline)
     }
 
-    public func pong(_ data: Buffer = Buffer()) throws {
-        try send(.pong, data: data)
+    public func pong(_ data: Buffer = Buffer(), _ writeDeadline: Double = 5.seconds.fromNow(), _ flushDeadline: Double = 5.seconds.fromNow()) throws {
+        try send(.pong, data: data, writeDeadline, flushDeadline)
     }
 
-    public func pong(_ convertible: BufferConvertible) throws {
-        try send(.pong, data: convertible.buffer)
+    public func pong(_ convertible: BufferConvertible, _ writeDeadline: Double = 5.seconds.fromNow(), _ flushDeadline: Double = 5.seconds.fromNow()) throws {
+        try send(.pong, data: convertible.buffer, writeDeadline, flushDeadline)
     }
 
     public func start() throws {
@@ -322,7 +322,7 @@ public final class WebSocket {
         }
     }
 
-    fileprivate func send(_ opCode: Frame.OpCode, data: Buffer) throws {
+  fileprivate func send(_ opCode: Frame.OpCode, data: Buffer, _ writeDeadline: Double , _ flushDeadline: Double) throws {
         let maskKey: Buffer
         if mode == .client {
             maskKey = try Buffer(randomBytes: 4)
@@ -331,8 +331,8 @@ public final class WebSocket {
         }
         let frame = Frame(opCode: opCode, data: data, maskKey: maskKey)
         let data = frame.data
-        try stream.write(data, deadline: 5.seconds.fromNow())
-        try stream.flush(deadline: 5.seconds.fromNow())
+        try stream.write(data, deadline: writeDeadline)
+        try stream.flush(deadline: flushDeadline)
     }
 
     public static func accept(_ key: String) -> String? {

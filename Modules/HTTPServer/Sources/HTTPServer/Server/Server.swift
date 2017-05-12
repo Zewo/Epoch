@@ -61,21 +61,21 @@ func retry(times: Int, waiting duration: Double, work: (Void) throws -> Void) th
 }
 
 extension Server {
-    public func start() throws {
+  public func start(_ retryTimes: Int = 10, _ retryWait: Double = 5.seconds, _ readDeadline: Double = 30.seconds.fromNow(), _ serializeDeadline: Double = 5.minutes.fromNow()) throws {
         printHeader()
-        try retry(times: 10, waiting: 5.seconds) {
+        try retry(times: retryTimes, waiting: retryWait) {
             while true {
                 let stream = try tcpHost.accept(deadline: .never)
-                co { do { try self.process(stream: stream) } catch { self.failure(error) } }
+                co { do { try self.process(stream: stream, readDeadline, serializeDeadline) } catch { self.failure(error) } }
             }
         }
     }
 
-    public func startInBackground() {
-        co { do { try self.start() } catch { self.failure(error) } }
+  public func startInBackground(_ retryTimes: Int = 10, _ retryWait: Double = 5.seconds, _ readDeadline: Double = 30.seconds.fromNow(), _ serializeDeadline: Double = 5.minutes.fromNow()) {
+        co { do { try self.start(retryTimes, retryWait, readDeadline, serializeDeadline) } catch { self.failure(error) } }
     }
 
-    public func process(stream: Stream) throws {
+  public func process(stream: Stream, _ readDeadline: Double = 30.seconds.fromNow(), _ serializeDeadline: Double = 5.minutes.fromNow()) throws {
         let buffer = UnsafeMutableBufferPointer<Byte>(capacity: bufferSize)
         defer { buffer.deallocate(capacity: bufferSize) }
 
@@ -84,14 +84,12 @@ extension Server {
 
         while !stream.closed {
             do {
-                // TODO: Add timeout parameter
-                let bytesRead = try stream.read(into: buffer, deadline: 30.seconds.fromNow())
+                let bytesRead = try stream.read(into: buffer, deadline: readDeadline)
                 
                 for message in try parser.parse(bytesRead) {
                     let request = message as! Request
                     let response = try middleware.chain(to: responder).respond(to: request)
-                    // TODO: Add timeout parameter
-                    try serializer.serialize(response, deadline: 5.minutes.fromNow())
+                    try serializer.serialize(response, deadline: serializeDeadline)
                     
                     if let upgrade = response.upgradeConnection {
                         try upgrade(request, stream)
@@ -113,6 +111,7 @@ extension Server {
                 try serializer.serialize(response, deadline: .never)
 
                 if let error = unrecoveredError {
+                    stream.close()
                     throw error
                 }
             }
@@ -128,7 +127,7 @@ extension Server {
     }
 
     public static func log(error: Error) -> Void {
-        print("Error: \(error)")
+        print("Zewo/HTTPServer Error: \(error)")
     }
 
     public func printHeader() {
