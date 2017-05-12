@@ -24,12 +24,12 @@ public class SessionMiddlewareTests : XCTestCase {
             return Response()
         })
 
-        let session1: Session! = request2.session
+        let session1 = request2.rawSession
         XCTAssertNotNil(session1)
         XCTAssertEqual(response1.cookieHeaders.count, 1)
 
         let sessionToken = session1.token
-        session1["key"] = "value"
+        session1.storage["key"] = "value"
 
         guard let responseCookie = response1.cookies.first else {
             return XCTFail("Response should contain cookie")
@@ -46,17 +46,14 @@ public class SessionMiddlewareTests : XCTestCase {
         })
 
         // make sure session is still there
-        let session2: Session! = request4.session
+        let session2 = request4.rawSession
         XCTAssertNotNil(session2)
 
         // make sure its the same session
         XCTAssertEqual(session2.token, sessionToken)
 
         // make sure that the session persists information
-        let value: Any! = session2["key"]
-        XCTAssertNotNil(value)
-        XCTAssertNotNil(value as? String)
-        XCTAssertEqual(value as? String, "value")
+        try XCTAssertEqual(session2.storage.get("key"), "value")
     }
 }
 
