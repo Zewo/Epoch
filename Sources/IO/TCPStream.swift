@@ -101,7 +101,7 @@ public final class TCPStream : DuplexStream {
     public func write(_ buffer: UnsafeRawBufferPointer, deadline: Deadline) throws {
         let socket = try getSocket()
         
-        guard !buffer.isEmpty else {
+        guard let baseAddress = buffer.baseAddress, !buffer.isEmpty else {
             return
         }
         
@@ -109,7 +109,7 @@ public final class TCPStream : DuplexStream {
         if writeBufferedCount + buffer.count <= writeBuffer.count {
             memcpy(
                 writeBuffer.baseAddress!.advanced(by: writeBufferedCount),
-                buffer.baseAddress,
+                baseAddress,
                 buffer.count
             )
             
@@ -124,7 +124,7 @@ public final class TCPStream : DuplexStream {
         if writeBufferedCount + buffer.count <= writeBuffer.count {
             memcpy(
                 writeBuffer.baseAddress!.advanced(by: writeBufferedCount),
-                buffer.baseAddress,
+                baseAddress,
                 buffer.count
             )
             
