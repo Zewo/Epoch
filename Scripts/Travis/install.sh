@@ -16,7 +16,5 @@ if [[ $(uname) == "Linux" ]]; then
 fi
 
 if [[ $(uname) == "Darwin" ]]; then
-    rvm get head
-    rvm install 2.2.3
     gem install xcpretty
 fi

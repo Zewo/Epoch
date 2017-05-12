@@ -24,8 +24,6 @@
 
 **Zewo** is a lightweight library for web applications in Swift.
 
-Check out our [organization](https://github.com/Zewo) for the modules.
-
 ## What sets Zewo apart?
 
 Zewo is **not** a web framework. Zewo is a lightweight library for web applications in Swift. Most server-side Swift projects use Grand Central Dispatch (**GCD**) as the concurrency library of choice. The drawback of using GCD is that its APIs are **asynchronous**. With async code comes **callback hell** and we all know it, it's no fun.

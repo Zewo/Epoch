@@ -108,7 +108,7 @@ public final class TCPStream : DuplexStream {
         /* If it fits into the write buffer, copy it there and be done. */
         if writeBufferedCount + buffer.count <= writeBuffer.count {
             memcpy(
-                writeBuffer.baseAddress?.advanced(by: writeBufferedCount),
+                writeBuffer.baseAddress!.advanced(by: writeBufferedCount),
                 buffer.baseAddress,
                 buffer.count
             )
@@ -123,7 +123,7 @@ public final class TCPStream : DuplexStream {
         /* Try to fit it into the buffer once again. */
         if writeBufferedCount + buffer.count <= writeBuffer.count {
             memcpy(
-                writeBuffer.baseAddress?.advanced(by: writeBufferedCount),
+                writeBuffer.baseAddress!.advanced(by: writeBufferedCount),
                 buffer.baseAddress,
                 buffer.count
             )
