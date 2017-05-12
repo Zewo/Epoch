@@ -1,5 +1,9 @@
 import XCTest
-
-var testCases = []
-
-XCTMain(testCases)
+import IOTests
+import POSIXTests
+    
+XCTMain([
+    testCase(IPTests.allTests),
+    testCase(TCPTests.allTests),
+    testCase(POSIXTests.allTests),
+])
