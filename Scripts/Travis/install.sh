@@ -17,4 +17,5 @@ fi
 
 if [[ $(uname) == "Darwin" ]]; then
     gem install xcpretty
+    brew outdated "pkg-config" || brew upgrade "pkg-config"
 fi
