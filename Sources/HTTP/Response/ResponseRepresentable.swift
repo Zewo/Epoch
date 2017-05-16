@@ -4,24 +4,6 @@ public protocol ResponseRepresentable {
     var response: Response { get }
 }
 
-extension Response : ResponseRepresentable {
-    public var response: Response {
-        return self
-    }
-}
-
-extension Content : ResponseRepresentable {
-    public var response: Response {
-        return Response(status: .ok, content: self)
-    }
-}
-
-extension NoContent : ResponseRepresentable {
-    public var response: Response {
-        return Response(status: .noContent)
-    }
-}
-
 extension ParametersError : ResponseRepresentable {
     public var response: Response {
         switch self {

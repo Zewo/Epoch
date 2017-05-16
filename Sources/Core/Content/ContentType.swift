@@ -13,3 +13,15 @@ public struct ContentType {
         self.serializer = serializer
     }
 }
+
+
+extension ContentType: Hashable {
+    
+    public static func ==(lhs: ContentType, rhs: ContentType) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
+
+    public var hashValue: Int {
+        return mediaType.hashValue
+    }
+}

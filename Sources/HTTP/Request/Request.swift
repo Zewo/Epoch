@@ -10,7 +10,6 @@ public final class Request : Message {
     public var headers: Headers
     public var body: Body
     
-    public var content: Content?
     public var storage: Storage = [:]
     
     public var upgradeConnection: UpgradeConnection?
@@ -130,18 +129,5 @@ extension Request : CustomStringConvertible {
 extension Request {
     public func getParameters<P : ParametersInitializable>() throws -> P {
         return try P(parameters: uri.parameters)
-    }
-    
-    public func getContent<C : ContentInitializable>() throws -> C {
-        if let noContent = NoContent() as? C {
-            return noContent
-        }
-        
-        guard let content = content else {
-            // TODO: Create a proper error for this.
-            throw ContentError.cannotInitialize(type: C.self, from: .null)
-        }
-        
-        return try C(content: content)
     }
 }
