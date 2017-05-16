@@ -1,9 +1,9 @@
 import XCTest
 import IOTests
-import POSIXTests
+import CoreTests
     
 XCTMain([
     testCase(IPTests.allTests),
     testCase(TCPTests.allTests),
-    testCase(POSIXTests.allTests),
+    testCase(SystemErrorTests.allTests),
 ])

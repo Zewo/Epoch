@@ -1,11 +1,31 @@
 import Foundation
 
 public enum ContentError : Error {
-    case cannotInitialize(type: ContentInitializable.Type, from: Content)
-    case outOfBounds(indexPath: [IndexPathComponent], count: Int)
-    case valueNotFound(indexPath: [IndexPathComponent])
-    case valueNotArray(indexPath: [IndexPathComponent])
-    case valueNotDictionary(indexPath: [IndexPathComponent])
+    case noContent(type: ContentInitializable.Type)
+    case cannotInitialize(type: ContentInitializable.Type, content: Content)
+    case valueNotArray(indexPath: [IndexPathComponentValue], content: Content)
+    case outOfBounds(indexPath: [IndexPathComponentValue], content: Content)
+    case valueNotDictionary(indexPath: [IndexPathComponentValue], content: Content)
+    case valueNotFound(indexPath: [IndexPathComponentValue], content: Content)
+}
+
+extension ContentError : CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case let .noContent(type):
+            return "Cannot initialize type \"\(String(describing: type))\" with no content."
+        case let .cannotInitialize(type, content):
+            return "Cannot initialize type \"\(String(describing: type))\" with content \(content)."
+        case let .valueNotArray(indexPath, content):
+            return "Cannot get content for index path \"\(indexPath.string)\". Content is not an array \(content)."
+        case let .outOfBounds(indexPath, content):
+            return "Cannot get content for index path \"\(indexPath.string)\". Index is out of bounds for content \(content)."
+        case let .valueNotDictionary(indexPath, content):
+            return "Cannot get content for index path \"\(indexPath.string)\". Content is not a dictionary \(content)."
+        case let .valueNotFound(indexPath, content):
+            return "Cannot get content for index path \"\(indexPath.string)\". Key is not present in content \(content)."
+        }
+    }
 }
 
 public enum Content {
@@ -21,34 +41,34 @@ public enum Content {
 
 extension Content {
     /// :nodoc:
-    public init<T: ContentRepresentable>(_ value: T?) throws {
-        self = try value?.content() ?? .null
+    public init<T: ContentRepresentable>(_ value: T?) {
+        self = value?.content ?? .null
     }
     
     /// :nodoc:
-    public init<T: ContentRepresentable>(_ values: [T]?) throws {
+    public init<T: ContentRepresentable>(_ values: [T]?) {
         if let values = values {
-            self = try .array(values.map({ try $0.content() }))
+            self = .array(values.map({ $0.content }))
         } else {
             self = .null
         }
     }
     
     /// :nodoc:
-    public init<T: ContentRepresentable>(_ values: [T?]?) throws {
+    public init<T: ContentRepresentable>(_ values: [T?]?) {
         if let values = values {
-            self = try .array(values.map({ try $0?.content() ?? .null}))
+            self = .array(values.map({ $0?.content ?? .null}))
         } else {
             self = .null
         }
     }
     
     /// :nodoc:
-    public init<T: ContentRepresentable>(_ values: [String: T]?) throws {
+    public init<T: ContentRepresentable>(_ values: [String: T]?) {
         if let values = values {
             var dictionary: [String: Content] = [:]
             
-            for (key, value) in try values.map({($0.key, try $0.value.content() )}) {
+            for (key, value) in values.map({($0.key, $0.value.content )}) {
                 dictionary[key] = value
             }
             
@@ -59,11 +79,11 @@ extension Content {
     }
     
     /// :nodoc:
-    public init<T: ContentRepresentable>(_ values: [String: T?]?) throws {
+    public init<T: ContentRepresentable>(_ values: [String: T?]?) {
         if let values = values {
             var dictionary: [String: Content] = [:]
             
-            for (key, value) in try values.map({($0.key, try $0.value?.content() ?? .null)}) {
+            for (key, value) in values.map({($0.key, $0.value?.content ?? .null)}) {
                 dictionary[key] = value
             }
             
@@ -77,6 +97,23 @@ extension Content {
 public enum IndexPathComponentValue {
     case index(Int)
     case key(String)
+}
+
+extension IndexPathComponentValue : CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case let .index(index):
+            return index.description
+        case let .key(key):
+            return key
+        }
+    }
+}
+
+extension Array where Element == IndexPathComponentValue {
+    fileprivate var string: String {
+        return map({ $0.description }).joined(separator: ".")
+    }
 }
 
 /// Can be represented as `IndexPathValue`.
@@ -108,29 +145,29 @@ extension Content {
     
     private func get(_ indexPath: [IndexPathComponent]) throws -> Content {
         var value = self
-        var visited: [IndexPathComponent] = []
+        var visited: [IndexPathComponentValue] = []
         
         for component in indexPath {
-            visited.append(component)
+            visited.append(component.indexPathComponent)
             
             switch component.indexPathComponent {
             case let .index(index):
                 guard case let .array(array) = self else {
-                    throw ContentError.valueNotArray(indexPath: visited)
+                    throw ContentError.valueNotArray(indexPath: visited, content: self)
                 }
                 
                 guard array.indices.contains(index) else {
-                    throw ContentError.outOfBounds(indexPath: visited, count: array.count)
+                    throw ContentError.outOfBounds(indexPath: visited, content: self)
                 }
                 
                 value = array[index]
             case let .key(key):
                 guard case let .dictionary(dictionary) = self else {
-                    throw ContentError.valueNotDictionary(indexPath: visited)
+                    throw ContentError.valueNotDictionary(indexPath: visited, content: self)
                 }
                 
                 guard let newValue = dictionary[key] else {
-                    throw ContentError.valueNotFound(indexPath: visited)
+                    throw ContentError.valueNotFound(indexPath: visited, content: self)
                 }
                 
                 value = newValue

@@ -5,7 +5,7 @@
 #endif
 
 import XCTest
-@testable import POSIX
+@testable import Core
 
 let map: [Int32: SystemError] = [
     EPERM: .operationNotPermitted,
@@ -102,7 +102,7 @@ let map: [Int32: SystemError] = [
     666: .other(errorNumber: 666)
 ]
 
-public class POSIXTests : XCTestCase {
+public class SystemErrorTests : XCTestCase {
     func testCreation() {
         for (errorNumber, error) in map {
             XCTAssertEqual(SystemError(errorNumber: errorNumber), error)
@@ -135,8 +135,8 @@ public class POSIXTests : XCTestCase {
     }
 }
 
-extension POSIXTests {
-    public static var allTests: [(String, (POSIXTests) -> () throws -> Void)] {
+extension SystemErrorTests {
+    public static var allTests: [(String, (SystemErrorTests) -> () throws -> Void)] {
         return [
             ("testCreation", testCreation),
             ("testDescription", testDescription),

@@ -20,18 +20,21 @@ public final class ResponseSerializer {
         buffer.deallocate()
     }
 
-    public func serialize(_ response: Response, timeout: Duration) throws {
-        let deadline = timeout.fromNow()
-        
+    public func serialize(_ response: Response, deadline: Deadline) throws -> Bool {
         try writeHeaders(for: response, deadline: deadline)
         
         if let contentLength = response.contentLength {
             try writeBody(for: response, contentLength: contentLength, deadline: deadline)
-        } else if response.isChunkEncoded {
-            try writeChunkedBody(for: response, deadline: deadline)
-        } else {
-            try writeBody(for: response, deadline: deadline)
+            return true
         }
+        
+        if response.isChunkEncoded {
+            try writeChunkEncodedBody(for: response, deadline: deadline)
+            return true
+        }
+        
+        try write(to: stream, body: response.body, deadline: deadline)
+        return false
     }
     
     @inline(__always)
@@ -75,16 +78,10 @@ public final class ResponseSerializer {
     }
     
     @inline(__always)
-    private func writeChunkedBody(for response: Response, deadline: Deadline) throws {
+    private func writeChunkEncodedBody(for response: Response, deadline: Deadline) throws {
         let bodyStream = ResponseBodyStream(stream, mode: .chunkedEncoding)
         try write(to: bodyStream, body: response.body, deadline: deadline)
         try stream.write("0\r\n\r\n", deadline: deadline)
-    }
-    
-    @inline(__always)
-    private func writeBody(for response: Response, deadline: Deadline) throws {
-        try write(to: stream, body: response.body, deadline: deadline)
-        try stream.close()
     }
     
     @inline(__always)

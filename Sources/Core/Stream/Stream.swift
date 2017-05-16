@@ -1,7 +1,10 @@
 import Venice
 import Foundation
 
-public protocol UnsafeRawBufferPointerRepresentable {
+public protocol BufferRepresentable {
+    /// Number of bytes in the buffer representation.
+    var bufferSize: Int { get }
+    
     /// Invokes the given closure on the contents represented as a buffer.
     ///
     /// The `withUnsafeBytes(body:)` method ensures that the buffer's lifetime extends
@@ -17,13 +20,29 @@ public protocol UnsafeRawBufferPointerRepresentable {
     /// - Parameter buffer: A buffer representing the contents of the underlying type.
     /// - Returns: The return value of the `body` closure, if any.
     /// - Throws: Errors thrown from the `body` closure, if any.
-    func withUnsafeBytes<ResultType>(
+    func withBuffer<ResultType>(
         body: (_ buffer: UnsafeRawBufferPointer) throws -> ResultType
     ) rethrows -> ResultType
 }
 
-extension String : UnsafeRawBufferPointerRepresentable {
-    public func withUnsafeBytes<ResultType>(
+extension UnsafeRawBufferPointer : BufferRepresentable {
+    public var bufferSize: Int {
+        return count
+    }
+    
+    public func withBuffer<ResultType>(
+        body: (_ buffer: UnsafeRawBufferPointer) throws -> ResultType
+    ) rethrows -> ResultType {
+        return try body(self)
+    }
+}
+
+extension String : BufferRepresentable {
+    public var bufferSize: Int {
+        return utf8.count
+    }
+
+    public func withBuffer<ResultType>(
         body: (_ buffer: UnsafeRawBufferPointer) throws -> ResultType
     ) rethrows -> ResultType {
         return try withCString { unsafePointer in
@@ -37,8 +56,12 @@ extension String : UnsafeRawBufferPointerRepresentable {
     }
 }
 
-extension Data : UnsafeRawBufferPointerRepresentable {
-    public func withUnsafeBytes<ResultType>(
+extension Data : BufferRepresentable {
+    public var bufferSize: Int {
+        return count
+    }
+    
+    public func withBuffer<ResultType>(
         body: (_ buffer: UnsafeRawBufferPointer) throws -> ResultType
     ) rethrows -> ResultType {
         return try withUnsafeBytes { (unsafePointer: UnsafePointer<UInt8>) in
@@ -72,8 +95,8 @@ public protocol WritableStream {
 }
 
 extension WritableStream {
-    public func write(_ buffer: UnsafeRawBufferPointerRepresentable, deadline: Deadline) throws {
-        try buffer.withUnsafeBytes {
+    public func write(_ buffer: BufferRepresentable, deadline: Deadline) throws {
+        try buffer.withBuffer {
             try write($0, deadline: deadline)
         }
     }

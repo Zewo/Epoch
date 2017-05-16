@@ -1,17 +1,18 @@
 import struct Foundation.Data
+import struct Foundation.UUID
 
 public protocol ContentInitializable {
     init(content: Content) throws
 }
 
 public protocol ContentRepresentable {
-    func content() throws -> Content
+    var content: Content { get }
 }
 
 public protocol ContentConvertible : ContentInitializable, ContentRepresentable {}
 
 extension Content : ContentConvertible {
-    public func content() throws -> Content {
+    public var content: Content {
         return self
     }
     
@@ -21,13 +22,13 @@ extension Content : ContentConvertible {
 }
 
 extension Int : ContentConvertible {
-    public func content() throws -> Content {
+    public var content: Content {
         return .int(self)
     }
     
     public init(content: Content) throws {
         guard case let .int(value) = content else {
-            throw ContentError.cannotInitialize(type: type(of: self), from: content)
+            throw ContentError.cannotInitialize(type: type(of: self), content: content)
         }
         
         self = value
@@ -35,13 +36,13 @@ extension Int : ContentConvertible {
 }
 
 extension Bool : ContentConvertible {
-    public func content() throws -> Content {
+    public var content: Content {
         return .bool(self)
     }
     
     public init(content: Content) throws {
         guard case let .bool(value) = content else {
-            throw ContentError.cannotInitialize(type: type(of: self), from: content)
+            throw ContentError.cannotInitialize(type: type(of: self), content: content)
         }
         
         self = value
@@ -49,13 +50,13 @@ extension Bool : ContentConvertible {
 }
 
 extension String : ContentConvertible {
-    public func content() throws -> Content {
+    public var content: Content {
         return .string(self)
     }
     
     public init(content: Content) throws {
         guard case let .string(value) = content else {
-            throw ContentError.cannotInitialize(type: type(of: self), from: content)
+            throw ContentError.cannotInitialize(type: type(of: self), content: content)
         }
         
         self = value
@@ -63,13 +64,13 @@ extension String : ContentConvertible {
 }
 
 extension Double : ContentConvertible {
-    public func content() throws -> Content {
+    public var content: Content {
         return .double(self)
     }
     
     public init(content: Content) throws {
         guard case let .double(value) = content else {
-            throw ContentError.cannotInitialize(type: type(of: self), from: content)
+            throw ContentError.cannotInitialize(type: type(of: self), content: content)
         }
         
         self = value
@@ -77,15 +78,29 @@ extension Double : ContentConvertible {
 }
 
 extension Data : ContentConvertible {
-    public func content() throws -> Content {
+    public var content: Content {
         return .data(self)
     }
     
     public init(content: Content) throws {
         guard case let .data(value) = content else {
-            throw ContentError.cannotInitialize(type: type(of: self), from: content)
+            throw ContentError.cannotInitialize(type: type(of: self), content: content)
         }
         
         self = value
+    }
+}
+
+extension UUID : ContentConvertible {
+    public var content: Content {
+        return .string(uuidString)
+    }
+    
+    public init(content: Content) throws {
+        guard case let .string(value) = content, let uuid = UUID(value) else {
+            throw ContentError.cannotInitialize(type: type(of: self), content: content)
+        }
+        
+        self = uuid
     }
 }

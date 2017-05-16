@@ -5,8 +5,11 @@ import Venice
 public typealias Respond = (Request) -> Response
 
 public final class Server {
-    /// Server buffer size
-    public let bufferSize: Int
+    /// Parser buffer size
+    public let parserBufferSize: Int
+    
+    /// Serializer buffer size
+    public let serializerBufferSize: Int
     
     /// Parse timeout
     public let parseTimeout: Duration
@@ -14,37 +17,48 @@ public final class Server {
     /// Serialization timeout
     public let serializeTimeout: Duration
     
+    /// Close connection timeout
+    public let closeConnectionTimeout: Duration
+    
     private let logger: Logger
     private let group = Coroutine.Group()
     private let respond: Respond
 
     /// Creates a new HTTP server
     public init(
-        bufferSize: Int = 4096,
+        parserBufferSize: Int = 4096,
+        serializerBufferSize: Int = 4096,
         parseTimeout: Duration = 5.minutes,
         serializeTimeout: Duration = 5.minutes,
+        closeConnectionTimeout: Duration = 1.minute,
         logAppenders: [LogAppender] = [defaultAppender],
         respond: @escaping Respond
     ) {
-        self.bufferSize = bufferSize
+        self.parserBufferSize = parserBufferSize
+        self.serializerBufferSize = serializerBufferSize
         self.parseTimeout = parseTimeout
         self.serializeTimeout = serializeTimeout
+        self.closeConnectionTimeout = closeConnectionTimeout
         self.logger = Logger(name: "HTTP server", appenders: logAppenders)
         self.respond = respond
     }
     
     /// Creates a new HTTP server
     public convenience init(
-        bufferSize: Int = 4096,
+        parserBufferSize: Int = 4096,
+        serializerBufferSize: Int = 4096,
         parseTimeout: Duration = 5.minutes,
         serializeTimeout: Duration = 5.minutes,
+        closeConnectionTimeout: Duration = 1.minute,
         logAppenders: [LogAppender] = [defaultAppender],
         router: BasicRouter
     ) {
         self.init(
-            bufferSize: bufferSize,
+            parserBufferSize: parserBufferSize,
+            serializerBufferSize: serializerBufferSize,
             parseTimeout: parseTimeout,
             serializeTimeout: serializeTimeout,
+            closeConnectionTimeout: closeConnectionTimeout,
             logAppenders: logAppenders,
             respond: router.respond
         )
@@ -113,7 +127,7 @@ public final class Server {
     }
     
     private static var defaultAppender: LogAppender {
-        return StandardOutputAppender(name: "HTTP server", levels: [.error, .info])
+        return StandardOutputAppender(name: "HTTP server", levels: [.error, .info, .debug])
     }
     
     private static var defaultHeader: String {
@@ -139,7 +153,7 @@ public final class Server {
     private func accept(_ host: Host) throws {
         let stream = try host.accept(deadline: .never)
         
-        try group.addCoroutine {
+        try group.addCoroutine { [unowned self] in
             do {
                 try self.process(stream)
             } catch SystemError.brokenPipe {
@@ -156,20 +170,28 @@ public final class Server {
 
     @inline(__always)
     private func process(_ stream: DuplexStream) throws {
-        let parser = RequestParser(stream: stream, bufferSize: bufferSize)
-        let serializer = ResponseSerializer(stream: stream, bufferSize: bufferSize)
+        let parser = RequestParser(stream: stream, bufferSize: parserBufferSize)
+        let serializer = ResponseSerializer(stream: stream, bufferSize: serializerBufferSize)
         
-        try parser.parse(timeout: parseTimeout) { request in
-            let response = self.respond(request)
-            try serializer.serialize(response, timeout: self.serializeTimeout)
+        while true {
+            let request = try parser.parse(deadline: parseTimeout.fromNow())
+            let response = respond(request)
+            let keepAlive = try serializer.serialize(response, deadline: serializeTimeout.fromNow())
+            
+            guard keepAlive else {
+                try stream.done(deadline: closeConnectionTimeout.fromNow())
+                break
+            }
             
             if let upgrade = response.upgradeConnection {
                 try upgrade(request, stream)
-                try stream.done(deadline: self.serializeTimeout.fromNow())
+                try stream.done(deadline: closeConnectionTimeout.fromNow())
+                break
             }
             
             if !request.isKeepAlive {
-                try stream.done(deadline: self.serializeTimeout.fromNow())
+                try stream.done(deadline: closeConnectionTimeout.fromNow())
+                break
             }
         }
     }

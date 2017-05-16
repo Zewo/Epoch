@@ -205,8 +205,6 @@ public final class RequestParser {
     
     private var requests: [Request] = []
     
-    private var body: (Request) throws -> Void = { _ in }
-    
     public init(stream: ReadableStream, bufferSize: Int = 2048) {
         self.stream = stream
         self.bufferSize = bufferSize
@@ -238,21 +236,13 @@ public final class RequestParser {
         buffer.deallocate()
     }
     
-    public func parse(timeout: Duration, body: @escaping (Request) throws -> Void) throws {
-        self.body = body
-        
+    public func parse(deadline: Deadline) throws -> Request {
         while true {
-            do {
-                try read(deadline: timeout.fromNow())
-            } catch VeniceError.deadlineReached {
-                continue
-            } catch SystemError.brokenPipe {
-                break
-            } catch SystemError.connectionResetByPeer {
-                break
-            } catch SystemError.socketIsNotConnected {
-                break
+            guard requests.isEmpty else {
+                return requests.removeFirst()
             }
+            
+            try read(deadline: deadline)
         }
     }
     
@@ -263,14 +253,10 @@ public final class RequestParser {
             try stream.close()
         }
         
-        let requests = try parse(read)
-        
-        for request in requests {
-            try body(request)
-        }
+        try parse(read)
     }
     
-    private func parse(_ buffer: UnsafeRawBufferPointer) throws -> [Request] {
+    private func parse(_ buffer: UnsafeRawBufferPointer) throws {
         let final = buffer.isEmpty
         let needsMessage: Bool
         
@@ -298,14 +284,9 @@ public final class RequestParser {
             throw RequestParserError(parser.http_errno)
         }
         
-        let parsed = requests
-        requests = []
-        
-        guard !parsed.isEmpty || !needsMessage else {
+        guard !requests.isEmpty || !needsMessage else {
             throw RequestParserError(HPE_INVALID_EOF_STATE.rawValue)
         }
-        
-        return parsed
     }
     
     fileprivate func process(state newState: State, data: UnsafeRawBufferPointer? = nil) -> Int32 {
