@@ -97,7 +97,7 @@ extension UUID : ContentConvertible {
     }
     
     public init(content: Content) throws {
-        guard case let .string(value) = content, let uuid = UUID(value) else {
+        guard case let .string(value) = content, let uuid = UUID(uuidString: value) else {
             throw ContentError.cannotInitialize(type: type(of: self), content: content)
         }
         

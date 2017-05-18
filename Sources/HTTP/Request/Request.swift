@@ -1,6 +1,8 @@
 import Core
 import Venice
 
+import struct Foundation.URL
+
 public final class Request : Message {
     public typealias UpgradeConnection = (Response, DuplexStream) throws -> Void
     
@@ -45,12 +47,12 @@ public final class Request : Message {
 extension Request {
     public convenience init(
         method: Method,
-        uri: URI,
+        url: URL,
         headers: Headers = [:]
     ) {
         self.init(
             method: method,
-            uri: uri,
+            uri: URI(url: url),
             headers: headers,
             version: .oneDotOne,
             body: .empty
@@ -61,13 +63,13 @@ extension Request {
     
     public convenience init(
         method: Method,
-        uri: URI,
+        url: URL,
         headers: Headers = [:],
         body stream: ReadableStream
     ) {
         self.init(
             method: method,
-            uri: uri,
+            uri: URI(url: url),
             headers: headers,
             version: .oneDotOne,
             body: .readable(stream)
@@ -76,13 +78,13 @@ extension Request {
     
     public convenience init(
         method: Method,
-        uri: URI,
+        url: URL,
         headers: Headers = [:],
         body write: @escaping Body.Write
     ) {
         self.init(
             method: method,
-            uri: uri,
+            uri: URI(url: url),
             headers: headers,
             version: .oneDotOne,
             body: .writable(write)
@@ -91,14 +93,14 @@ extension Request {
     
     public convenience init(
         method: Method,
-        uri: URI,
+        url: URL,
         headers: Headers = [:],
         body buffer: BufferRepresentable,
         timeout: Duration
     ) {
         self.init(
             method: method,
-            uri: uri,
+            uri: URI(url: url),
             headers: headers,
             version: .oneDotOne,
             body: .writable { stream in
@@ -111,7 +113,7 @@ extension Request {
     
     public convenience init(
         method: Method,
-        uri: URI,
+        url: URL,
         headers: Headers = [:],
         content: Content,
         contentType: ContentType,
@@ -120,7 +122,7 @@ extension Request {
     ) {
         self.init(
             method: method,
-            uri: uri,
+            uri: URI(url: url),
             headers: headers,
             version: .oneDotOne,
             body: .writable { stream in
@@ -140,7 +142,7 @@ extension Request {
     
     public convenience init(
         method: Method,
-        uri: URI,
+        url: URL,
         headers: Headers = [:],
         content: ContentRepresentable,
         contentType: ContentType,
@@ -149,7 +151,7 @@ extension Request {
     ) {
         self.init(
             method: method,
-            uri: uri,
+            url: url,
             headers: headers,
             content: content.content,
             contentType: contentType,

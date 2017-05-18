@@ -12,6 +12,9 @@
  scheme  user info           host    port    path       query  fragment
  ```
  */
+
+import struct Foundation.URL
+
 public struct URI {
     public var scheme: String?
     public var userInfo: UserInfo?
@@ -39,15 +42,24 @@ public struct URI {
         self.path = path
         self.query = query
         self.fragment = fragment
-        self.parameters = Parameters(query: query)
+
+        if let query = query {
+            self.parameters = Parameters(query: query)
+        } else {
+            self.parameters = Parameters()
+        }
     }
-    
+
     public struct Parameters {
         var parameters: [String: String]
+
+        init(_ parameters: [String: String] = [:]) {
+            self.parameters = parameters
+        }
         
-        init(query: String?) {
+        init(query: String) {
             var parameters: [String: String] = [:]
-            let components = query?.components(separatedBy: "&") ?? []
+            let components = query.components(separatedBy: "&")
             
             for component in components {
                 let pair = component.components(separatedBy: "=")
@@ -57,15 +69,15 @@ public struct URI {
                 }
             }
             
-            self.parameters = parameters
+            self.init(parameters)
         }
     }
     
     public struct UserInfo {
         public var username: String
-        public var password: String
+        public var password: String?
         
-        public init(username: String, password: String) {
+        public init(username: String, password: String?) {
             self.username = username
             self.password = password
         }
@@ -109,9 +121,37 @@ extension URI : CustomStringConvertible {
     }
 }
 
+extension URI {
+
+    public init(url: URL) {
+
+        let userInfo: UserInfo?
+
+        if let username = url.user {
+            userInfo = UserInfo(username: username, password: url.password)
+        } else {
+            userInfo = nil
+        }
+
+        self.init(
+            scheme: url.scheme,
+            userInfo: userInfo,
+            host: url.host,
+            port: url.port,
+            path: url.path,
+            query: url.query,
+            fragment: url.fragment
+        )
+    }
+}
+
 extension URI.UserInfo : CustomStringConvertible {
     /// :nodoc:
     public var description: String {
+        guard let password = password else {
+            return username
+        }
+
         return username + ":" + password
     }
 }
