@@ -1,0 +1,19 @@
+The following copyrights were extracted from the source file headers.
+
+Copyrights for libtls are owned by:
+
+Joel Sing <jsing@openbsd.org>
+Tobias Pape <tobias@netshed.de>
+Bob Beck <beck@openbsd.org>
+Jeremie Courreges-Anglas <jca@openbsd.org>
+Reyk Floeter <reyk@openbsd.org>
+
+Copyrights for the functions appearing in the compatibility library are owned by:
+
+David Mazieres <dm@uun.org>
+Damien Miller <djm@openbsd.org
+Markus Friedl <markus@openbsd.org>
+Theo de Raadt <deraadt@openbsd.org>
+Otto Moerbeek <otto@drijf.net>
+Todd C. Miller <Todd.Miller@courtesan.com>
+Brent Cook <bcook@openbsd.org>

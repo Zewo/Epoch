@@ -14,7 +14,7 @@ public enum TCPError : Error {}
 public final class TCPHost : Handle, Host {
     public let ip: IP
 
-    init(handle: HandleDescriptor, ip: IP) throws {
+    init(handle: HandleDescriptor, ip: IP) {
         self.ip = ip
         super.init(handle: handle)
     }
@@ -36,7 +36,7 @@ public final class TCPHost : Handle, Host {
             }
         }
         
-        try self.init(handle: result, ip: ip)
+        self.init(handle: result, ip: ip)
     }
 
     public convenience init(

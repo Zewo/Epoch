@@ -1,3 +1,5 @@
+// swift-tools-version:3.1
+
 import PackageDescription
 
 let package = Package(
@@ -5,10 +7,11 @@ let package = Package(
     targets: [
         Target(name: "CHTTPParser"),
         Target(name: "CYAJL"),
+        Target(name: "CDsock"),
         
         Target(name: "Core", dependencies: ["CYAJL"]),
-        Target(name: "IO", dependencies: ["Core"]),
-        Target(name: "HTTP", dependencies: ["CHTTPParser", "IO"]),
+        Target(name: "IO", dependencies: ["Core", "CDsock"]),
+        Target(name: "HTTP", dependencies: ["IO", "CHTTPParser"]),
     ],
     dependencies: [
         .Package(url: "https://github.com/Zewo/Venice.git", majorVersion: 0, minor: 17),

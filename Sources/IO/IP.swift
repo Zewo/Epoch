@@ -7,6 +7,7 @@
 import Venice
 import Core
 import CLibdill
+import CDsock
 
 public enum IPError: Error {
     case invalidPort
