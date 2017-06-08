@@ -10,18 +10,9 @@ install:
 
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install zewo/tap/zewo; fi
 
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then echo "deb [trusted=yes] http://zewo.github.io/apt ./" | sudo tee --append /etc/apt/sources.list; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then echo "deb [trusted=yes] http://apt.zewo.io ./" | sudo tee --append /etc/apt/sources.list; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libdill; fi
-
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.5.4.tar.gz; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then tar axf libressl-2.5.4.tar.gz; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then pushd libressl-2.5.4; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo ./configure --prefix=/usr/local/opt/libressl; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo ln -s /usr/local/opt/libressl/lib/pkgconfig/libtls.pc /usr/local/lib/pkgconfig/libtls.pc; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then popd; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libdill libressl; fi
 
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then git clone https://github.com/Zewo/btls; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then pushd btls; fi
