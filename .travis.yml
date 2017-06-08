@@ -7,6 +7,7 @@ dist: trusty
 osx_image: xcode8.3
 install:
   - source ./Scripts/Travis/install.sh
+  - pkg-config --list-all
 
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install zewo/tap/zewo; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then git clone https://github.com/Zewo/libdill; fi
@@ -23,6 +24,7 @@ install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo ./configure --prefix=/usr/local/opt/libressl; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo ln -s /usr/local/opt/libressl/lib/pkgconfig/libtls.pc /usr/local/lib/pkgconfig/libtls.pc; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then popd; fi
 
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then git clone https://github.com/Zewo/btls; fi
@@ -30,6 +32,7 @@ install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then popd; fi
 
+  - pkg-config --list-all
   - export LD_LIBRARY_PATH=/usr/local/lib
 script:
   - ./Scripts/Travis/build-test.sh Zewo
