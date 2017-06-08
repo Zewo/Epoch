@@ -77,6 +77,7 @@ public struct Environment {
             
             let matches = regex.matches(
                 in: line,
+                options: [],
                 range: NSRange(location: 0, length: string.length)
             )
             
