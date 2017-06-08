@@ -6,6 +6,8 @@ sudo: required
 dist: trusty
 osx_image: xcode8.3
 install:
+  - source ./Scripts/Travis/install.sh
+
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install zewo/tap/zewo; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then git clone https://github.com/Zewo/libdill; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then pushd libdill; fi
@@ -29,7 +31,6 @@ install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then popd; fi
 
   - export LD_LIBRARY_PATH=/usr/local/lib
-  - source ./Scripts/Travis/install.sh
 script:
   - ./Scripts/Travis/build-test.sh Zewo
 after_success:
