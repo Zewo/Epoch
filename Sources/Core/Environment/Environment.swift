@@ -1,9 +1,5 @@
 import Foundation
 
-#if os(macOS)
-typealias RegularExpression = NSRegularExpression
-#endif
-
 public enum EnvironmentError : Error {
     case valueNotFound(key: String, variables: [String: String])
     case cannotInitialize(type: LosslessStringConvertible.Type, variable: String)
@@ -71,8 +67,9 @@ public struct Environment {
     static func parse(_ content: String) -> [String: String] {
         var variables: [String: String] = [:]
         
-        let regex = try! RegularExpression(
-            pattern: "^\\s*([\\w\\.\\-]+)\\s*=\\s*(.*)?\\s*$"
+        let regex = try! NSRegularExpression(
+            pattern: "^\\s*([\\w\\.\\-]+)\\s*=\\s*(.*)?\\s*$",
+            options: []
         )
         
         for line in content.components(separatedBy: "\n") {

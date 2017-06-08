@@ -21,8 +21,12 @@ public final class ReadableBuffer : Readable {
             return UnsafeRawBufferPointer(start: nil, count: 0)
         }
         
+        guard let destination = buffer.baseAddress, let origin = self.buffer.baseAddress else {
+            return UnsafeRawBufferPointer(start: nil, count: 0)
+        }
+        
         let readCount = min(buffer.count, self.buffer.count)
-        memcpy(buffer.baseAddress, self.buffer.baseAddress, readCount)
+        memcpy(destination, origin, readCount)
         let read = buffer.prefix(readCount)
         self.buffer = self.buffer.suffix(from: readCount)
         return UnsafeRawBufferPointer(read)
