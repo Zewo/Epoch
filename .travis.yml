@@ -31,7 +31,7 @@ install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then popd; fi
 
-  - export LD_LIBRARY_PATH=/usr/local/lib
+  - export LD_LIBRARY_PATH="/usr/local/lib:/usr/local/opt/libressl/lib" 
 script:
   - ./Scripts/Travis/build-test.sh Zewo
 after_success:
