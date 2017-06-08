@@ -7,7 +7,7 @@
 import Venice
 import Core
 import CLibdill
-import CDsock
+import CBtls
 
 // TODO: Create TCP errors
 public enum TLSError : Error {}
@@ -77,7 +77,7 @@ public final class TLSHost : Host {
             }
         }
         
-        result = btls_attach_server(socket, UInt64(DSOCK_BTLS_DEFAULT), 0, &keyPair, 1, nil, nil)
+        result = btls_attach_server(socket, UInt64(BTLS_DEFAULT), 0, &keyPair, 1, nil, nil)
         
         guard result != -1 else {
             switch errno {
@@ -86,6 +86,7 @@ public final class TLSHost : Host {
             }
         }
         
+        // TODO: deallocate this in deinit
 //        certificate.deallocate(capacity: 1)
 //        key.deallocate(capacity: 1)
         
