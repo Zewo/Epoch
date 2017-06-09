@@ -1,6 +1,6 @@
 import Core
 import CArgon2
-import COpenSSL
+import CLibtls
 
 public struct Crypto {
     public static func hs256(

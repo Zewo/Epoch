@@ -7,6 +7,14 @@ dist: trusty
 osx_image: xcode8.3
 install:
   - source ./Scripts/Travis/install.sh
+
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install zewo/tap/zewo; fi
+
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then echo "deb [trusted=yes] http://apt.zewo.io ./" | sudo tee --append /etc/apt/sources.list; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install zewo; fi
+  
+  - export LD_LIBRARY_PATH="/usr/local/lib:/usr/local/opt/libressl/lib" 
 script:
   - ./Scripts/Travis/build-test.sh Zewo
 after_success:

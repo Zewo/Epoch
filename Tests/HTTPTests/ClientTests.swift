@@ -4,11 +4,15 @@ import HTTP
 
 public class ClientTests: XCTestCase {
     func testClient() throws {
-        let client = try Client(uri: "https://api.github.com")
-        let request = try Request(method: .get, uri: "/zen")
-        let response = try client.send(request)
-        let zen: PlainText = try response.content()
-        print(zen)
+        do {
+            let client = try Client(uri: "https://api.github.com")
+            let request = try Request(method: .get, uri: "/zen")
+            let response = try client.send(request)
+            let zen: PlainText = try response.content()
+            print(zen)
+        } catch {
+            print(error)
+        }
     }
 }
 

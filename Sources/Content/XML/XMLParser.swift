@@ -47,9 +47,25 @@ fileprivate class ParserStream : InputStream {
         buffer.deallocate()
     }
     
+    #if os(macOS)
     fileprivate override var streamError: Error? {
         return lastError
     }
+    #else
+    fileprivate override var streamError: NSError? {
+        let userInfo: [String: Any] = [
+            NSLocalizedDescriptionKey: lastError.map({ String(describing: $0) }) ?? ""
+        ]
+        
+        let error = NSError(
+            domain: "XMLParserError",
+            code: 0,
+            userInfo: userInfo
+        )
+        
+        return error
+    }
+    #endif
     
     fileprivate override func open() {}
     fileprivate override func close() {}
@@ -171,17 +187,17 @@ struct Stack {
 
 #if os(Linux)
 extension XMLParserDelegate {
-    func parserDidStartDocument(_ parser: Foundation.XMLParser) {}
-    func parserDidEndDocument(_ parser: Foundation.XMLParser) {}
+    public func parserDidStartDocument(_ parser: Foundation.XMLParser) {}
+    public func parserDidEndDocument(_ parser: Foundation.XMLParser) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         foundNotationDeclarationWithName name: String,
         publicID: String?,
         systemID: String?
     ) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         foundUnparsedEntityDeclarationWithName name: String,
         publicID: String?,
@@ -189,7 +205,7 @@ extension XMLParserDelegate {
         notationName: String?
     ) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         foundAttributeDeclarationWithName attributeName: String,
         forElement elementName: String,
@@ -197,26 +213,26 @@ extension XMLParserDelegate {
         defaultValue: String?
     ) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         foundElementDeclarationWithName elementName: String,
         model: String
     ) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         foundInternalEntityDeclarationWithName name: String,
         value: String?
     ) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         foundExternalEntityDeclarationWithName name: String,
         publicID: String?,
         systemID: String?
     ) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         didStartElement elementName: String,
         namespaceURI: String?,
@@ -224,55 +240,55 @@ extension XMLParserDelegate {
         attributes attributeDict: [String : String]
     ) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         didEndElement elementName: String,
         namespaceURI: String?,
         qualifiedName qName: String?
     ) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         didStartMappingPrefix prefix: String,
         toURI namespaceURI: String
     ) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         didEndMappingPrefix prefix: String
     ) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         foundCharacters string: String
     ) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         foundIgnorableWhitespace whitespaceString: String
     ) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         foundProcessingInstructionWithTarget target: String,
         data: String?
     ) {}
     
-    func parser(_ parser: Foundation.XMLParser, foundComment comment: String) {}
-    func parser(_ parser: Foundation.XMLParser, foundCDATA CDATABlock: Data) {}
+    public func parser(_ parser: Foundation.XMLParser, foundComment comment: String) {}
+    public func parser(_ parser: Foundation.XMLParser, foundCDATA CDATABlock: Data) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         resolveExternalEntityName name: String,
         systemID: String?
     ) -> Data? { return nil }
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         parseErrorOccurred parseError: NSError
     ) {}
     
-    func parser(
+    public func parser(
         _ parser: Foundation.XMLParser,
         validationErrorOccurred validationError: NSError
     ) {}

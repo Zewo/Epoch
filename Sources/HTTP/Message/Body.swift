@@ -84,8 +84,13 @@ fileprivate final class ReadableBytes : Readable {
         
         let readCount = min(buffer.count, self.buffer.count)
         
-        _ = self.buffer.withUnsafeBytes {
-            memcpy(buffer.baseAddress, $0.baseAddress, readCount)
+        guard let destination = buffer.baseAddress else {
+            return UnsafeRawBufferPointer(start: nil, count: 0)
+        }
+        
+        self.buffer.withUnsafeBytes {
+            memcpy(destination, $0.baseAddress!, readCount)
+            return
         }
         
         let read = buffer.prefix(readCount)

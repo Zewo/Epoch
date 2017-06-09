@@ -7,7 +7,7 @@
 import Venice
 import Core
 import CLibdill
-import CDsock
+import CBtls
 
 public final class TLSStream : DuplexStream {
     internal typealias Handle = Int32
@@ -60,10 +60,10 @@ public final class TLSStream : DuplexStream {
         result = btls_attach_client(
             socket,
             UInt64(
-                DSOCK_BTLS_DEFAULT |
-                DSOCK_BTLS_NO_VERIFY_NAME |
-                DSOCK_BTLS_NO_VERIFY_CERT |
-                DSOCK_BTLS_NO_VERIFY_TIME
+                BTLS_DEFAULT |
+                BTLS_NO_VERIFY_NAME |
+                BTLS_NO_VERIFY_CERT |
+                BTLS_NO_VERIFY_TIME
             ),
             0,
             nil,
