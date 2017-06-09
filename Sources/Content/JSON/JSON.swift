@@ -98,6 +98,68 @@ extension JSON {
 }
 
 extension JSON {
+    public var isNull: Bool {
+        if case .null = self {
+            return true
+        }
+        
+        return false
+    }
+    
+    public var isBool: Bool {
+        if case .bool = self {
+            return true
+        }
+        
+        return false
+    }
+    
+    public var isNumber: Bool {
+        return isDouble || isInt
+    }
+    
+    public var isDouble: Bool {
+        if case .double = self {
+            return true
+        }
+        
+        return false
+    }
+    
+    public var isInt: Bool {
+        if case .int = self {
+            return true
+        }
+        
+        return false
+    }
+    
+    public var isString: Bool {
+        if case .string = self {
+            return true
+        }
+        
+        return false
+    }
+    
+    public var isArray: Bool {
+        if case .array = self {
+            return true
+        }
+        
+        return false
+    }
+    
+    public var isObject: Bool {
+        if case .object = self {
+            return true
+        }
+        
+        return false
+    }
+}
+
+extension JSON {
     public func get<T : JSONInitializable>(_ indexPath: IndexPathComponent...) throws -> T {
         let content = try _get(indexPath as [IndexPathComponent])
         return try T(json: content)

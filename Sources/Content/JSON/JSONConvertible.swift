@@ -154,3 +154,39 @@ extension Array : JSONInitializable {
         self = this
     }
 }
+
+protocol MapDictionaryKeyInitializable {
+    init(mapDictionaryKey: String)
+}
+
+extension String : MapDictionaryKeyInitializable {
+    init(mapDictionaryKey: String) {
+        self = mapDictionaryKey
+    }
+}
+
+extension Dictionary : JSONInitializable {
+    public init(json: JSON) throws {
+        guard case .object(let object) = json else {
+            throw JSONError.cannotInitialize(type: type(of: self), json: json)
+        }
+        
+        guard let keyInitializable = Key.self as? MapDictionaryKeyInitializable.Type else {
+            throw JSONError.cannotInitialize(type: type(of: self), json: json)
+        }
+        
+        guard let valueInitializable = Value.self as? JSONInitializable.Type else {
+            throw JSONError.cannotInitialize(type: type(of: self), json: json)
+        }
+        
+        var this = Dictionary(minimumCapacity: object.count)
+        
+        for (key, value) in object {
+            if let key = keyInitializable.init(mapDictionaryKey: key) as? Key {
+                this[key] = try valueInitializable.init(json: value) as? Value
+            }
+        }
+        
+        self = this
+    }
+}

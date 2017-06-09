@@ -341,9 +341,9 @@ fileprivate func yajl_string(
         } else {
             var newBuffer = UnsafeMutablePointer<CChar>.allocate(capacity: bufferLength + 1)
             defer { newBuffer.deallocate(capacity: bufferLength + 1) }
-            memcpy(UnsafeMutableRawPointer(newBuffer), buffer!, bufferLength)
+            memcpy(UnsafeMutableRawPointer(newBuffer), buffer, bufferLength)
             newBuffer[bufferLength] = 0
-            str = String(cString: UnsafePointer(newBuffer))
+            string = String(cString: UnsafePointer(newBuffer))
         }
     } else {
         string = ""
@@ -377,9 +377,9 @@ fileprivate func yajl_map_key(
         } else {
             var newBuffer = UnsafeMutablePointer<CChar>.allocate(capacity: bufferLength + 1)
             defer { newBuffer.deallocate(capacity: bufferLength + 1) }
-            memcpy(UnsafeMutableRawPointer(newBuffer), buffer!, bufferLength)
+            memcpy(UnsafeMutableRawPointer(newBuffer), buffer, bufferLength)
             newBuffer[bufferLength] = 0
-            str = String(cString: UnsafePointer(newBuffer))
+            string = String(cString: UnsafePointer(newBuffer))
         }
     } else {
         string = ""
