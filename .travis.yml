@@ -14,8 +14,6 @@ install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libdill libressl; fi
   
-  - pkg-config --list-all
-
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then git clone https://github.com/Zewo/btls; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then pushd btls; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install; fi
