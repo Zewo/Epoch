@@ -12,13 +12,8 @@ install:
 
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then echo "deb [trusted=yes] http://apt.zewo.io ./" | sudo tee --append /etc/apt/sources.list; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libdill libressl; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install zewo; fi
   
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then git clone https://github.com/Zewo/btls; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then pushd btls; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then popd; fi
-
   - export LD_LIBRARY_PATH="/usr/local/lib:/usr/local/opt/libressl/lib" 
 script:
   - ./Scripts/Travis/build-test.sh Zewo
