@@ -4,13 +4,22 @@ class MediaReferencingEncoder<Map : EncodingMedia> : MediaEncoder<Map> {
     
     init(
         referencing encoder: MediaEncoder<Map>,
-        at key: CodingKey?,
+        at key: CodingKey,
         write: @escaping (EncodingMedia) throws -> Void
     ) {
         self.encoder = encoder
         self.write = write
         super.init(codingPath: encoder.codingPath, userInfo: encoder.userInfo)
         self.codingPath.append(key)
+    }
+    
+    init(
+        referencing encoder: MediaEncoder<Map>,
+        write: @escaping (EncodingMedia) throws -> Void
+        ) {
+        self.encoder = encoder
+        self.write = write
+        super.init(codingPath: encoder.codingPath, userInfo: encoder.userInfo)
     }
     
     override var canEncodeNewElement: Bool {

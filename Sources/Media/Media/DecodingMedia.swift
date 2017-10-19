@@ -57,6 +57,7 @@ public protocol DecodingMedia {
     func decode(_ type: Float.Type) throws -> Float
     func decode(_ type: Double.Type) throws -> Double
     func decode(_ type: String.Type) throws -> String
+    func decode<D : Decodable>(_ type: D.Type) throws -> D
     
     // Optional
     
@@ -77,6 +78,7 @@ public protocol DecodingMedia {
     func decodeIfPresent(_ type: Float.Type, forKey key: CodingKey) throws -> Float?
     func decodeIfPresent(_ type: Double.Type, forKey key: CodingKey) throws -> Double?
     func decodeIfPresent(_ type: String.Type, forKey key: CodingKey) throws -> String?
+    func decodeNilIfPresent(forKey key: CodingKey) throws -> Bool
     
     func decodeIfPresent(_ type: Bool.Type) throws -> Bool?
     func decodeIfPresent(_ type: Int.Type) throws -> Int?
@@ -115,9 +117,14 @@ extension DecodingMedia {
         guard let map = try decodeIfPresent(Self.self, forKey: key) as? Self else {
             throw DecodingError.valueNotFound(type, DecodingError.Context())
         }
-        
+
         return try D(from: map)
     }
+    
+    public func decode<D : Decodable>(_ type: D.Type) throws -> D {
+        return try D(from: self)
+    }
+
     
     public func decode(_ type: Bool.Type, forKey key: CodingKey) throws -> Bool {
         guard let map = try decodeIfPresent(Self.self, forKey: key) else {

@@ -127,6 +127,42 @@ extension JSON : DecodingMedia {
         }
     }
     
+    public func decodeNilIfPresent(forKey key: CodingKey) throws -> Bool {
+        if let index = key.intValue {
+            guard case let .array(array) = self else {
+                throw DecodingError.typeMismatch(
+                    [JSON].self,
+                    DecodingError.Context(codingPath: [key])
+                )
+            }
+            
+            guard array.indices.contains(index) else {
+                throw DecodingError.valueNotFound(
+                    JSON.self,
+                    DecodingError.Context(codingPath: [key])
+                )
+            }
+            
+            return array[index].isNull
+        } else {
+            guard case let .object(object) = self else {
+                throw DecodingError.typeMismatch(
+                    [String: JSON].self,
+                    DecodingError.Context(codingPath: [key])
+                )
+            }
+            
+            guard let newValue = object[key.stringValue] else {
+                throw DecodingError.valueNotFound(
+                    JSON.self,
+                    DecodingError.Context(codingPath: [key])
+                )
+            }
+            
+            return newValue.isNull
+        }
+    }
+    
     public func decodeNil() -> Bool {
         return isNull
     }
