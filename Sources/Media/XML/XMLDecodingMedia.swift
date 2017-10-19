@@ -45,6 +45,10 @@ extension XML : DecodingMedia {
         return XMLMap.single(root) // change this (wrap root)
     }
     
+    public func decodeNilIfPresent(forKey key: CodingKey) throws -> Bool {
+        return false
+    }
+    
     public func decodeNil() -> Bool {
         return false
     }
@@ -199,6 +203,10 @@ extension XMLMap : DecodingMedia {
             
             return XMLMap.single(elements[index])
         }
+    }
+    
+    public func decodeNilIfPresent(forKey key: CodingKey) throws -> Bool {
+        return false
     }
     
     public func decodeNil() -> Bool {

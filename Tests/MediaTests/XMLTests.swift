@@ -58,44 +58,40 @@ struct Root : Codable {
 
 public class XMLTests: XCTestCase {
     func testXML() throws {
-        do {
-            let xml = XML(root:
-                XML.Element(name: "Catalog", children: [
-                    XML.Element(name: "Book", attributes: ["id": "a"], children: [
-                        XML.Element(name: "Author", children: ["Bob"]),
-                    ]),
-                    XML.Element(name: "Book", attributes: ["id": "b"], children: [
-                        XML.Element(name: "Author", children: ["John"]),
-                    ]),
-                    XML.Element(name: "Book", attributes: ["id": "c"], children: [
-                        XML.Element(name: "Author", children: ["Mark"]),
-                    ]),
-                ])
-            )
-            
-            var json: JSON = [
-                "Catalog": [
-                    "Book": [
-                        ["Author": "Bob"],
-                        ["Author": "John"],
-                        ["Author": "Mark"],
-                    ]
+        let xml = XML(root:
+            XML.Element(name: "Catalog", children: [
+                XML.Element(name: "Book", attributes: ["id": "a"], children: [
+                    XML.Element(name: "Author", children: ["Bob"]),
+                ]),
+                XML.Element(name: "Book", attributes: ["id": "b"], children: [
+                    XML.Element(name: "Author", children: ["John"]),
+                ]),
+                XML.Element(name: "Book", attributes: ["id": "c"], children: [
+                    XML.Element(name: "Author", children: ["Mark"]),
+                ]),
+            ])
+        )
+        
+        var json: JSON = [
+            "Catalog": [
+                "Book": [
+                    ["Author": "Bob"],
+                    ["Author": "John"],
+                    ["Author": "Mark"],
                 ]
             ]
-            
-            var root: Root
-            
-            root = try Root(from: json)
-            print(root)
-            
-            root = try Root(from: xml)
-            print(root)
-            
-            json = try JSON(from: root)
-            print(json)
-        } catch {
-            print(error)
-        }
+        ]
+        
+//        var root: Root
+//
+//        root = try Root(from: json)
+//        print(root)
+//        
+//        root = try Root(from: xml)
+//        print(root)
+//
+//        json = try JSON(from: root)
+//        print(json)
     }
 }
 

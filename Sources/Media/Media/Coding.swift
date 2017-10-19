@@ -43,25 +43,29 @@ extension Int : CodingKey {
 }
 
 extension EncodingError.Context {
-    public init(codingPath: [CodingKey?] = []) {
+    public init(codingPath: [CodingKey] = []) {
         self.codingPath = codingPath
         self.debugDescription = ""
+        self.underlyingError = nil
     }
     
     public init(debugDescription: String) {
         self.codingPath = []
         self.debugDescription = debugDescription
+        self.underlyingError = nil
     }
 }
 
 extension DecodingError.Context {
-    public init(codingPath: [CodingKey?] = []) {
+    public init(codingPath: [CodingKey] = []) {
         self.codingPath = codingPath
         self.debugDescription = ""
+        self.underlyingError = nil
     }
     
     public init(debugDescription: String) {
         self.codingPath = []
         self.debugDescription = debugDescription
+        self.underlyingError = nil
     }
 }

@@ -55,7 +55,25 @@ extension JSON : EncodingMedia {
         array.append(json)
         self = .array(array)
     }
+
+    public mutating func encodeNil() throws {
+        guard case var .array(array) = self else {
+            throw EncodingError.invalidValue(JSON.null, EncodingError.Context())
+        }
+        
+        array.append(JSON.null)
+        self = .array(array)
+    }
     
+    public mutating func encodeNil(forKey key: CodingKey) throws {
+        guard case var .object(object) = self else {
+            throw EncodingError.invalidValue(JSON.null, EncodingError.Context())
+        }
+        
+        object[key.stringValue] = JSON.null
+        self = .object(object)
+    }
+
     public static func encodeNil() throws -> EncodingMedia {
         return JSON.null
     }

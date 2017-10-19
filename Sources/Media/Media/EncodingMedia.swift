@@ -67,6 +67,7 @@ public protocol EncodingMedia {
     mutating func encode(_ value: Float, forKey key: CodingKey) throws
     mutating func encode(_ value: Double, forKey key: CodingKey) throws
     mutating func encode(_ value: String, forKey key: CodingKey) throws
+    mutating func encodeNil(forKey key: CodingKey) throws
     
     mutating func encode(_ value: Bool) throws
     mutating func encode(_ value: Int) throws
@@ -82,6 +83,7 @@ public protocol EncodingMedia {
     mutating func encode(_ value: Float) throws
     mutating func encode(_ value: Double) throws
     mutating func encode(_ value: String) throws
+    mutating func encodeNil() throws
 }
 
 extension EncodingMedia {
