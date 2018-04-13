@@ -34,7 +34,7 @@ struct Resources : MediaCodable {
     let userRepositoriesURL: String
     let userSearchURL: String
     
-    enum Key : String, CodingKey {
+    private enum CodingKeys : String, CodingKey {
         case currentUserURL = "current_user_url"
         case currentUserAuthorizationsHTMLURL = "current_user_authorizations_html_url"
         case authorizationsURL = "authorizations_url"
@@ -66,43 +66,9 @@ struct Resources : MediaCodable {
         case userRepositoriesURL = "user_repositories_url"
         case userSearchURL = "user_search_url"
     }
-    
-    init(from decoder: Decoder) throws {
-        let container                    = try decoder.container(keyedBy: Key.self)
-        currentUserURL                   = try container.decode(String.self, forKey: .currentUserURL)
-        currentUserAuthorizationsHTMLURL = try container.decode(String.self, forKey: .currentUserAuthorizationsHTMLURL)
-        authorizationsURL                = try container.decode(String.self, forKey: .authorizationsURL)
-        codeSearchURL                    = try container.decode(String.self, forKey: .codeSearchURL)
-        commitSearchURL                  = try container.decode(String.self, forKey: .commitSearchURL)
-        emailsURL                        = try container.decode(String.self, forKey: .emailsURL)
-        emojisURL                        = try container.decode(String.self, forKey: .emojisURL)
-        eventsURL                        = try container.decode(String.self, forKey: .eventsURL)
-        feedsURL                         = try container.decode(String.self, forKey: .feedsURL)
-        followersURL                     = try container.decode(String.self, forKey: .followersURL)
-        followingURL                     = try container.decode(String.self, forKey: .followingURL)
-        gistsURL                         = try container.decode(String.self, forKey: .gistsURL)
-        hubURL                           = try container.decode(String.self, forKey: .hubURL)
-        issueSearchURL                   = try container.decode(String.self, forKey: .issueSearchURL)
-        issuesURL                        = try container.decode(String.self, forKey: .issuesURL)
-        keysURL                          = try container.decode(String.self, forKey: .keysURL)
-        notificationsURL                 = try container.decode(String.self, forKey: .notificationsURL)
-        organizationRepositoriesURL      = try container.decode(String.self, forKey: .organizationRepositoriesURL)
-        organizationURL                  = try container.decode(String.self, forKey: .organizationURL)
-        publicGistsURL                   = try container.decode(String.self, forKey: .publicGistsURL)
-        rateLimitURL                     = try container.decode(String.self, forKey: .rateLimitURL)
-        repositoryURL                    = try container.decode(String.self, forKey: .repositoryURL)
-        currentUserRepositoriesURL       = try container.decode(String.self, forKey: .currentUserRepositoriesURL)
-        starredURL                       = try container.decode(String.self, forKey: .starredURL)
-        starredGistsURL                  = try container.decode(String.self, forKey: .starredGistsURL)
-        teamURL                          = try container.decode(String.self, forKey: .teamURL)
-        userURL                          = try container.decode(String.self, forKey: .userURL)
-        userOrganizationsURL             = try container.decode(String.self, forKey: .userOrganizationsURL)
-        userRepositoriesURL              = try container.decode(String.self, forKey: .userRepositoriesURL)
-        userSearchURL                    = try container.decode(String.self, forKey: .userSearchURL)
-    }
 }
 
-public class ClientTests: XCTestCase {
+public class ClientTests : XCTestCase {
     func testClient() throws {
         do {
             let client = try Client(uri: "https://api.github.com")
@@ -142,6 +108,7 @@ public class ClientTests: XCTestCase {
             XCTAssertEqual(resources.userSearchURL, "https://api.github.com/search/users?q={query}{&page,per_page,sort,order}")
         } catch {
             print(error)
+            throw error
         }
     }
 }
