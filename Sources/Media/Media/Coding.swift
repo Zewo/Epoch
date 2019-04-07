@@ -22,7 +22,7 @@ extension String : CodingKey {
 
 extension Int : CodingKey {
     public var stringValue: String {
-        return description
+        return String(self)
     }
     
     public init?(stringValue: String) {

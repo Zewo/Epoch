@@ -58,7 +58,7 @@ internal class Serializer {
     internal init(stream: Writable, bufferSize: Int) {
         self.stream = stream
         self.bufferSize = bufferSize
-        self.buffer = UnsafeMutableRawBufferPointer.allocate(count: bufferSize)
+        self.buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: bufferSize, alignment: MemoryLayout<UInt8>.alignment)
     }
     
     deinit {

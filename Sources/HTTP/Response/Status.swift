@@ -227,7 +227,7 @@ extension Response.Status {
         case .notExtended:                   return "510"
         case .networkAuthenticationRequired: return "511"
             
-        case .other(let statusCode, _):        return statusCode.description
+        case .other(let statusCode, _):        return statusCode.stringValue
         }
     }
 }

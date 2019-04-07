@@ -138,9 +138,9 @@ extension XMLMap : DecodingMedia {
     public func allKeys<Key>(keyedBy: Key.Type) -> [Key] where Key : CodingKey {
         switch self {
         case let .single(element):
-            return Set(element.elements.map({ $0.name })).flatMap({ Key(stringValue: $0) })
+            return Set(element.elements.map({ $0.name })).compactMap({ Key(stringValue: $0) })
         case let .multiple(elements):
-            return elements.indices.flatMap({ Key(intValue: $0) })
+            return elements.indices.compactMap({ Key(intValue: $0) })
         }
     }
     

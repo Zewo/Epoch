@@ -14,7 +14,7 @@ public class TCPTests: XCTestCase {
         let deadline = 1.minute.fromNow()
         let port = 8002
         let channel = try Channel<Void>()
-        let buffer = UnsafeMutableRawBufferPointer.allocate(count: 1)
+        let buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: MemoryLayout<UInt8>.alignment)
         
         defer {
             buffer.deallocate()
@@ -49,7 +49,7 @@ public class TCPTests: XCTestCase {
         let deadline = 1.minute.fromNow()
         let port = 8004
         let channel = try Channel<Void>()
-        let buffer = UnsafeMutableRawBufferPointer.allocate(count: 10)
+        let buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: 10, alignment: MemoryLayout<UInt8>.alignment)
         
         defer {
             buffer.deallocate()

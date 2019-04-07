@@ -4,7 +4,7 @@ import Venice
 extension JSON : DecodingMedia {
     public init(from readable: Readable, deadline: Deadline) throws {
         let parser = JSONParser()
-        let buffer = UnsafeMutableRawBufferPointer.allocate(count: 4096)
+        let buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: 4096, alignment: MemoryLayout<UInt8>.alignment)
         
         defer {
             buffer.deallocate()
@@ -42,11 +42,11 @@ extension JSON : DecodingMedia {
     
     public func allKeys<Key>(keyedBy: Key.Type) -> [Key] where Key : CodingKey {
         if case let .object(object) = self {
-            return object.keys.flatMap({ Key(stringValue: $0) })
+            return object.keys.compactMap({ Key(stringValue: $0) })
         }
         
         if case let .array(array) = self {
-            return array.indices.flatMap({ Key(intValue: $0) })
+            return array.indices.compactMap({ Key(intValue: $0) })
         }
         
         return []

@@ -29,12 +29,12 @@ class ServerTest: XCTestCase {
         let request = try Request(method: method, uri: uri, body: message)
         let response = try client.send(request)
         let bufferSize = response.contentLength ?? 0
-        let buffer = UnsafeMutableRawBufferPointer.allocate(count: bufferSize)
+        let buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: bufferSize, alignment: MemoryLayout<UInt8>.alignment)
         _ = try response.body.convertedToReadable().read(buffer, deadline: .immediately)
         XCTAssertEqual(String(buffer), message)
 
         coroutine.cancel()
-        
+
         try Coroutine.wakeUp(10.seconds.fromNow())
 
     }

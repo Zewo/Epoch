@@ -39,7 +39,7 @@ fileprivate class ParserStream : InputStream {
     fileprivate init(readable: Readable, deadline: Deadline, bufferSize: Int = 4096) {
         self.readable = readable
         self.deadline = deadline
-        self.buffer = UnsafeMutableRawBufferPointer.allocate(count: bufferSize)
+        self.buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: bufferSize, alignment: MemoryLayout<UInt8>.alignment)
         super.init(data: Data())
     }
     

@@ -6,7 +6,7 @@
 
 public enum System {
     public static var workingDirectory: String {
-        let buffer = UnsafeMutableRawBufferPointer.allocate(count: Int(PATH_MAX))
+        let buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: Int(PATH_MAX), alignment: MemoryLayout<UInt8>.alignment)
         
         defer {
             buffer.deallocate()

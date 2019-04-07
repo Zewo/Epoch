@@ -102,7 +102,7 @@ internal class Parser {
     public init(stream: Readable, bufferSize: Int = 2048, type: http_parser_type) {
         self.stream = stream
         self.bufferSize = bufferSize
-        self.buffer = UnsafeMutableRawBufferPointer.allocate(count: bufferSize)
+        self.buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: bufferSize, alignment: MemoryLayout<UInt8>.alignment)
         
         var parser = http_parser()
         

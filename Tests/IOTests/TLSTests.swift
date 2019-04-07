@@ -20,7 +20,7 @@ public class TLSTests: XCTestCase {
         let deadline = 5.seconds.fromNow()
         let port = 8006
         let channel = try Channel<Void>()
-        let buffer = UnsafeMutableRawBufferPointer.allocate(count: 1)
+        let buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: 1, alignment: MemoryLayout<UInt8>.alignment)
         
         defer {
             buffer.deallocate()
@@ -61,7 +61,7 @@ public class TLSTests: XCTestCase {
         let deadline = 1.minute.fromNow()
         let port = 8009
         let channel = try Channel<Void>()
-        let buffer = UnsafeMutableRawBufferPointer.allocate(count: 10)
+        let buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: 10, alignment: MemoryLayout<UInt8>.alignment)
         
         defer {
             buffer.deallocate()

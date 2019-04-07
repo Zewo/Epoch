@@ -55,7 +55,7 @@ extension Message {
         }
         
         set(contentLength) {
-            headers["Content-Length"] = contentLength?.description
+            headers["Content-Length"] = contentLength?.stringValue
         }
     }
     
